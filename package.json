@@ -1,0 +1,57 @@
+{
+  "name": "fetcher",
+  "version": "0.0.0",
+  "description": "Thin, OpenAPI-aware facade over ky that preserves ky's runtime ergonomics.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js"
+    },
+    "./openapi": {
+      "types": "./dist/openapi.d.ts",
+      "import": "./dist/openapi.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "fetch",
+    "ky",
+    "openapi",
+    "typescript",
+    "http-client"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilokesto/fetcher.git"
+  },
+  "homepage": "https://github.com/ilokesto/fetcher",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "ky": "^1.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "ky": "^1.14.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}
