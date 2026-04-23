@@ -154,8 +154,33 @@ const prepareShortcutRequest = ({
   });
 };
 
+const prepareHeadRequest = ({
+  input,
+  request,
+}: {
+  input: Input;
+  request?: Options;
+}) => {
+  return prepareKyRequest({
+    input,
+    method: 'head',
+    options: request,
+  });
+};
+
 const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): TypedKy<PathsLike>[ShortcutMethod] => {
   return ((input: Input, request?: unknown, options?: Options) => {
+    if (method === 'head') {
+      const preparedRequest = prepareHeadRequest({
+        input,
+        request: request as Options | undefined,
+      });
+
+      return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
+        instance.head(nextInput, nextOptions),
+      );
+    }
+
     const preparedRequest = prepareShortcutRequest({
       input,
       method,

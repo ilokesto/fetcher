@@ -873,12 +873,20 @@ describe('createTypedKy', () => {
     expect(payload).toEqual({ id: '99', title: 'typed facade' });
   });
 
-  it('keeps head on the plain ky surface while still forwarding to ky', async () => {
+  it('keeps head on the plain ky surface while still forwarding plain ky options to ky', async () => {
     const seenMethods: string[] = [];
     const seenUrls: string[] = [];
+    const seenTimeouts: Array<number | false | undefined> = [];
 
     const api = createTypedKy<ApiPaths>({
       prefixUrl: 'https://example.com/api',
+      hooks: {
+        beforeRequest: [
+          (_request, options) => {
+            seenTimeouts.push((options as { timeout?: number | false }).timeout);
+          },
+        ],
+      },
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
         seenMethods.push(request.method);
@@ -894,11 +902,16 @@ describe('createTypedKy', () => {
       headers: {
         'x-head': '1',
       },
+      searchParams: {
+        probe: 'true',
+      },
+      timeout: 321,
     });
 
     expect(response.status).toBe(204);
     expect(seenMethods).toEqual(['HEAD']);
-    expect(seenUrls).toEqual(['https://example.com/api/health']);
+    expect(seenUrls).toEqual(['https://example.com/api/health?probe=true']);
+    expect(seenTimeouts).toEqual([321]);
   });
 
   it('re-exposes stop and retry on the decorated client', () => {
