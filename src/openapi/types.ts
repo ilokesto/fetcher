@@ -419,7 +419,7 @@ type SafeTypedCallable<Paths extends PathsLike> = {
   <Json = unknown>(url: Input, options?: Options): Promise<SafeResult<Json>>;
 };
 
-type TypedKySafe<Paths extends PathsLike> = SafeTypedCallable<Paths> & {
+type FetcherSafe<Paths extends PathsLike> = SafeTypedCallable<Paths> & {
   get: SafeTypedShortcutMethod<Paths, 'get'>;
   post: SafeTypedShortcutMethod<Paths, 'post'>;
   put: SafeTypedShortcutMethod<Paths, 'put'>;
@@ -427,17 +427,17 @@ type TypedKySafe<Paths extends PathsLike> = SafeTypedCallable<Paths> & {
   delete: SafeTypedShortcutMethod<Paths, 'delete'>;
 };
 
-export type TypedKy<Paths extends PathsLike> = TypedCallable<Paths> &
+export type Fetcher<Paths extends PathsLike> = TypedCallable<Paths> &
   Omit<KyInstance, 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'create' | 'extend'> & {
-    safe: TypedKySafe<Paths>;
+    safe: FetcherSafe<Paths>;
     get: TypedShortcutMethod<Paths, 'get'>;
     post: TypedShortcutMethod<Paths, 'post'>;
     put: TypedShortcutMethod<Paths, 'put'>;
     patch: TypedShortcutMethod<Paths, 'patch'>;
     delete: TypedShortcutMethod<Paths, 'delete'>;
     head: KyInstance['head'];
-    create(defaultOptions?: Options): TypedKy<Paths>;
-    extend(defaultOptions: Parameters<KyInstance['extend']>[0]): TypedKy<Paths>;
+    create(defaultOptions?: Options): Fetcher<Paths>;
+    extend(defaultOptions: Parameters<KyInstance['extend']>[0]): Fetcher<Paths>;
   };
 
 export type MergePaths<Base, Extra> = Simplify<Omit<Base, keyof Extra> & Extra>;

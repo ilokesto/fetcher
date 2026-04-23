@@ -7,7 +7,7 @@ import {
   toOpenApiMethod,
   type GroupedRequest,
 } from '../internal/runtime';
-import type { PathsLike, SafeResult, TypedKy } from '../openapi/types';
+import type { PathsLike, SafeResult, Fetcher } from '../openapi/types';
 
 type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
 type SafeShortcutMethod = Exclude<ShortcutMethod, 'head'>;
@@ -168,7 +168,7 @@ const prepareHeadRequest = ({
   });
 };
 
-const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): TypedKy<PathsLike>[ShortcutMethod] => {
+const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): Fetcher<PathsLike>[ShortcutMethod] => {
   return ((input: Input, request?: unknown, options?: Options) => {
     if (method === 'head') {
       const preparedRequest = prepareHeadRequest({
@@ -191,13 +191,13 @@ const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): Typed
     return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
       instance[method](nextInput, nextOptions),
     );
-  }) as TypedKy<PathsLike>[ShortcutMethod];
+  }) as Fetcher<PathsLike>[ShortcutMethod];
 };
 
 const bindSafeShortcutMethod = <Paths extends PathsLike, Method extends SafeShortcutMethod>(
   instance: KyInstance,
   method: Method,
-): TypedKy<Paths>['safe'][Method] => {
+): Fetcher<Paths>['safe'][Method] => {
   return (async (input: Input, request?: unknown, options?: Options) => {
     return resolveSafeResult(() => {
       const preparedRequest = prepareShortcutRequest({
@@ -211,11 +211,11 @@ const bindSafeShortcutMethod = <Paths extends PathsLike, Method extends SafeShor
         instance[method](nextInput, nextOptions),
       );
     });
-  }) as TypedKy<Paths>['safe'][Method];
+  }) as Fetcher<Paths>['safe'][Method];
 };
 
-const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): TypedKy<Paths> => {
-  const typedKy = ((input: Input, options?: Options) => {
+const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetcher<Paths> => {
+  const fetcher = ((input: Input, options?: Options) => {
     const request = prepareKyRequest({
       input,
       method: toOpenApiMethod(options?.method),
@@ -225,9 +225,9 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Type
     return executeKyCall(request.input, request.options, (nextInput, nextOptions) =>
       instance(nextInput, nextOptions),
     );
-  }) as TypedKy<Paths>;
+  }) as Fetcher<Paths>;
 
-  typedKy.safe = (async (input: Input, options?: Options) => {
+  fetcher.safe = (async (input: Input, options?: Options) => {
     return resolveSafeResult(() => {
       const request = prepareKyRequest({
         input,
@@ -239,48 +239,48 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Type
         instance(nextInput, nextOptions),
       );
     });
-  }) as TypedKy<Paths>['safe'];
+  }) as Fetcher<Paths>['safe'];
 
-  typedKy.safe.get = bindSafeShortcutMethod<Paths, 'get'>(instance, 'get');
-  typedKy.safe.post = bindSafeShortcutMethod<Paths, 'post'>(instance, 'post');
-  typedKy.safe.put = bindSafeShortcutMethod<Paths, 'put'>(instance, 'put');
-  typedKy.safe.patch = bindSafeShortcutMethod<Paths, 'patch'>(instance, 'patch');
-  typedKy.safe.delete = bindSafeShortcutMethod<Paths, 'delete'>(instance, 'delete');
+  fetcher.safe.get = bindSafeShortcutMethod<Paths, 'get'>(instance, 'get');
+  fetcher.safe.post = bindSafeShortcutMethod<Paths, 'post'>(instance, 'post');
+  fetcher.safe.put = bindSafeShortcutMethod<Paths, 'put'>(instance, 'put');
+  fetcher.safe.patch = bindSafeShortcutMethod<Paths, 'patch'>(instance, 'patch');
+  fetcher.safe.delete = bindSafeShortcutMethod<Paths, 'delete'>(instance, 'delete');
 
-  typedKy.get = bindShortcutMethod(instance, 'get') as TypedKy<Paths>['get'];
-  typedKy.post = bindShortcutMethod(instance, 'post') as TypedKy<Paths>['post'];
-  typedKy.put = bindShortcutMethod(instance, 'put') as TypedKy<Paths>['put'];
-  typedKy.patch = bindShortcutMethod(instance, 'patch') as TypedKy<Paths>['patch'];
-  typedKy.delete = bindShortcutMethod(instance, 'delete') as TypedKy<Paths>['delete'];
-  typedKy.head = bindShortcutMethod(instance, 'head') as TypedKy<Paths>['head'];
-  Object.defineProperty(typedKy, 'stop', {
+  fetcher.get = bindShortcutMethod(instance, 'get') as Fetcher<Paths>['get'];
+  fetcher.post = bindShortcutMethod(instance, 'post') as Fetcher<Paths>['post'];
+  fetcher.put = bindShortcutMethod(instance, 'put') as Fetcher<Paths>['put'];
+  fetcher.patch = bindShortcutMethod(instance, 'patch') as Fetcher<Paths>['patch'];
+  fetcher.delete = bindShortcutMethod(instance, 'delete') as Fetcher<Paths>['delete'];
+  fetcher.head = bindShortcutMethod(instance, 'head') as Fetcher<Paths>['head'];
+  Object.defineProperty(fetcher, 'stop', {
     value: instance.stop,
     enumerable: true,
     configurable: true,
     writable: false,
   });
-  Object.defineProperty(typedKy, 'retry', {
+  Object.defineProperty(fetcher, 'retry', {
     value: instance.retry,
     enumerable: true,
     configurable: true,
     writable: false,
   });
 
-  typedKy.create = ((defaultOptions?: Options) => {
+  fetcher.create = ((defaultOptions?: Options) => {
     return decorateKyInstance<Paths>(instance.create(defaultOptions));
-  }) as TypedKy<Paths>['create'];
+  }) as Fetcher<Paths>['create'];
 
-  typedKy.extend = ((defaultOptions: Parameters<KyInstance['extend']>[0]) => {
+  fetcher.extend = ((defaultOptions: Parameters<KyInstance['extend']>[0]) => {
     return decorateKyInstance<Paths>(instance.extend(defaultOptions));
-  }) as TypedKy<Paths>['extend'];
+  }) as Fetcher<Paths>['extend'];
 
-  return typedKy;
+  return fetcher;
 };
 
-export function createTypedKy<Paths extends PathsLike>(): TypedKy<Paths>;
-export function createTypedKy<Paths extends PathsLike>(defaultOptions: Options): TypedKy<Paths>;
-export function createTypedKy<Paths extends PathsLike>(instance: KyInstance): TypedKy<Paths>;
-export function createTypedKy<Paths extends PathsLike>(input?: Options | KyInstance): TypedKy<Paths> {
+export function createFetcher<Paths extends PathsLike>(): Fetcher<Paths>;
+export function createFetcher<Paths extends PathsLike>(defaultOptions: Options): Fetcher<Paths>;
+export function createFetcher<Paths extends PathsLike>(instance: KyInstance): Fetcher<Paths>;
+export function createFetcher<Paths extends PathsLike>(input?: Options | KyInstance): Fetcher<Paths> {
   const instance = typeof input === 'function' ? input : ky.create(input);
 
   return decorateKyInstance<Paths>(instance);

@@ -1,4 +1,4 @@
-export { createTypedKy } from '../core/createTypedKy';
+export { createFetcher } from '../core/createFetcher';
 export type {
   InferJson,
   MergePaths,
@@ -10,5 +10,5 @@ export type {
   PathTemplateParams,
   PathsLike,
   SafeResult,
-  TypedKy,
+  Fetcher,
 } from './types';

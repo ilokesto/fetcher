@@ -1,5 +1,5 @@
 {
-  "name": "fetcher",
+  "name": "@ilokesto/fetcher",
   "version": "0.0.0",
   "description": "Thin, OpenAPI-aware facade over ky that preserves ky's runtime ergonomics.",
   "license": "MIT",

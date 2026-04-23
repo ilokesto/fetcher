@@ -1,9 +1,9 @@
 import ky, { HTTPError } from 'ky';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { createTypedKy as createTypedKyFromRoot } from '.';
-import { createTypedKy as createTypedKyFromCore } from './core';
-import { createTypedKy } from './openapi';
-import type { MergePaths, TypedKy } from './openapi';
+import { createFetcher as createFetcherFromRoot } from '.';
+import { createFetcher as createFetcherFromCore } from './core';
+import { createFetcher } from './openapi';
+import type { MergePaths, Fetcher } from './openapi';
 import { interpolatePathTemplate, normalizeGroupedRequestOptions } from './internal/runtime';
 import type { SafeResult } from './openapi/types';
 
@@ -171,7 +171,7 @@ type ExtraPaths = {
 
 type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
 
-const assertTypedShortcutUrlOptionFoundations = (api: TypedKy<ApiPaths>) => {
+const assertTypedShortcutUrlOptionFoundations = (api: Fetcher<ApiPaths>) => {
   api.get('/users/{id}', {
     params: {
       path: { id: '42' },
@@ -378,7 +378,7 @@ const assertTypedShortcutUrlOptionFoundations = (api: TypedKy<ApiPaths>) => {
   });
 };
 
-const assertUnknownShortcutUrlOptionFallback = (api: TypedKy<ApiPaths>) => {
+const assertUnknownShortcutUrlOptionFallback = (api: Fetcher<ApiPaths>) => {
   const response = api.post(
     '/unknown',
     {
@@ -413,7 +413,7 @@ const assertUnknownShortcutUrlOptionFallback = (api: TypedKy<ApiPaths>) => {
   });
 };
 
-const assertNoTypedOptionsShortcut = (api: TypedKy<ApiPaths>) => {
+const assertNoTypedOptionsShortcut = (api: Fetcher<ApiPaths>) => {
   // @ts-expect-error `options` stays on the raw ky surface
   api.options(
     '/widgets/{widgetId}',
@@ -428,7 +428,7 @@ const assertNoTypedOptionsShortcut = (api: TypedKy<ApiPaths>) => {
   );
 };
 
-const assertHeadStaysOnPlainKyTyping = (api: TypedKy<ApiPaths>) => {
+const assertHeadStaysOnPlainKyTyping = (api: Fetcher<ApiPaths>) => {
   api.head('/health', {
     headers: {
       authorization: 'Bearer token',
@@ -442,12 +442,12 @@ const assertHeadStaysOnPlainKyTyping = (api: TypedKy<ApiPaths>) => {
 };
 
 const assertBarrelImportContinuity = () => {
-  expectTypeOf(createTypedKyFromCore<ApiPaths>()).toEqualTypeOf<TypedKy<ApiPaths>>();
-  expectTypeOf(createTypedKyFromRoot<ApiPaths>()).toEqualTypeOf<TypedKy<ApiPaths>>();
+  expectTypeOf(createFetcherFromCore<ApiPaths>()).toEqualTypeOf<Fetcher<ApiPaths>>();
+  expectTypeOf(createFetcherFromRoot<ApiPaths>()).toEqualTypeOf<Fetcher<ApiPaths>>();
 };
 
 const assertReadmeQuickStartSnippet = () => {
-  const api = createTypedKy<ApiPaths>({
+  const api = createFetcher<ApiPaths>({
     prefixUrl: '/api',
     hooks: {
       beforeRequest: [
@@ -494,10 +494,10 @@ const assertReadmeQuickStartSnippet = () => {
       serializedMdx: string;
     }>
   >();
-  expectTypeOf(authed).toEqualTypeOf<TypedKy<ApiPaths>>();
+  expectTypeOf(authed).toEqualTypeOf<Fetcher<ApiPaths>>();
 };
 
-const assertSafeSurfaceTyping = (api: TypedKy<ApiPaths>) => {
+const assertSafeSurfaceTyping = (api: Fetcher<ApiPaths>) => {
   const shortcutResult = api.safe.get('/users/{id}', {
     params: {
       path: { id: '42' },
@@ -605,7 +605,7 @@ void [
   assertSafeSurfaceTyping,
 ];
 
-describe('createTypedKy', () => {
+describe('createFetcher', () => {
   it('interpolates path params, preserves ky behavior, and injects openapi context', async () => {
     const seenRequests: Array<{
       url: string;
@@ -614,7 +614,7 @@ describe('createTypedKy', () => {
     }> = [];
     const seenContexts: Array<Record<string, unknown>> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       hooks: {
         beforeRequest: [
@@ -661,7 +661,7 @@ describe('createTypedKy', () => {
   it('keeps extend typed and preserves inherited ky defaults', async () => {
     const authorizationValues: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -697,14 +697,14 @@ describe('createTypedKy', () => {
 
     expect(payload).toEqual({ serializedMdx: 'compiled' });
     expect(authorizationValues).toEqual(['Bearer token']);
-    expectTypeOf(authed).toEqualTypeOf<TypedKy<ApiPaths>>();
+    expectTypeOf(authed).toEqualTypeOf<Fetcher<ApiPaths>>();
   });
 
   it('keeps create typed and returns a usable derived client', async () => {
     const seenUrls: string[] = [];
     const seenHeaders: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -753,7 +753,7 @@ describe('createTypedKy', () => {
     expect(payload).toEqual({ serializedMdx: 'derived' });
     expect(seenUrls).toEqual(['https://example.com/api/api/bff/serialize-mdx']);
     expect(seenHeaders).toEqual(['yes']);
-    expectTypeOf(derived).toEqualTypeOf<TypedKy<ApiPaths>>();
+    expectTypeOf(derived).toEqualTypeOf<Fetcher<ApiPaths>>();
   });
 
   it('supports wrapping an existing ky instance with prefixUrl defaults', async () => {
@@ -774,7 +774,7 @@ describe('createTypedKy', () => {
       },
     });
 
-    const api = createTypedKy<ApiPaths>(instance);
+    const api = createFetcher<ApiPaths>(instance);
 
     const payload = await api
       .get('/users/{id}', {
@@ -792,7 +792,7 @@ describe('createTypedKy', () => {
     const seenUrls: string[] = [];
     const seenHeaders: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -827,7 +827,7 @@ describe('createTypedKy', () => {
   });
 
   it('does not pretend prefixUrl still exists after extend clears it', async () => {
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async () => {
         return new Response(JSON.stringify({ ok: true }), {
@@ -851,7 +851,7 @@ describe('createTypedKy', () => {
   });
 
   it('supports direct callable usage with inferred method typing', async () => {
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async () => {
         return new Response(JSON.stringify({ id: '99', title: 'typed facade' }), {
@@ -878,7 +878,7 @@ describe('createTypedKy', () => {
     const seenUrls: string[] = [];
     const seenTimeouts: Array<number | false | undefined> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       hooks: {
         beforeRequest: [
@@ -919,7 +919,7 @@ describe('createTypedKy', () => {
       prefixUrl: 'https://example.com/api',
     });
 
-    const api = createTypedKy<ApiPaths>(instance);
+    const api = createFetcher<ApiPaths>(instance);
     const derived = api.extend({
       headers: {
         'x-derived': '1',
@@ -935,7 +935,7 @@ describe('createTypedKy', () => {
   it('retries leading-slash inputs with prefixUrl for direct callable usage', async () => {
     const seenUrls: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -964,7 +964,7 @@ describe('createTypedKy', () => {
   it('injects openapi context for typed shortcut requests', async () => {
     const seenContexts: Array<Record<string, unknown>> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       hooks: {
         beforeRequest: [
@@ -1017,7 +1017,7 @@ describe('createTypedKy', () => {
       body: unknown;
     }> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -1115,7 +1115,7 @@ describe('createTypedKy', () => {
   it('replaces grouped json with explicit ky json when either side is non-plain', async () => {
     const seenBodies: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -1189,7 +1189,7 @@ describe('createTypedKy', () => {
 
     const file = new Blob(['payload'], { type: 'text/plain' });
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -1256,7 +1256,7 @@ describe('createTypedKy', () => {
   it('does not auto-serialize params.cookie into a cookie header', async () => {
     const seenHeaders: Headers[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -1295,8 +1295,8 @@ describe('createTypedKy', () => {
   });
 
   it('keeps the root, core, and openapi barrels aligned', () => {
-    expect(createTypedKyFromCore).toBe(createTypedKy);
-    expect(createTypedKyFromRoot).toBe(createTypedKy);
+    expect(createFetcherFromCore).toBe(createFetcher);
+    expect(createFetcherFromRoot).toBe(createFetcher);
   });
 
   it('forwards non-string inputs without fabricating a path template', async () => {
@@ -1304,7 +1304,7 @@ describe('createTypedKy', () => {
     const seenMethods: string[] = [];
     const seenContexts: Array<Record<string, unknown>> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       hooks: {
         beforeRequest: [
           (_request, options) => {
@@ -1345,7 +1345,7 @@ describe('createTypedKy', () => {
     const seenMethods: string[] = [];
     const seenContexts: Array<Record<string, unknown>> = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
         seenMethods.push(request.method);
@@ -1386,7 +1386,7 @@ describe('createTypedKy', () => {
   });
 
   it('exposes inferred json types for shortcut and callable forms', () => {
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async () => {
         return new Response(null, {
@@ -1441,7 +1441,7 @@ describe('createTypedKy', () => {
     const seenUrls: string[] = [];
     let requestCount = 0;
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       fetch: async (input) => {
         const request = input instanceof Request ? input : new Request(input);
@@ -1508,7 +1508,7 @@ describe('createTypedKy', () => {
     const seenUrls: string[] = [];
     const seenHeaders: string[] = [];
 
-    const api = createTypedKy<ApiPaths>({
+    const api = createFetcher<ApiPaths>({
       prefixUrl: 'https://example.com/api',
       headers: {
         authorization: 'Bearer base',

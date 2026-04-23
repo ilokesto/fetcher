@@ -1,4 +1,4 @@
-export { createTypedKy } from './createTypedKy';
+export { createFetcher } from './createFetcher';
 export type {
   Hooks,
   Input,

@@ -1,15 +1,15 @@
-# fetcher
+# @ilokesto/fetcher
 
-`fetcher` is a thin, OpenAPI-aware wrapper around the real [`ky`](https://github.com/sindresorhus/ky) runtime.
+`@ilokesto/fetcher` is a thin, OpenAPI-aware wrapper around the real [`ky`](https://github.com/sindresorhus/ky) runtime.
 
 It keeps the parts people already like about `ky`, such as `create()`, `extend()`, hooks, `prefixUrl`, custom `fetch`, and lazy `ResponsePromise` parsing, while adding OpenAPI-driven typing for route templates, grouped shortcut requests, and inferred `.json()` results.
 
 ## Status
 
-- Package name: `fetcher`
+- Package name: `@ilokesto/fetcher`
 - Runtime core: `ky`
 - Build output: compiled `dist/` package
-- Public entrypoints: `.`, `./core`, `./openapi`
+- Public entrypoints: `@ilokesto/fetcher`, `@ilokesto/fetcher/core`, `@ilokesto/fetcher/openapi`
 - Runtime stance in v1: wrapper over `ky`, not a `ky` fork
 
 This package now ships as a normal dist-based library, not as a source-export-only prototype.
@@ -27,10 +27,10 @@ Many typed API wrappers smooth over OpenAPI at the cost of losing `ky` ergonomic
 
 ## Installation
 
-Install `fetcher` with `ky`.
+Install `@ilokesto/fetcher` with `ky`.
 
 ```bash
-pnpm add fetcher ky
+pnpm add @ilokesto/fetcher ky
 ```
 
 `ky` is a peer dependency.
@@ -38,7 +38,7 @@ pnpm add fetcher ky
 ## Quick start
 
 ```ts
-import { createTypedKy, type MergePaths } from 'fetcher/openapi';
+import { createFetcher, type MergePaths } from '@ilokesto/fetcher/openapi';
 import type { paths as GeneratedPaths } from './__generated__/openapi';
 
 type ExtraPaths = {
@@ -67,7 +67,7 @@ type ExtraPaths = {
 
 type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
 
-const api = createTypedKy<ApiPaths>({
+const api = createFetcher<ApiPaths>({
   prefixUrl: '/api',
   hooks: {
     beforeRequest: [
@@ -205,7 +205,7 @@ Missing required path params throw immediately.
 
 OpenAPI paths often start with `/`, while raw `ky` rejects leading slashes when `prefixUrl` is set.
 
-`fetcher` retries that specific `ky` error with the leading slash removed, so OpenAPI-style route literals still work with `prefixUrl`.
+`@ilokesto/fetcher` retries that specific `ky` error with the leading slash removed, so OpenAPI-style route literals still work with `prefixUrl`.
 
 ### `params.cookie` is type-only
 
@@ -235,7 +235,7 @@ If `kyOptions.body` is provided, it wins and the grouped JSON payload is not use
 - `Blob` values are appended directly
 - `undefined` entries are skipped
 
-`fetcher` does not force a multipart `Content-Type` header or set a boundary manually. It leaves that to the platform and `fetch`, which is the safe behavior for multipart requests.
+`@ilokesto/fetcher` does not force a multipart `Content-Type` header or set a boundary manually. It leaves that to the platform and `fetch`, which is the safe behavior for multipart requests.
 
 ### Hook metadata
 
@@ -266,17 +266,17 @@ This keeps response inference predictable, even when an operation declares sever
 
 ## API notes
 
-### `createTypedKy<Paths>()`
+### `createFetcher<Paths>()`
 
 Supported overloads:
 
 ```ts
-createTypedKy<Paths>()
-createTypedKy<Paths>(defaultOptions: Options)
-createTypedKy<Paths>(instance: KyInstance)
+createFetcher<Paths>()
+createFetcher<Paths>(defaultOptions: Options)
+createFetcher<Paths>(instance: KyInstance)
 ```
 
-### `TypedKy<Paths>`
+### `Fetcher<Paths>`
 
 The typed client keeps `ky` behavior while adding:
 
@@ -289,7 +289,7 @@ The typed client keeps `ky` behavior while adding:
 
 ### Public OpenAPI types
 
-The package exports these main OpenAPI helper types from `fetcher/openapi`:
+The package exports these main OpenAPI helper types from `@ilokesto/fetcher/openapi`:
 
 - `OpenApiRequest`
 - `OpenApiRequestOptions`
@@ -361,7 +361,7 @@ The callable client remains closer to raw `ky`, so this migration guidance is sp
 
 ## Wrapper stance
 
-`fetcher` is intentionally a wrapper-first package in v1.
+`@ilokesto/fetcher` is intentionally a wrapper-first package in v1.
 
 - `ky` remains the runtime core
 - the package does not ship a `ky` fork
