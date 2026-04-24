@@ -1,6 +1,6 @@
 {
   "name": "@ilokesto/fetcher",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "description": "Thin, OpenAPI-aware facade over ky that preserves ky's runtime ergonomics.",
   "license": "MIT",
   "type": "module",
@@ -8,7 +8,10 @@
   "files": [
     "dist"
   ],
-  "public": true,
+  "publishConfig": {
+    "access": "public",
+    "tag": "beta"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
