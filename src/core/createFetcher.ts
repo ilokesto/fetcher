@@ -73,45 +73,61 @@ const resolveSafeResult = async <Json>(
 const isObjectRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
+const readCompatibilityParams = (value: Record<string, unknown>): GroupedRequest['params'] | undefined => {
+  const params: NonNullable<GroupedRequest['params']> = {};
+
+  if ('path' in value) {
+    params.path = value.path as NonNullable<GroupedRequest['params']>['path'];
+  }
+
+  if ('query' in value) {
+    params.query = value.query as NonNullable<GroupedRequest['params']>['query'];
+  }
+
+  if ('cookie' in value) {
+    params.cookie = value.cookie as NonNullable<GroupedRequest['params']>['cookie'];
+  }
+
+  return Object.keys(params).length > 0 ? params : undefined;
+};
+
+const toCompatibilityGroupedRequest = (value: Record<string, unknown>): GroupedRequest => {
+  const groupedRequest: GroupedRequest = {};
+  const params = readCompatibilityParams(value);
+
+  if (params) {
+    groupedRequest.params = params;
+  }
+
+  if ('header' in value) {
+    groupedRequest.headers = value.header as GroupedRequest['headers'];
+  }
+
+  return groupedRequest;
+};
+
 const toGroupedRequest = (value: unknown): GroupedRequest | undefined => {
   if (!isObjectRecord(value)) {
     return undefined;
   }
 
+  const compatibilityRequest = toCompatibilityGroupedRequest(value);
   const groupedRequest: GroupedRequest = {};
   let hasGroupedRequest = false;
 
   if ('params' in value) {
     groupedRequest.params = value.params as GroupedRequest['params'];
     hasGroupedRequest = true;
-  } else {
-    const params: NonNullable<GroupedRequest['params']> = {};
-
-    if ('path' in value) {
-      params.path = value.path as NonNullable<GroupedRequest['params']>['path'];
-      hasGroupedRequest = true;
-    }
-
-    if ('query' in value) {
-      params.query = value.query as NonNullable<GroupedRequest['params']>['query'];
-      hasGroupedRequest = true;
-    }
-
-    if ('cookie' in value) {
-      params.cookie = value.cookie as NonNullable<GroupedRequest['params']>['cookie'];
-      hasGroupedRequest = true;
-    }
-
-    if (Object.keys(params).length > 0) {
-      groupedRequest.params = params;
-    }
+  } else if (compatibilityRequest.params) {
+    groupedRequest.params = compatibilityRequest.params;
+    hasGroupedRequest = true;
   }
 
   if ('headers' in value) {
     groupedRequest.headers = value.headers as GroupedRequest['headers'];
     hasGroupedRequest = true;
-  } else if ('header' in value) {
-    groupedRequest.headers = value.header as GroupedRequest['headers'];
+  } else if (compatibilityRequest.headers) {
+    groupedRequest.headers = compatibilityRequest.headers;
     hasGroupedRequest = true;
   }
 
@@ -122,6 +138,11 @@ const toGroupedRequest = (value: unknown): GroupedRequest | undefined => {
 
   if ('formData' in value) {
     groupedRequest.formData = value.formData;
+    hasGroupedRequest = true;
+  }
+
+  if ('formUrlEncoded' in value) {
+    groupedRequest.formUrlEncoded = value.formUrlEncoded;
     hasGroupedRequest = true;
   }
 
@@ -154,26 +175,13 @@ const prepareShortcutRequest = ({
   });
 };
 
-const prepareHeadRequest = ({
-  input,
-  request,
-}: {
-  input: Input;
-  request?: Options;
-}) => {
-  return prepareKyRequest({
-    input,
-    method: 'head',
-    options: request,
-  });
-};
-
 const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): Fetcher<PathsLike>[ShortcutMethod] => {
   return ((input: Input, request?: unknown, options?: Options) => {
     if (method === 'head') {
-      const preparedRequest = prepareHeadRequest({
+      const preparedRequest = prepareKyRequest({
         input,
-        request: request as Options | undefined,
+        method: 'head',
+        options: request as Options | undefined,
       });
 
       return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
