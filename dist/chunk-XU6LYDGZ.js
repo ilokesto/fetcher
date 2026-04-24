@@ -1,3 +1,4 @@
+// src/core/index.ts
 import {
   ForceRetryError,
   HTTPError,
@@ -6,18 +7,15 @@ import {
   isHTTPError,
   isKyError,
   isTimeoutError
-} from "./chunk-XU6LYDGZ.js";
-import {
-  createFetcher
-} from "./chunk-23LSK5YU.js";
+} from "ky";
+
 export {
   ForceRetryError,
   HTTPError,
   TimeoutError,
-  createFetcher,
   isForceRetryError,
   isHTTPError,
   isKyError,
   isTimeoutError
 };
-//# sourceMappingURL=core.js.map
+//# sourceMappingURL=chunk-XU6LYDGZ.js.map

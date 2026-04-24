@@ -1,8 +1,6 @@
 import { Options, ResponsePromise, Input, KyInstance } from 'ky';
 export { ForceRetryError, HTTPError, Hooks, Input, KyInstance, KyRequest, KyResponse, Options, ResponsePromise, TimeoutError, isForceRetryError, isHTTPError, isKyError, isTimeoutError } from 'ky';
 
-type PathParameterValue = string | number | boolean;
-
 type OpenApiHttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options';
 type PathsLike = Record<string, Partial<Record<OpenApiHttpMethod, unknown>>>;
 type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
@@ -12,36 +10,80 @@ type Simplify<T> = {
     [K in keyof T]: T[K];
 } & {};
 type DistributiveSimplify<T> = T extends unknown ? Simplify<T> : never;
-type NonStringInput = Exclude<Input, string>;
 type RequiredKeys<T> = {
     [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
 }[keyof T];
 type HasRequiredKeys<T> = [RequiredKeys<T>] extends [never] ? false : true;
 type UnknownIfNever<T> = [T] extends [never] ? unknown : T;
-type RouteParameterGroupKey = 'path' | 'query' | 'header' | 'cookie';
 type MaybeProperty<Key extends PropertyKey, Value, IsRequired extends boolean, Include extends boolean> = Include extends true ? IsRequired extends true ? {
     [K in Key]-?: Value;
 } : {
     [K in Key]?: Value;
 } : {};
-type TemplateParamNames<Path extends string> = Path extends `${string}{${infer Param}}${infer Rest}` ? Param | TemplateParamNames<Rest> : never;
-type PathTemplateParams<Path extends string> = [TemplateParamNames<Path>] extends [never] ? never : {
-    [K in TemplateParamNames<Path>]: PathParameterValue;
-};
 type OperationFor<Paths extends PathsLike, Path extends PathKey<Paths>, Method extends string> = Method extends keyof Paths[Path] ? Paths[Path][Method] : never;
-type ParametersFor<Operation> = Operation extends {
-    parameters: infer Parameters;
-} ? Parameters : Operation extends {
-    parameters?: infer Parameters;
-} ? Parameters : never;
+type MergePathMethods<BasePath, ExtraPath> = Simplify<{
+    [Method in keyof BasePath | keyof ExtraPath]: Method extends keyof ExtraPath ? ExtraPath[Method] : Method extends keyof BasePath ? BasePath[Method] : never;
+}>;
+type MergePaths<Base, Extra> = Simplify<{
+    [Path in keyof Base | keyof Extra]: Path extends keyof Extra ? Path extends keyof Base ? MergePathMethods<Base[Path], Extra[Path]> : Extra[Path] : Path extends keyof Base ? Base[Path] : never;
+}>;
+
 type RequestBodyFor<Operation> = Operation extends {
     requestBody: infer RequestBody;
 } ? RequestBody : Operation extends {
     requestBody?: infer RequestBody;
 } ? RequestBody : never;
+type ContentFor<RequestBody> = RequestBody extends {
+    content: infer Content;
+} ? Content : never;
+type JsonMediaTypeKeys<Content> = Extract<keyof Content, 'application/json' | `${string}+json` | `${string}/json`>;
+type JsonContent<Content> = [JsonMediaTypeKeys<Content>] extends [never] ? never : Content[JsonMediaTypeKeys<Content>];
+type FormDataMediaTypeKeys<Content> = Extract<keyof Content, 'multipart/form-data'>;
+type FormDataContent<Content> = [FormDataMediaTypeKeys<Content>] extends [never] ? never : Content[FormDataMediaTypeKeys<Content>];
+type FormUrlEncodedMediaTypeKeys<Content> = Extract<keyof Content, 'application/x-www-form-urlencoded'>;
+type FormUrlEncodedContent<Content> = [FormUrlEncodedMediaTypeKeys<Content>] extends [never] ? never : Content[FormUrlEncodedMediaTypeKeys<Content>];
+type JsonRequestBody<Operation> = JsonContent<ContentFor<RequestBodyFor<Operation>>>;
+type FormDataRequestBody<Operation> = FormDataContent<ContentFor<RequestBodyFor<Operation>>>;
+type FormUrlEncodedRequestBody<Operation> = FormUrlEncodedContent<ContentFor<RequestBodyFor<Operation>>>;
+type RequestBodyRequired<Operation> = RequestBodyFor<Operation> extends {
+    content: infer _Content;
+} ? true : false;
+type JsonRequestBodyRequired<Operation> = [JsonRequestBody<Operation>] extends [never] ? false : RequestBodyRequired<Operation>;
+type ShortcutBodyKey = 'json' | 'formData' | 'formUrlEncoded';
+type ShortcutPayloadMember<Key extends ShortcutBodyKey, Value, IsRequired extends boolean> = DistributiveSimplify<MaybeProperty<Key, Value, IsRequired, true> & {
+    [K in Exclude<ShortcutBodyKey, Key>]?: never;
+}>;
+type ShortcutRequestPayloadUnion<Operation> = ([JsonRequestBody<Operation>] extends [never] ? never : ShortcutPayloadMember<'json', JsonRequestBody<Operation>, RequestBodyRequired<Operation>>) | ([FormDataRequestBody<Operation>] extends [never] ? never : ShortcutPayloadMember<'formData', FormDataRequestBody<Operation>, RequestBodyRequired<Operation>>) | ([FormUrlEncodedRequestBody<Operation>] extends [never] ? never : ShortcutPayloadMember<'formUrlEncoded', FormUrlEncodedRequestBody<Operation>, RequestBodyRequired<Operation>>);
+type ShortcutRequestPayload<Operation> = [
+    ShortcutRequestPayloadUnion<Operation>
+] extends [never] ? {} : ShortcutRequestPayloadUnion<Operation>;
+
 type ResponsesFor<Operation> = Operation extends {
     responses: infer Responses;
 } ? Responses : never;
+type PreferredJsonStatusCode = 200 | 201 | 204;
+type ResponseForStatus<Responses, Status extends PreferredJsonStatusCode> = Responses extends object ? Responses[Extract<keyof Responses, Status | `${Status}`>] : never;
+type DefaultResponse<Responses> = Responses extends {
+    default: infer Response;
+} ? Response : never;
+type JsonResponse<Response> = Response extends {
+    content: infer Content;
+} ? JsonContent<Content> : never;
+type PreferredJsonResponse<Responses> = [JsonResponse<ResponseForStatus<Responses, 200>>] extends [never] ? [JsonResponse<ResponseForStatus<Responses, 201>>] extends [never] ? [JsonResponse<ResponseForStatus<Responses, 204>>] extends [never] ? JsonResponse<DefaultResponse<Responses>> : JsonResponse<ResponseForStatus<Responses, 204>> : JsonResponse<ResponseForStatus<Responses, 201>> : JsonResponse<ResponseForStatus<Responses, 200>>;
+type InferJson<Paths extends PathsLike, Path extends PathKey<Paths>, Method extends string> = UnknownIfNever<PreferredJsonResponse<ResponsesFor<OperationFor<Paths, Path, Method>>>>;
+
+type PathParameterValue = string | number | boolean;
+
+type RouteParameterGroupKey = 'path' | 'query' | 'header' | 'cookie';
+type TemplateParamNames<Path extends string> = Path extends `${string}{${infer Param}}${infer Rest}` ? Param | TemplateParamNames<Rest> : never;
+type PathTemplateParams<Path extends string> = [TemplateParamNames<Path>] extends [never] ? never : {
+    [K in TemplateParamNames<Path>]: PathParameterValue;
+};
+type ParametersFor<Operation> = Operation extends {
+    parameters: infer Parameters;
+} ? Parameters : Operation extends {
+    parameters?: infer Parameters;
+} ? Parameters : never;
 type ParameterGroup<Parameters, Key extends RouteParameterGroupKey> = Parameters extends {
     [K in Key]: infer Value;
 } ? Value : Parameters extends {
@@ -61,29 +103,8 @@ type PathParametersRequired<Path extends string, Operation> = [TemplateParamName
 type QueryParametersRequired<Operation> = ParameterGroupRequired<Operation, 'query'>;
 type HeaderParametersRequired<Operation> = ParameterGroupRequired<Operation, 'header'>;
 type CookieParametersRequired<Operation> = ParameterGroupRequired<Operation, 'cookie'>;
-type ContentFor<RequestBody> = RequestBody extends {
-    content: infer Content;
-} ? Content : never;
-type JsonMediaTypeKeys<Content> = Extract<keyof Content, 'application/json' | `${string}+json` | `${string}/json`>;
-type JsonContent<Content> = [JsonMediaTypeKeys<Content>] extends [never] ? never : Content[JsonMediaTypeKeys<Content>];
-type FormDataMediaTypeKeys<Content> = Extract<keyof Content, 'multipart/form-data' | 'application/x-www-form-urlencoded'>;
-type FormDataContent<Content> = [FormDataMediaTypeKeys<Content>] extends [never] ? never : Content[FormDataMediaTypeKeys<Content>];
-type JsonRequestBody<Operation> = JsonContent<ContentFor<RequestBodyFor<Operation>>>;
-type FormDataRequestBody<Operation> = FormDataContent<ContentFor<RequestBodyFor<Operation>>>;
-type RequestBodyRequired<Operation> = RequestBodyFor<Operation> extends {
-    content: infer _Content;
-} ? true : false;
-type JsonRequestBodyRequired<Operation> = [JsonRequestBody<Operation>] extends [never] ? false : RequestBodyRequired<Operation>;
-type PreferredJsonStatusCode = 200 | 201 | 204;
-type ResponseForStatus<Responses, Status extends PreferredJsonStatusCode> = Responses extends object ? Responses[Extract<keyof Responses, Status | `${Status}`>] : never;
-type DefaultResponse<Responses> = Responses extends {
-    default: infer Response;
-} ? Response : never;
-type JsonResponse<Response> = Response extends {
-    content: infer Content;
-} ? JsonContent<Content> : never;
-type PreferredJsonResponse<Responses> = [JsonResponse<ResponseForStatus<Responses, 200>>] extends [never] ? [JsonResponse<ResponseForStatus<Responses, 201>>] extends [never] ? [JsonResponse<ResponseForStatus<Responses, 204>>] extends [never] ? JsonResponse<DefaultResponse<Responses>> : JsonResponse<ResponseForStatus<Responses, 204>> : JsonResponse<ResponseForStatus<Responses, 201>> : JsonResponse<ResponseForStatus<Responses, 200>>;
-type InferJson<Paths extends PathsLike, Path extends PathKey<Paths>, Method extends string> = UnknownIfNever<PreferredJsonResponse<ResponsesFor<OperationFor<Paths, Path, Method>>>>;
+
+type NonStringInput = Exclude<Input, string>;
 type SafeResponse<Json = unknown> = Awaited<ResponsePromise<Json>>;
 type SafeResult<Data, Error = unknown> = {
     ok: true;
@@ -109,13 +130,6 @@ type DirectCallRequestOptions<Path extends string, Method extends string> = Simp
 type ShortcutRequestOptions<Path extends string, Method extends string> = Simplify<Omit<Options, 'method' | 'searchParams' | 'body' | 'json' | 'context'> & OpenApiContextOptions<Path, Method>>;
 type OpenApiRequestOptions<Path extends string, Method extends string> = ShortcutRequestOptions<Path, Method>;
 type ShortcutRequestParams<Path extends string, Operation> = Simplify<MaybeProperty<'path', PathParametersFor<Path, Operation>, PathParametersRequired<Path, Operation>, HasMeaningfulKeys<PathParametersFor<Path, Operation>>> & MaybeProperty<'query', QueryParameters<Operation>, QueryParametersRequired<Operation>, HasMeaningfulKeys<QueryParameters<Operation>>> & MaybeProperty<'cookie', CookieParameters<Operation>, CookieParametersRequired<Operation>, HasMeaningfulKeys<CookieParameters<Operation>>>>;
-type ShortcutRequestPayload<Operation> = [
-    JsonRequestBody<Operation>
-] extends [never] ? [FormDataRequestBody<Operation>] extends [never] ? {} : MaybeProperty<'formData', FormDataRequestBody<Operation>, RequestBodyRequired<Operation>, true> : [FormDataRequestBody<Operation>] extends [never] ? MaybeProperty<'json', JsonRequestBody<Operation>, RequestBodyRequired<Operation>, true> : ({
-    formData?: never;
-} & MaybeProperty<'json', JsonRequestBody<Operation>, RequestBodyRequired<Operation>, true>) | ({
-    json?: never;
-} & MaybeProperty<'formData', FormDataRequestBody<Operation>, RequestBodyRequired<Operation>, true>);
 type ShortcutRequest<Paths extends PathsLike, Path extends PathKey<Paths>, Method extends string> = DistributiveSimplify<MaybeProperty<'params', ShortcutRequestParams<Path, OperationFor<Paths, Path, Method>>, HasRequiredKeys<ShortcutRequestParams<Path, OperationFor<Paths, Path, Method>>>, HasMeaningfulKeys<ShortcutRequestParams<Path, OperationFor<Paths, Path, Method>>>> & MaybeProperty<'headers', HeaderParameters<OperationFor<Paths, Path, Method>>, HeaderParametersRequired<OperationFor<Paths, Path, Method>>, HasMeaningfulKeys<HeaderParameters<OperationFor<Paths, Path, Method>>>> & ShortcutRequestPayload<OperationFor<Paths, Path, Method>>>;
 type OpenApiRequest<Paths extends PathsLike, Path extends PathKey<Paths>, Method extends string> = ShortcutRequest<Paths, Path, Method>;
 type WideShortcutRequest = DistributiveSimplify<{
@@ -130,6 +144,7 @@ type WideShortcutRequest = DistributiveSimplify<{
         content: {
             'application/json': unknown;
             'multipart/form-data': unknown;
+            'application/x-www-form-urlencoded': unknown;
         };
     };
 }>>;
@@ -194,7 +209,6 @@ type Fetcher<Paths extends PathsLike> = TypedCallable<Paths> & Omit<KyInstance, 
     create(defaultOptions?: Options): Fetcher<Paths>;
     extend(defaultOptions: Parameters<KyInstance['extend']>[0]): Fetcher<Paths>;
 };
-type MergePaths<Base, Extra> = Simplify<Omit<Base, keyof Extra> & Extra>;
 
 declare function createFetcher<Paths extends PathsLike>(): Fetcher<Paths>;
 declare function createFetcher<Paths extends PathsLike>(defaultOptions: Options): Fetcher<Paths>;
