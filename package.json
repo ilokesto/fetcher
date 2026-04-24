@@ -42,7 +42,8 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:dist": "node ./scripts/verify-dist.mjs"
   },
   "peerDependencies": {
     "ky": "^1.14.0"
