@@ -4,8 +4,8 @@ export type PathParameterValue = string | number | boolean;
 type RuntimeSearchParams = NonNullable<Options['searchParams']>;
 type RuntimeHeaders = NonNullable<Options['headers']>;
 
-const KY_PREFIX_URL_LEADING_SLASH_ERROR =
-  '`input` must not begin with a slash when using `prefixUrl`';
+const KY_PREFIX_URL_ERROR_PREFIX = 'prefixUrl';
+const KY_LEADING_SLASH_ERROR_PATTERN = /slash|begins?|starts?/i;
 
 type RuntimeContext = Record<string, unknown> & {
   openapi?: Record<string, unknown>;
@@ -27,6 +27,7 @@ export type GroupedRequest = {
   headers?: RuntimeHeaders;
   json?: unknown;
   formData?: unknown;
+  formUrlEncoded?: unknown;
 };
 
 const PATH_TOKEN_PATTERN = /\{([^}]+)\}/g;
@@ -129,6 +130,44 @@ const toFormDataBody = (value: unknown): FormData => {
   return formData;
 };
 
+const appendUrlSearchParamsValue = (
+  searchParams: URLSearchParams,
+  key: string,
+  value: unknown,
+): void => {
+  if (value === undefined) {
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((item) => {
+      appendUrlSearchParamsValue(searchParams, key, item);
+    });
+
+    return;
+  }
+
+  searchParams.append(key, String(value));
+};
+
+const toUrlSearchParamsBody = (value: unknown): URLSearchParams => {
+  if (value instanceof URLSearchParams) {
+    return value;
+  }
+
+  const searchParams = new URLSearchParams();
+
+  if (!isStrictPlainObject(value)) {
+    return searchParams;
+  }
+
+  Object.entries(value).forEach(([key, entryValue]) => {
+    appendUrlSearchParamsValue(searchParams, key, entryValue);
+  });
+
+  return searchParams;
+};
+
 const resolveJson = (requestJson: unknown, explicitJson: unknown): unknown => {
   if (requestJson === undefined) {
     return explicitJson;
@@ -181,10 +220,13 @@ export const normalizeGroupedRequestOptions = ({
   delete runtimeOptions.json;
   delete runtimeOptions.body;
 
+  if (options?.body !== undefined) {
+    runtimeOptions.body = options.body;
+    return runtimeOptions;
+  }
+
   if (request && hasOwn(request, 'formData')) {
-    if (options?.body !== undefined) {
-      runtimeOptions.body = options.body;
-    } else if (options?.json !== undefined) {
+    if (options?.json !== undefined) {
       runtimeOptions.json = options.json;
     } else {
       runtimeOptions.body = toFormDataBody(request.formData);
@@ -193,12 +235,17 @@ export const normalizeGroupedRequestOptions = ({
     return runtimeOptions;
   }
 
-  if (request && hasOwn(request, 'json')) {
-    if (options?.body !== undefined) {
-      runtimeOptions.body = options.body;
-      return runtimeOptions;
+  if (request && hasOwn(request, 'formUrlEncoded')) {
+    if (options?.json !== undefined) {
+      runtimeOptions.json = options.json;
+    } else {
+      runtimeOptions.body = toUrlSearchParamsBody(request.formUrlEncoded);
     }
 
+    return runtimeOptions;
+  }
+
+  if (request && hasOwn(request, 'json')) {
     const resolvedJson = resolveJson(request.json, options?.json);
 
     if (resolvedJson !== undefined) {
@@ -206,10 +253,6 @@ export const normalizeGroupedRequestOptions = ({
     }
 
     return runtimeOptions;
-  }
-
-  if (options?.body !== undefined) {
-    runtimeOptions.body = options.body;
   }
 
   if (options?.json !== undefined) {
@@ -258,7 +301,9 @@ export const interpolatePathTemplate = (
 };
 
 export const isKyPrefixUrlLeadingSlashError = (error: unknown): error is Error =>
-  error instanceof Error && error.message === KY_PREFIX_URL_LEADING_SLASH_ERROR;
+  error instanceof Error &&
+  error.message.includes(KY_PREFIX_URL_ERROR_PREFIX) &&
+  KY_LEADING_SLASH_ERROR_PATTERN.test(error.message);
 
 export const stripLeadingSlash = (input: Input): Input => {
   if (typeof input !== 'string' || !input.startsWith('/')) {
