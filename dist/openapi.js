@@ -1,8 +1,7 @@
-import "./chunk-D2ZLQTTH.js";
+import "./chunk-UPJ4LFMJ.js";
 import {
   createFetcher
-} from "./chunk-23LSK5YU.js";
+} from "./chunk-6F4L3ERV.js";
 export {
   createFetcher
 };
-//# sourceMappingURL=openapi.js.map
