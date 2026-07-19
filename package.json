@@ -40,6 +40,7 @@
     "url": "git+https://github.com/ilokesto/fetcher.git"
   },
   "homepage": "https://github.com/ilokesto/fetcher",
+  "packageManager": "pnpm@10.17.1",
   "engines": {
     "node": ">=22"
   },
