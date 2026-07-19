@@ -1,0 +1,90 @@
+---
+title: "Quick start"
+description: "Create a typed fetcher, call OpenAPI paths, and keep ky options available."
+---
+
+# Quick start
+
+Start with an OpenAPI `paths` type. Most projects generate it with tools such as `openapi-typescript`, but any compatible TypeScript type works.
+
+## 1. Install
+
+Install `fetcher` together with its peer dependency `ky`.
+
+```package-install
+@ilokesto/fetcher ky
+```
+
+```ts lineNumbers
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from './__generated__/openapi';
+
+const api = createFetcher<paths>({
+  prefixUrl: 'https://api.example.com',
+  retry: { limit: 1 },
+});
+```
+
+## Call a typed shortcut
+
+Shortcut methods use the grouped request contract.
+
+```ts lineNumbers
+const profile = await api
+  .get('/users/{id}', {
+    params: {
+      path: { id: '42' },
+      query: { include: 'profile' },
+    },
+  })
+  .json();
+```
+
+The path template is interpolated before it reaches `ky`. Query parameters become `searchParams`, and the result type of `.json()` is inferred from the preferred JSON response in the OpenAPI operation.
+
+## Send a typed body
+
+```ts lineNumbers
+const post = await api
+  .post('/posts', {
+    json: {
+      title: 'Typed facade',
+    },
+  })
+  .json();
+```
+
+`json`, `formData`, and `formUrlEncoded` are mutually exclusive shortcut body shapes. Use the third argument only for normal `ky` options such as `timeout`, `signal`, `hooks`, `context`, or explicit override bodies.
+
+## Keep ky composition
+
+```ts lineNumbers
+const authed = api.extend({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
+await authed.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+`create`, `extend`, hooks, retry, timeout, custom `fetch`, and `HTTPError` behavior stay ky-compatible. `fetcher` prepares OpenAPI-shaped input, then delegates the request to the underlying `KyInstance`.
+
+## Use safe when you do not want exceptions
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+} else {
+  result.error;
+  result.response;
+}
+```
+
+The default surface still throws like `ky`; `safe` converts the same request into a discriminated result.

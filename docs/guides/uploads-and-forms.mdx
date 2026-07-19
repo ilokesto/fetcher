@@ -1,0 +1,56 @@
+---
+title: "Uploads and forms"
+description: "Send multipart uploads and URL-encoded form submissions."
+---
+
+# Uploads and forms
+
+OpenAPI request bodies often describe more than JSON. Fetcher keeps those body forms explicit in the shortcut request.
+
+## Multipart upload
+
+```ts lineNumbers
+await api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'avatar' },
+  },
+  headers: {
+    'x-upload-token': uploadToken,
+  },
+  formData: {
+    file,
+    visibility: 'private',
+  },
+});
+```
+
+Do not set the multipart `Content-Type` header yourself unless you know exactly why. The platform needs to add the boundary.
+
+## URL-encoded form
+
+```ts lineNumbers
+await api.post('/sessions', {
+  formUrlEncoded: {
+    username,
+    password,
+    scope: ['read', 'write'],
+  },
+});
+```
+
+Arrays become repeated keys. Boolean and number values are stringified. `undefined` entries are skipped.
+
+## Prebuilt bodies
+
+If you need full control, pass a `FormData`, `URLSearchParams`, or explicit `body` through ky options.
+
+```ts lineNumbers
+const body = new FormData();
+body.append('file', file);
+
+await api.post('/uploads/{uploadId}', {
+  params: { path: { uploadId: 'manual' } },
+}, {
+  body,
+});
+```

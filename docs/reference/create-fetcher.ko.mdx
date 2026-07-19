@@ -1,0 +1,49 @@
+---
+title: "createFetcher"
+description: "ky options로 fetcher를 만들거나 기존 KyInstance를 decorate합니다."
+---
+
+# createFetcher
+
+`createFetcher`는 decorated `KyInstance`처럼 동작하는 typed client를 반환합니다.
+
+```ts
+createFetcher<Paths>()
+createFetcher<Paths>(defaultOptions)
+createFetcher<Paths>(kyInstance)
+```
+
+## Options로 만들기
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  prefixUrl: '/api',
+  timeout: 10_000,
+  retry: { limit: 1 },
+});
+```
+
+내부적으로 `ky.create(defaultOptions)`로 새 `ky` instance를 만듭니다.
+
+## 기존 KyInstance로 만들기
+
+```ts lineNumbers
+import ky from 'ky';
+
+const kyInstance = ky.create({ prefixUrl: '/api' });
+const api = createFetcher<paths>(kyInstance);
+```
+
+Application이 이미 configured `ky` instance를 소유하고 있을 때 사용하세요.
+
+## 반환되는 client
+
+반환된 client는 다음을 포함합니다.
+
+- callable ky-style usage: `api(url, options)`
+- typed shortcut method: `get`, `post`, `put`, `patch`, `delete`
+- plain ky `head`
+- throw하지 않는 `safe`
+- ky composition: `create`, `extend`, `retry`, `stop`
+
+`create`와 `extend`는 같은 `Paths` type을 유지하는 또 다른 typed fetcher를 반환합니다.

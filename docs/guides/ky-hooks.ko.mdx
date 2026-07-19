@@ -1,0 +1,51 @@
+---
+title: "ky 훅"
+description: "OpenAPI context와 함께 ky hook을 auth, logging, metrics에 사용합니다."
+---
+
+# ky hooks
+
+Fetcher는 `ky`에 위임하므로 hook 기반 패턴이 그대로 유지됩니다. 추가로 제공되는 `context.openapi` metadata는 route-level instrumentation을 쉽게 만듭니다.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  prefixUrl: '/api',
+  hooks: {
+    beforeRequest: [
+      (request, options) => {
+        request.headers.set('x-client', 'web');
+        console.debug('request', {
+          method: options.context.openapi?.method,
+          template: options.context.openapi?.pathTemplate,
+        });
+      },
+    ],
+    afterResponse: [
+      (_request, options, response) => {
+        reportMetric('http.response', {
+          path: options.context.openapi?.pathTemplate,
+          status: response.status,
+        });
+      },
+    ],
+  },
+});
+```
+
+## Auth clients
+
+Base client를 한 번 만들고 authenticated branch에는 `extend`를 사용하세요.
+
+```ts lineNumbers
+const api = createFetcher<paths>({ prefixUrl: '/api' });
+
+export function withToken(token: string) {
+  return api.extend({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+```
+
+`extend`는 typed fetcher를 반환하므로 composition 이후에도 route inference가 유지됩니다.

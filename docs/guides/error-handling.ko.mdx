@@ -1,0 +1,44 @@
+---
+title: "오류 처리"
+description: "경계에 따라 ky 예외 또는 safe 결과를 선택합니다."
+---
+
+# Error handling
+
+Fetcher는 두 가지 style을 제공합니다. Exception이 자연스러운 control flow라면 기본 surface를 사용하고, component/action/loader가 result object로 분기해야 한다면 `safe`를 사용하세요.
+
+## 기본 ky behavior
+
+```ts lineNumbers
+import { HTTPError } from '@ilokesto/fetcher/core';
+
+try {
+  const user = await api.get('/users/{id}', {
+    params: { path: { id: '42' } },
+  }).json();
+} catch (error) {
+  if (error instanceof HTTPError) {
+    const status = error.response.status;
+  }
+}
+```
+
+이미 top-level error boundary가 있는 service function에서는 이 style이 잘 맞습니다.
+
+## Safe result branch
+
+```ts lineNumbers
+const result = await api.safe.post('/posts', {
+  json: { title },
+});
+
+return result.ok
+  ? { status: 'created', post: result.data }
+  : { status: 'failed', error: result.error };
+```
+
+Failure가 예상 가능한 branch인 UI boundary, route action, workflow step에서는 이 style이 좋습니다.
+
+## Parsing errors
+
+`safe`는 JSON을 즉시 읽기 시작하고 성공하면 parsed data를 반환합니다. JSON parsing이 실패하면 error branch가 됩니다. Non-JSON endpoint라면 기본 surface를 사용하고 body를 직접 읽는 편이 명확합니다.

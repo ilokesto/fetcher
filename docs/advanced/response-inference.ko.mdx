@@ -1,0 +1,47 @@
+---
+title: "응답 추론"
+description: ".json() 결과 type을 OpenAPI responses에서 선택하는 방식입니다."
+---
+
+# Response inference
+
+Typed OpenAPI call에서 `ResponsePromise`는 inferred JSON type을 갖습니다.
+
+```ts lineNumbers
+const user = await api
+  .get('/users/{id}', {
+    params: { path: { id: '42' } },
+  })
+  .json();
+```
+
+`user`는 operation response content에서 추론됩니다.
+
+## Preferred response order
+
+`InferJson`은 다음 순서로 JSON response content를 선택합니다.
+
+1. 200
+2. 201
+3. 204
+4. default
+
+JSON response content를 찾지 못하면 inferred type은 `unknown`으로 fallback합니다.
+
+## Media types
+
+JSON content에는 `application/json`과 custom `+json` media type 같은 JSON-like suffix가 포함됩니다.
+
+## Safe results
+
+`safe`도 success branch의 `data`에 같은 inference를 사용합니다.
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+}
+```

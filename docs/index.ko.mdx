@@ -1,0 +1,80 @@
+---
+title: "Fetcher"
+description: "ky의 사용감을 유지하면서 OpenAPI 타입 안전성을 더하는 얇은 래퍼입니다."
+---
+
+# Fetcher
+
+`@ilokesto/fetcher`는 실제 `ky` 런타임 위에 얇게 얹히는 래퍼입니다. `ky.create`, `extend`, 훅, `prefixUrl`, 커스텀 `fetch`, 지연 `ResponsePromise` 파싱, `ky` 오류 동작은 유지하면서 타입 안전한 경로 템플릿, 묶음형 단축 요청, `.json()` 결과 추론, 오류를 던지지 않는 `safe` API를 추가합니다.
+
+## 설치
+
+`fetcher`는 함께 필요한 패키지인 `ky`와 같이 설치합니다.
+
+```package-install
+@ilokesto/fetcher ky
+```
+
+패키지는 빌드된 ESM 형태로 배포됩니다. 패키지 도구 기준은 Node.js 22 이상이며, 실제 HTTP 런타임은 `ky`에 위임하므로 브라우저, 서버, 테스트 환경 제약은 사용하는 `ky` 환경과 같습니다.
+
+## 빠른 예시
+
+```ts lineNumbers
+import { createFetcher, type MergePaths } from '@ilokesto/fetcher/openapi';
+import type { paths as GeneratedPaths } from './__generated__/openapi';
+
+type ExtraPaths = {
+  '/bff/checkout/quote': {
+    post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            cartId: string;
+            couponCode?: string;
+          };
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              total: number;
+              currency: 'KRW' | 'USD';
+              discountApplied: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+};
+
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+
+const api = createFetcher<ApiPaths>({
+  prefixUrl: '/api',
+});
+
+const user = await api
+  .get('/users/{id}', {
+    params: {
+      path: { id: '42' },
+      query: { include: 'profile' },
+    },
+  })
+  .json();
+
+const quote = await api
+  .post('/bff/checkout/quote', {
+    json: { cartId: 'cart_123', couponCode: 'WELCOME10' },
+  })
+  .json();
+```
+
+## 다음에 볼 문서
+
+- [빠른 시작](/ko/fetcher/quick-start)에서 타입 안전한 클라이언트를 처음부터 만듭니다.
+- [핵심 개념](/ko/fetcher/core-concepts)에서 ky를 중심에 둔 모델을 설명합니다.
+- [엔트리포인트](/ko/fetcher/reference/entrypoints)에서 공개 import 경로를 확인합니다.
+- [그룹 요청](/ko/fetcher/reference/request-grouped-request)에서 단축 요청의 형태를 다룹니다.
+- [Safe](/ko/fetcher/reference/safe)에서 오류를 던지지 않는 요청을 설명합니다.

@@ -1,0 +1,55 @@
+---
+title: "단축 메서드"
+description: "Typed get, post, put, patch, delete와 ky-style head method입니다."
+---
+
+# Shortcut methods
+
+Fetcher는 자주 쓰는 shortcut method에 OpenAPI typing을 더합니다.
+
+```ts
+api.get(path, request, options)
+api.post(path, request, options)
+api.put(path, request, options)
+api.patch(path, request, options)
+api.delete(path, request, options)
+```
+
+## 타입 안전한 경로 호출
+
+Path가 `Paths` type 안에서 해당 method를 갖고 있으면, request object가 그 operation에서 추론됩니다.
+
+```ts lineNumbers
+api.post('/widgets/{widgetId}', {
+  params: {
+    path: { widgetId: 'widget-1' },
+    query: { draft: true },
+  },
+  headers: {
+    'x-trace': 'trace-1',
+  },
+  json: {
+    title: 'Draft',
+  },
+});
+```
+
+## Untyped fallback
+
+`Paths` type에 없는 string path는 wide grouped request를 받습니다. Generic을 직접 주지 않으면 response JSON type은 `unknown`입니다.
+
+```ts
+const response = api.get<{ ok: true }>('/internal/health', {});
+```
+
+## Non-string input
+
+`URL`과 `Request` input은 plain ky-style input으로 남습니다.
+
+```ts
+api.get(new URL('https://example.com/report'));
+```
+
+## `head`
+
+`head`는 의도적으로 plain ky surface에 남아 있습니다. 일반 ky option을 forwarding하며 grouped shortcut typing을 적용하지 않습니다.

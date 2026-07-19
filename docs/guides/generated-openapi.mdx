@@ -1,0 +1,50 @@
+---
+title: "Generated OpenAPI types"
+description: "Use generated paths and extend them with application-only endpoints."
+---
+
+# Generated OpenAPI types
+
+Fetcher is designed to work with generated `paths` types, but it does not require a specific generator. The only requirement is a path map shaped like OpenAPI paths.
+
+```ts lineNumbers
+import { createFetcher, type MergePaths } from '@ilokesto/fetcher/openapi';
+import type { paths as GeneratedPaths } from './__generated__/openapi';
+
+type ExtraPaths = {
+  '/bff/checkout/quote': {
+    post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            cartId: string;
+          };
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              total: number;
+            };
+          };
+        };
+      };
+    };
+  };
+};
+
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+const api = createFetcher<ApiPaths>({ prefixUrl: '/api' });
+```
+
+## When to add extra paths
+
+Use `MergePaths` for endpoints that are intentionally outside the upstream OpenAPI file:
+
+- BFF endpoints owned by your frontend team
+- mocks used only in local development
+- rollout endpoints not yet published by the backend contract
+- compatibility aliases during migration
+
+Keep generated paths generated. Put hand-written additions in a separate file so regeneration does not delete them.

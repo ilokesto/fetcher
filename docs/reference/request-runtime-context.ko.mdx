@@ -1,0 +1,48 @@
+---
+title: "런타임 컨텍스트"
+description: "ky hook context에 주입되는 OpenAPI metadata입니다."
+---
+
+# Runtime context
+
+Fetcher는 string URL request에 OpenAPI metadata를 ky context로 주입합니다.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  hooks: {
+    beforeRequest: [(_request, options) => {
+      const pathTemplate = options.context.openapi?.pathTemplate;
+      const method = options.context.openapi?.method;
+    }],
+  },
+});
+```
+
+## Shape
+
+```ts
+type OpenApiContext<Path extends string, Method extends string> = {
+  openapi?: {
+    pathTemplate?: Path;
+    method?: Method;
+  };
+};
+```
+
+`pathTemplate`은 interpolated URL이 아니라 client에 넘긴 original template입니다. `method`는 runtime에서 lowercase로 normalize됩니다.
+
+## Existing context 보존
+
+직접 ky `context`를 넘기면 fetcher는 전체 object를 대체하지 않고 `openapi`를 merge합니다.
+
+```ts lineNumbers
+api.get('/users/{id}', {
+  params: { path: { id: '42' } },
+}, {
+  context: {
+    requestId: crypto.randomUUID(),
+  },
+});
+```
+
+Application tracing field와 fetcher-provided OpenAPI metadata를 함께 쓰는 데 사용하세요.

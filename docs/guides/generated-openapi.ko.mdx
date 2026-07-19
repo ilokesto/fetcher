@@ -1,0 +1,50 @@
+---
+title: "생성된 OpenAPI 타입"
+description: "Generated paths를 사용하고 application-only endpoint를 확장합니다."
+---
+
+# Generated OpenAPI types
+
+Fetcher는 generated `paths` type과 함께 쓰도록 설계되었지만 특정 generator를 요구하지 않습니다. 필요한 것은 OpenAPI paths처럼 생긴 path map뿐입니다.
+
+```ts lineNumbers
+import { createFetcher, type MergePaths } from '@ilokesto/fetcher/openapi';
+import type { paths as GeneratedPaths } from './__generated__/openapi';
+
+type ExtraPaths = {
+  '/bff/checkout/quote': {
+    post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            cartId: string;
+          };
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              total: number;
+            };
+          };
+        };
+      };
+    };
+  };
+};
+
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+const api = createFetcher<ApiPaths>({ prefixUrl: '/api' });
+```
+
+## Extra path를 추가할 때
+
+Upstream OpenAPI file 밖에 의도적으로 존재하는 endpoint에는 `MergePaths`를 사용하세요.
+
+- Frontend team이 소유한 BFF endpoint
+- Local development에서만 쓰는 mock
+- Backend contract에 아직 공개되지 않은 rollout endpoint
+- Migration 중 compatibility alias
+
+Generated path는 계속 generated 상태로 유지하세요. Regeneration이 지우지 않도록 hand-written addition은 별도 파일에 두는 것이 좋습니다.

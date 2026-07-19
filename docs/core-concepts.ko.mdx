@@ -1,0 +1,73 @@
+---
+title: "핵심 개념"
+description: "ky-first OpenAPI facade의 mental model입니다."
+---
+
+# 핵심 개념
+
+Fetcher의 기준은 단순합니다. Runtime behavior는 `ky`가 맡고, OpenAPI awareness는 wrapper와 TypeScript type이 맡습니다.
+
+## 아래에는 실제 KyInstance가 있습니다
+
+`createFetcher()`는 `KyInstance`를 만들거나 decorate합니다. 반환된 client는 callable이며 shortcut method를 갖고, `create`와 `extend`를 노출하고, `ky`의 `retry`와 `stop`도 보존합니다.
+
+```ts lineNumbers
+import ky from 'ky';
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+
+const instance = ky.create({ prefixUrl: '/api' });
+const api = createFetcher<paths>(instance);
+const adminApi = api.extend({ headers: { 'x-admin': '1' } });
+```
+
+## Shortcut method는 typed request builder입니다
+
+`api.get`, `api.post`, `api.put`, `api.patch`, `api.delete`는 OpenAPI path와 grouped request object를 받습니다. Wrapper는 이 object를 plain `ky` options로 normalize합니다.
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'upload-1' },
+    query: { overwrite: true },
+  },
+  headers: {
+    'x-upload-token': token,
+  },
+  formData: {
+    file,
+  },
+});
+```
+
+## Callable form은 ky에 가깝게 남습니다
+
+Client 자체는 `ky`처럼 호출할 수 있습니다. Typed OpenAPI call에서는 options object에 method를 넣고 `path`, `searchParams`, `json` 같은 direct option을 사용합니다.
+
+```ts lineNumbers
+api('/users/{id}', {
+  method: 'GET',
+  path: { id: '42' },
+  searchParams: { include: 'profile' },
+});
+```
+
+이 분리는 의도된 설계입니다. Shortcut은 grouped contract를 쓰고, callable usage는 plain `ky`에 가깝게 유지합니다.
+
+## Hook을 위한 context가 주입됩니다
+
+문자열 URL request에는 `options.context.openapi`가 주입되며 `pathTemplate`과 `method`를 포함합니다. Hook에서 tracing, metrics, auth routing, request log에 사용할 수 있습니다.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  hooks: {
+    beforeRequest: [(_request, options) => {
+      options.context.openapi?.pathTemplate;
+      options.context.openapi?.method;
+    }],
+  },
+});
+```
+
+## Default는 throw, safe는 resolve
+
+기본 surface는 `ky` `ResponsePromise`를 반환하고 HTTP failure에서 throw합니다. `safe` surface는 같은 request를 수행하지만 `{ ok: true, data, response }` 또는 `{ ok: false, error, response }`로 resolve합니다.

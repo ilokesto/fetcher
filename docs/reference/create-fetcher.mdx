@@ -1,0 +1,49 @@
+---
+title: "createFetcher"
+description: "Create a fetcher from ky options or decorate an existing KyInstance."
+---
+
+# createFetcher
+
+`createFetcher` returns a typed client that behaves like a decorated `KyInstance`.
+
+```ts
+createFetcher<Paths>()
+createFetcher<Paths>(defaultOptions)
+createFetcher<Paths>(kyInstance)
+```
+
+## From options
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  prefixUrl: '/api',
+  timeout: 10_000,
+  retry: { limit: 1 },
+});
+```
+
+This creates a new `ky` instance internally with `ky.create(defaultOptions)`.
+
+## From an existing KyInstance
+
+```ts lineNumbers
+import ky from 'ky';
+
+const kyInstance = ky.create({ prefixUrl: '/api' });
+const api = createFetcher<paths>(kyInstance);
+```
+
+Use this when the application already owns a configured `ky` instance.
+
+## Returned client
+
+The returned client includes:
+
+- callable ky-style usage: `api(url, options)`
+- typed shortcut methods: `get`, `post`, `put`, `patch`, `delete`
+- plain ky `head`
+- non-throwing `safe`
+- ky composition: `create`, `extend`, `retry`, `stop`
+
+`create` and `extend` return another typed fetcher with the same `Paths` type.

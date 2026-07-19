@@ -1,0 +1,34 @@
+---
+title: "Troubleshooting"
+description: "Common fetcher mistakes and how to fix them."
+---
+
+# Troubleshooting
+
+## `prefixUrl` rejects a leading slash
+
+Use string OpenAPI paths with the fetcher client, not the raw ky instance. Fetcher retries known ky leading-slash prefixUrl errors by stripping the slash.
+
+If you removed `prefixUrl` with `extend({ prefixUrl: undefined })`, use absolute URLs or paths accepted by ky.
+
+## Path parameter is missing
+
+A template such as `/users/{id}` requires `params.path.id` on shortcut calls or `path.id` on callable calls.
+
+```ts
+api.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+## Cookie parameters do not appear on the network
+
+`params.cookie` is currently type-only at runtime. If you need a cookie header, set it explicitly through `headers` or rely on browser credential behavior.
+
+## My form upload has the wrong content type
+
+Do not manually set `Content-Type` for `multipart/form-data` unless you are also controlling the boundary. Let the platform generate it from the `FormData` body.
+
+## I expected safe to return raw text
+
+`safe` reads JSON and returns parsed `data` on success. For text, blob, stream, or custom body handling, use the default ky-style surface and read the response manually.

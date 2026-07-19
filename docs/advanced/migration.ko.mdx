@@ -1,0 +1,46 @@
+---
+title: "마이그레이션"
+description: "기본 ky 사용 방식이나 예전 요청 형태에서 현재 규칙으로 옮깁니다."
+---
+
+# Migration
+
+Fetcher v1은 ky를 대체하지 않고 감싸는 래퍼입니다. 마이그레이션은 먼저 ky 기본값을 보존하고, 필요한 곳에 OpenAPI 타입 안전성을 추가하는 방식이 좋습니다.
+
+## Plain ky에서 이동하기
+
+```ts
+const api = ky.create({ prefixUrl: '/api' });
+```
+
+위 코드는 다음처럼 바뀝니다.
+
+```ts
+const api = createFetcher<paths>({ prefixUrl: '/api' });
+```
+
+기존 ky options, hooks, retry configuration, custom fetch, `extend` composition은 보통 그대로 옮길 수 있습니다.
+
+## Flat shortcut alias에서 이동하기
+
+그룹 요청 형태를 우선 사용하세요.
+
+```ts
+api.get('/users/{id}', {
+  params: {
+    path: { id: '42' },
+    query: { include: 'profile' },
+  },
+});
+```
+
+Unknown/untyped call을 위한 flat runtime compatibility가 일부 남아 있지만, 공식 문서와 type contract는 grouped shape를 기준으로 합니다.
+
+## Eager JSON client에서 이동하기
+
+예전 helper가 parsed JSON을 바로 반환했다면 boundary별로 선택하세요.
+
+- ky-style lazy parsing이 필요하면 `await api.get(...).json()`을 유지합니다.
+- Parsed `data`와 non-throwing result가 필요하면 `await api.safe.get(...)`을 사용합니다.
+
+이렇게 하면 ky ergonomics를 유지하면서 필요한 곳에서는 result-object style을 사용할 수 있습니다.

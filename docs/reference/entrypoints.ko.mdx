@@ -1,0 +1,40 @@
+---
+title: "엔트리포인트"
+description: "Public import path와 각 path가 노출하는 surface입니다."
+---
+
+# Entrypoints
+
+`@ilokesto/fetcher`는 의도적으로 작은 entrypoint surface만 노출합니다. 작성하는 코드에 맞는 가장 좁은 import를 사용하세요.
+
+## `@ilokesto/fetcher`
+
+Root entrypoint입니다. Core ky-facing surface와 OpenAPI surface를 모두 re-export합니다.
+
+```ts
+import { createFetcher, HTTPError, type Fetcher, type MergePaths } from '@ilokesto/fetcher';
+```
+
+Application code에서 하나의 import path로 모든 것을 가져오고 싶을 때 사용합니다.
+
+## `@ilokesto/fetcher/core`
+
+핵심 ky 래퍼입니다. `createFetcher`, ky 요청/응답 타입, ky 오류를 내보냅니다.
+
+```ts
+import { createFetcher, HTTPError, type Options, type ResponsePromise } from '@ilokesto/fetcher/core';
+```
+
+현재 module에서 OpenAPI helper type이 필요 없을 때 사용하세요.
+
+## `@ilokesto/fetcher/openapi`
+
+OpenAPI 타입을 이해하는 API입니다. `createFetcher`와 경로/요청/응답 헬퍼 타입을 함께 내보냅니다.
+
+```ts
+import { createFetcher, type Fetcher, type InferJson, type OpenApiRequest } from '@ilokesto/fetcher/openapi';
+```
+
+## Runtime identity
+
+빌드된 모든 entrypoint는 같은 런타임 `createFetcher` 구현을 공유합니다. Root, core, openapi 어디에서 import해도 다른 wrapper behavior가 생기지 않습니다.

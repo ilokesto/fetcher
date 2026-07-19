@@ -1,0 +1,57 @@
+---
+title: "React"
+description: "Use fetcher from React components, actions, and hooks."
+---
+
+# React
+
+Fetcher is not a React state library. Treat it as an API client and decide at the component boundary whether you want exceptions or `safe` results.
+
+## Client module
+
+```ts title="api.ts"
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from './__generated__/openapi';
+
+export const api = createFetcher<paths>({
+  prefixUrl: '/api',
+});
+```
+
+## Component with safe branch
+
+```tsx lineNumbers
+import { useEffect, useState } from 'react';
+import { api } from './api';
+
+export function UserPanel({ id }: { id: string }) {
+  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    let alive = true;
+
+    api.safe.get('/users/{id}', {
+      params: { path: { id } },
+    }).then((result) => {
+      if (!alive) return;
+      if (result.ok) {
+        setName(result.data.name);
+        setState('ready');
+      } else {
+        setState('error');
+      }
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  if (state === 'loading') return <p>Loading...</p>;
+  if (state === 'error') return <p>Failed to load user.</p>;
+  return <p>{name}</p>;
+}
+```
+
+For larger apps, compose fetcher with your data framework of choice and keep `api` as the low-level typed HTTP boundary.

@@ -1,0 +1,57 @@
+---
+title: "React"
+description: "React component, action, hook에서 fetcher를 사용합니다."
+---
+
+# React
+
+Fetcher는 React state library가 아닙니다. API client로 다루고, component boundary에서 exception을 쓸지 `safe` result를 쓸지 선택하세요.
+
+## Client module
+
+```ts title="api.ts"
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from './__generated__/openapi';
+
+export const api = createFetcher<paths>({
+  prefixUrl: '/api',
+});
+```
+
+## Safe branch를 쓰는 component
+
+```tsx lineNumbers
+import { useEffect, useState } from 'react';
+import { api } from './api';
+
+export function UserPanel({ id }: { id: string }) {
+  const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [name, setName] = useState('');
+
+  useEffect(() => {
+    let alive = true;
+
+    api.safe.get('/users/{id}', {
+      params: { path: { id } },
+    }).then((result) => {
+      if (!alive) return;
+      if (result.ok) {
+        setName(result.data.name);
+        setState('ready');
+      } else {
+        setState('error');
+      }
+    });
+
+    return () => {
+      alive = false;
+    };
+  }, [id]);
+
+  if (state === 'loading') return <p>Loading...</p>;
+  if (state === 'error') return <p>Failed to load user.</p>;
+  return <p>{name}</p>;
+}
+```
+
+더 큰 app에서는 원하는 data framework와 fetcher를 조합하고, `api`는 low-level typed HTTP boundary로 유지하세요.

@@ -1,0 +1,80 @@
+---
+title: "Fetcher"
+description: "A thin, OpenAPI-aware facade over ky that keeps ky runtime ergonomics."
+---
+
+# Fetcher
+
+`@ilokesto/fetcher` is a small OpenAPI-aware wrapper around the real `ky` runtime. It keeps `ky.create`, `extend`, hooks, `prefixUrl`, custom `fetch`, lazy `ResponsePromise` parsing, and `ky` errors, then adds typed route templates, grouped shortcut requests, inferred `.json()` results, and a non-throwing `safe` surface.
+
+## Installation
+
+Install `fetcher` together with its peer dependency `ky`.
+
+```package-install
+@ilokesto/fetcher ky
+```
+
+The package is published as a dist-based ESM package and currently targets Node.js 22 or newer for package tooling. Runtime behavior is delegated to `ky`, so browser, server, and test usage follow the same constraints as your chosen `ky` environment.
+
+## Quick example
+
+```ts lineNumbers
+import { createFetcher, type MergePaths } from '@ilokesto/fetcher/openapi';
+import type { paths as GeneratedPaths } from './__generated__/openapi';
+
+type ExtraPaths = {
+  '/bff/checkout/quote': {
+    post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            cartId: string;
+            couponCode?: string;
+          };
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              total: number;
+              currency: 'KRW' | 'USD';
+              discountApplied: boolean;
+            };
+          };
+        };
+      };
+    };
+  };
+};
+
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+
+const api = createFetcher<ApiPaths>({
+  prefixUrl: '/api',
+});
+
+const user = await api
+  .get('/users/{id}', {
+    params: {
+      path: { id: '42' },
+      query: { include: 'profile' },
+    },
+  })
+  .json();
+
+const quote = await api
+  .post('/bff/checkout/quote', {
+    json: { cartId: 'cart_123', couponCode: 'WELCOME10' },
+  })
+  .json();
+```
+
+## What to read next
+
+- [Quick start](/en/fetcher/quick-start) builds a typed client from zero.
+- [Core concepts](/en/fetcher/core-concepts) explains the ky-first model.
+- [Entrypoints](/en/fetcher/reference/entrypoints) documents the public import surface.
+- [Grouped request](/en/fetcher/reference/request-grouped-request) documents shortcut request shape.
+- [Safe](/en/fetcher/reference/safe) documents non-throwing requests.

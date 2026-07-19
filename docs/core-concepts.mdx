@@ -1,0 +1,73 @@
+---
+title: "Core concepts"
+description: "The mental model behind the ky-first OpenAPI facade."
+---
+
+# Core concepts
+
+Fetcher has one guiding rule: runtime behavior belongs to `ky`; OpenAPI awareness belongs to the wrapper and TypeScript types.
+
+## A real KyInstance remains underneath
+
+`createFetcher()` creates or decorates a `KyInstance`. The returned client is callable, has shortcut methods, exposes `create` and `extend`, and preserves `retry` and `stop` from `ky`.
+
+```ts lineNumbers
+import ky from 'ky';
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+
+const instance = ky.create({ prefixUrl: '/api' });
+const api = createFetcher<paths>(instance);
+const adminApi = api.extend({ headers: { 'x-admin': '1' } });
+```
+
+## Shortcut methods are typed request builders
+
+`api.get`, `api.post`, `api.put`, `api.patch`, and `api.delete` accept OpenAPI paths and grouped request objects. The wrapper normalizes those objects into plain `ky` options.
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'upload-1' },
+    query: { overwrite: true },
+  },
+  headers: {
+    'x-upload-token': token,
+  },
+  formData: {
+    file,
+  },
+});
+```
+
+## The callable form stays close to ky
+
+The client itself can be called like `ky`. For typed OpenAPI calls, put the method in the options object and use direct options such as `path`, `searchParams`, and `json`.
+
+```ts lineNumbers
+api('/users/{id}', {
+  method: 'GET',
+  path: { id: '42' },
+  searchParams: { include: 'profile' },
+});
+```
+
+This split is intentional: shortcuts use a grouped contract; callable usage remains close to plain `ky`.
+
+## Context is injected for hooks
+
+Every string URL request receives `options.context.openapi` with `pathTemplate` and `method`. You can use that in hooks for tracing, metrics, auth routing, or request logs.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  hooks: {
+    beforeRequest: [(_request, options) => {
+      options.context.openapi?.pathTemplate;
+      options.context.openapi?.method;
+    }],
+  },
+});
+```
+
+## Default throws, safe resolves
+
+The default surface returns `ky` `ResponsePromise` objects and throws on HTTP failures. The `safe` surface performs the same request but resolves to `{ ok: true, data, response }` or `{ ok: false, error, response }`.

@@ -1,0 +1,46 @@
+---
+title: "Migration"
+description: "Move from plain ky or old prototype request shapes to the current contract."
+---
+
+# Migration
+
+Fetcher v1 is a ky wrapper, not a ky replacement. Migration should preserve ky defaults first, then add OpenAPI typing where it pays off.
+
+## From plain ky
+
+```ts
+const api = ky.create({ prefixUrl: '/api' });
+```
+
+becomes:
+
+```ts
+const api = createFetcher<paths>({ prefixUrl: '/api' });
+```
+
+Existing ky options, hooks, retry configuration, custom fetch, and `extend` composition can usually move over unchanged.
+
+## From flat shortcut aliases
+
+Prefer the grouped request shape.
+
+```ts
+api.get('/users/{id}', {
+  params: {
+    path: { id: '42' },
+    query: { include: 'profile' },
+  },
+});
+```
+
+Some flat runtime compatibility remains for unknown or untyped calls, but official docs and type contracts use the grouped shape.
+
+## From eager JSON clients
+
+If an older helper returned parsed JSON directly, decide per boundary:
+
+- keep `await api.get(...).json()` when you want ky-style lazy parsing
+- use `await api.safe.get(...)` when you want parsed `data` and a non-throwing result
+
+This preserves ky ergonomics while still offering a result-object style where it helps.

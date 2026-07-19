@@ -1,0 +1,46 @@
+---
+title: "Next.js"
+description: "Server code, route handler, client component에서 fetcher를 사용합니다."
+---
+
+# Next.js
+
+Fetcher는 server module, route handler, server action, client component에서 사용할 수 있습니다. Request가 어디에서 실행되는지에 따라 `prefixUrl`을 선택하세요.
+
+## Server-side API client
+
+```ts title="lib/api.server.ts"
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from '@/generated/openapi';
+
+export const api = createFetcher<paths>({
+  prefixUrl: process.env.API_ORIGIN,
+  headers: {
+    'x-runtime': 'next-server',
+  },
+});
+```
+
+Backend가 Next.js app 밖에 있다면 server-side call에는 absolute origin을 사용하세요.
+
+## Route handler proxy
+
+```ts title="app/api/users/[id]/route.ts"
+import { api } from '@/lib/api.server';
+
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const response = await api.get('/users/{id}', {
+    params: { path: { id } },
+  });
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: response.headers,
+  });
+}
+```
+
+## Client-side calls
+
+Browser component에서는 `/api` 같은 relative `prefixUrl`을 사용해서 request가 Next.js route를 거치도록 하는 편이 좋습니다.

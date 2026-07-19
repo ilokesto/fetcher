@@ -1,0 +1,55 @@
+---
+title: "safe"
+description: "Request failure에서 throw하지 않는 같은 client surface입니다."
+---
+
+# safe
+
+기본 fetcher surface는 `ky`처럼 동작합니다. HTTP failure는 `HTTPError`로 reject되고, timeout은 `TimeoutError`로 reject되며, parsing failure는 body를 읽을 때 reject됩니다.
+
+`safe`는 같은 call을 resolved discriminated result로 변환합니다.
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+  result.response;
+} else {
+  result.error;
+  result.response;
+}
+```
+
+## Result shape
+
+```ts
+type SafeResult<Data, Error = unknown> =
+  | {
+      ok: true;
+      data: Data;
+      error: null;
+      response: Response;
+    }
+  | {
+      ok: false;
+      data: null;
+      error: Error;
+      response: Response | null;
+    };
+```
+
+## Methods
+
+`safe`는 callable surface와 typed shortcut method를 비춥니다.
+
+- `api.safe(url, options)`
+- `api.safe.get(path, request, options)`
+- `api.safe.post(path, request, options)`
+- `api.safe.put(path, request, options)`
+- `api.safe.patch(path, request, options)`
+- `api.safe.delete(path, request, options)`
+
+`head`는 의도적으로 mirror하지 않습니다. 추론할 JSON body가 없고 plain ky `head` method가 더 명확한 경우가 많습니다.

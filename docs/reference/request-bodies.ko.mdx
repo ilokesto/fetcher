@@ -1,0 +1,59 @@
+---
+title: "요청 본문"
+description: "JSON, multipart, URL-encoded, explicit body override behavior입니다."
+---
+
+# Bodies
+
+Shortcut request는 세 가지 OpenAPI body shortcut인 `json`, `formData`, `formUrlEncoded`를 지원합니다.
+
+## JSON
+
+```ts lineNumbers
+api.post('/posts', {
+  json: {
+    title: 'Typed facade',
+  },
+});
+```
+
+Grouped `json`은 ky `json` option으로 매핑됩니다. 세 번째 인자에도 `json`이 있고 두 값이 모두 strict plain object이면 explicit ky value가 우선하도록 shallow merge됩니다.
+
+## Multipart form data
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: { path: { uploadId: 'upload-1' } },
+  formData: {
+    file,
+    visibility: 'private',
+    tags: ['a', 'b'],
+  },
+});
+```
+
+Object는 `FormData`로 변환됩니다. Array는 같은 key를 반복 append합니다. `Blob` value는 blob으로 append됩니다. `undefined` value는 건너뜁니다. 이미 `FormData` instance라면 그대로 전달됩니다.
+
+## URL encoded
+
+```ts lineNumbers
+api.post('/sessions', {
+  formUrlEncoded: {
+    username: 'demo',
+    password: 'secret',
+    scope: ['read', 'write'],
+  },
+});
+```
+
+Object는 `URLSearchParams`로 변환됩니다. Array는 같은 key를 반복 append하고 값은 string으로 변환됩니다.
+
+## Explicit override
+
+세 번째 인자는 grouped body normalization을 override할 수 있습니다.
+
+- explicit `body`는 모든 grouped body보다 우선합니다.
+- explicit `json`은 grouped form body를 대체할 수 있습니다.
+- grouped `json`과 explicit `json`은 둘 다 strict plain object일 때만 merge됩니다.
+
+특정 endpoint에서 정확한 ky behavior가 필요할 때 이 escape hatch를 사용하세요.

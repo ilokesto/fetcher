@@ -1,0 +1,55 @@
+---
+title: "Shortcut methods"
+description: "Typed get, post, put, patch, delete, and the ky-style head method."
+---
+
+# Shortcut methods
+
+Fetcher decorates the common shortcut methods with OpenAPI typing.
+
+```ts
+api.get(path, request, options)
+api.post(path, request, options)
+api.put(path, request, options)
+api.patch(path, request, options)
+api.delete(path, request, options)
+```
+
+## Typed route calls
+
+When the path exists in your `Paths` type for the method, the request object is inferred from that operation.
+
+```ts lineNumbers
+api.post('/widgets/{widgetId}', {
+  params: {
+    path: { widgetId: 'widget-1' },
+    query: { draft: true },
+  },
+  headers: {
+    'x-trace': 'trace-1',
+  },
+  json: {
+    title: 'Draft',
+  },
+});
+```
+
+## Untyped fallback
+
+For string paths that are not known to the `Paths` type, shortcuts still accept a wide grouped request. The response JSON type defaults to `unknown` unless you provide a generic.
+
+```ts
+const response = api.get<{ ok: true }>('/internal/health', {});
+```
+
+## Non-string inputs
+
+`URL` and `Request` inputs remain plain ky-style inputs.
+
+```ts
+api.get(new URL('https://example.com/report'));
+```
+
+## `head`
+
+`head` intentionally stays on the plain ky surface. It forwards normal ky options and does not get typed grouped shortcut behavior.

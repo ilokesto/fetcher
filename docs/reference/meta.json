@@ -1,0 +1,14 @@
+{
+  "title": "Reference",
+  "pages": [
+    "entrypoints",
+    "create-fetcher",
+    "shortcut-methods",
+    "safe",
+    "request-grouped-request",
+    "request-path-and-query",
+    "request-bodies",
+    "request-runtime-context",
+    "types"
+  ]
+}

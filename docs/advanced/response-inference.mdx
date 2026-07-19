@@ -1,0 +1,47 @@
+---
+title: "Response inference"
+description: "How .json() result types are selected from OpenAPI responses."
+---
+
+# Response inference
+
+For typed OpenAPI calls, `ResponsePromise` carries an inferred JSON type.
+
+```ts lineNumbers
+const user = await api
+  .get('/users/{id}', {
+    params: { path: { id: '42' } },
+  })
+  .json();
+```
+
+`user` is inferred from the operation response content.
+
+## Preferred response order
+
+`InferJson` chooses JSON response content in this order:
+
+1. 200
+2. 201
+3. 204
+4. default
+
+If no JSON response content is found, the inferred type falls back to `unknown`.
+
+## Media types
+
+JSON content includes `application/json` and JSON-like suffixes such as custom `+json` media types.
+
+## Safe results
+
+`safe` uses the same inference for `data` in the success branch.
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+}
+```

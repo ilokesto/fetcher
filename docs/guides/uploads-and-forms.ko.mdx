@@ -1,0 +1,56 @@
+---
+title: "업로드와 폼"
+description: "Multipart upload과 URL-encoded form submission을 보냅니다."
+---
+
+# Uploads and forms
+
+OpenAPI 요청 본문은 JSON만 설명하지 않습니다. Fetcher는 단축 요청에서도 이런 본문 형식을 명시적으로 유지합니다.
+
+## Multipart upload
+
+```ts lineNumbers
+await api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'avatar' },
+  },
+  headers: {
+    'x-upload-token': uploadToken,
+  },
+  formData: {
+    file,
+    visibility: 'private',
+  },
+});
+```
+
+정확한 이유가 없다면 multipart `Content-Type` header를 직접 설정하지 마세요. Boundary는 platform이 추가해야 합니다.
+
+## URL-encoded form
+
+```ts lineNumbers
+await api.post('/sessions', {
+  formUrlEncoded: {
+    username,
+    password,
+    scope: ['read', 'write'],
+  },
+});
+```
+
+Array는 repeated key가 됩니다. Boolean과 number는 string으로 변환됩니다. `undefined` entry는 건너뜁니다.
+
+## Prebuilt bodies
+
+완전한 제어가 필요하면 `FormData`, `URLSearchParams`, explicit `body`를 ky options로 넘기세요.
+
+```ts lineNumbers
+const body = new FormData();
+body.append('file', file);
+
+await api.post('/uploads/{uploadId}', {
+  params: { path: { uploadId: 'manual' } },
+}, {
+  body,
+});
+```

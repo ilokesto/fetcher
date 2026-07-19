@@ -1,0 +1,40 @@
+---
+title: "Entrypoints"
+description: "Public import paths and what each one exposes."
+---
+
+# Entrypoints
+
+`@ilokesto/fetcher` intentionally exposes a small entrypoint surface. Use the narrowest import that matches the code you are writing.
+
+## `@ilokesto/fetcher`
+
+Root entrypoint. It re-exports the core ky-facing surface and the OpenAPI surface.
+
+```ts
+import { createFetcher, HTTPError, type Fetcher, type MergePaths } from '@ilokesto/fetcher';
+```
+
+Use this when application code wants one import path for everything.
+
+## `@ilokesto/fetcher/core`
+
+Core ky wrapper. It exports `createFetcher`, ky request/response types, and ky errors.
+
+```ts
+import { createFetcher, HTTPError, type Options, type ResponsePromise } from '@ilokesto/fetcher/core';
+```
+
+Use this when you do not need OpenAPI helper types in the current module.
+
+## `@ilokesto/fetcher/openapi`
+
+OpenAPI-aware surface. It exports `createFetcher` plus route/request/response helper types.
+
+```ts
+import { createFetcher, type Fetcher, type InferJson, type OpenApiRequest } from '@ilokesto/fetcher/openapi';
+```
+
+## Runtime identity
+
+All built entrypoints share the same runtime `createFetcher` implementation. Importing from root, core, or openapi does not create different wrapper behavior.

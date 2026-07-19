@@ -1,0 +1,55 @@
+---
+title: "safe"
+description: "Use the same client without throwing on request failures."
+---
+
+# safe
+
+The default fetcher surface behaves like `ky`: HTTP failures reject with `HTTPError`, timeout failures reject with `TimeoutError`, and parsing failures reject when you read the body.
+
+`safe` converts the same calls into a resolved discriminated result.
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+  result.response;
+} else {
+  result.error;
+  result.response;
+}
+```
+
+## Result shape
+
+```ts
+type SafeResult<Data, Error = unknown> =
+  | {
+      ok: true;
+      data: Data;
+      error: null;
+      response: Response;
+    }
+  | {
+      ok: false;
+      data: null;
+      error: Error;
+      response: Response | null;
+    };
+```
+
+## Methods
+
+`safe` mirrors the callable surface and the typed shortcut methods:
+
+- `api.safe(url, options)`
+- `api.safe.get(path, request, options)`
+- `api.safe.post(path, request, options)`
+- `api.safe.put(path, request, options)`
+- `api.safe.patch(path, request, options)`
+- `api.safe.delete(path, request, options)`
+
+`head` is intentionally not mirrored because there is no JSON body to infer and the plain ky `head` method is usually clearer.

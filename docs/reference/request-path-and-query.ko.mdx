@@ -1,0 +1,48 @@
+---
+title: "경로와 쿼리"
+description: "Route template과 query parameter가 normalize되는 방식입니다."
+---
+
+# Path and query
+
+Fetcher는 `/users/{id}` 같은 OpenAPI-style path template을 이해합니다.
+
+## Path interpolation
+
+```ts lineNumbers
+api.get('/users/{id}', {
+  params: {
+    path: { id: '42' },
+  },
+});
+```
+
+Request가 `ky`에 도달하기 전에 `{id}`는 `encodeURIComponent(String(value))`로 치환됩니다. Path value가 빠지면 unresolved template으로 accidental request를 보내지 않도록 synchronous하게 throw합니다.
+
+Runtime value로 허용되는 값은 string, number, boolean입니다.
+
+## Query parameters
+
+```ts lineNumbers
+api.get('/search', {
+  params: {
+    query: {
+      term: 'widget',
+      page: 2,
+    },
+  },
+});
+```
+
+Shortcut query parameter는 ky `searchParams`가 됩니다. Callable usage에서는 `searchParams`를 직접 사용합니다.
+
+```ts lineNumbers
+api('/search', {
+  method: 'GET',
+  searchParams: { term: 'widget' },
+});
+```
+
+## Template fallback
+
+Operation이 explicit `parameters.path`를 정의하지 않아도 type layer는 route string의 `{param}` 이름에서 path parameter를 추론할 수 있습니다.

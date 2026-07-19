@@ -1,0 +1,35 @@
+---
+title: "prefixUrl"
+description: "How fetcher preserves ky prefixUrl behavior for OpenAPI paths."
+---
+
+# prefixUrl
+
+OpenAPI paths usually start with `/`, while raw `ky` rejects leading slash input when `prefixUrl` is set. Fetcher handles this mismatch for string URL calls.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  prefixUrl: 'https://example.com/api',
+});
+
+await api.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+The request is ultimately sent to `https://example.com/api/users/42`.
+
+## What is retried
+
+If ky throws the known prefixUrl leading-slash error and the original input is a string that starts with `/`, fetcher retries the same call after stripping the leading slash.
+
+It does not retry:
+
+- absolute URL strings
+- `URL` objects
+- `Request` objects
+- unrelated synchronous errors from a custom runner
+
+## Clearing prefixUrl
+
+If you call `extend({ prefixUrl: undefined })`, the derived client no longer has a prefix URL. Leading slash string inputs then follow ky behavior and can throw invalid URL errors.

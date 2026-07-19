@@ -1,0 +1,51 @@
+---
+title: "그룹 요청"
+description: "타입 안전한 단축 메서드가 사용하는 요청 형태입니다."
+---
+
+# Grouped request
+
+Typed shortcut method는 grouped request object를 사용합니다. 이 grouping은 OpenAPI 개념을 반영하지만, 별도 runtime client model을 만들지는 않습니다.
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'upload-1' },
+    query: { draft: true },
+    cookie: { session: 'type-only' },
+  },
+  headers: {
+    'x-upload-token': token,
+  },
+  formData: {
+    file,
+    tags: ['a', 'b'],
+  },
+}, {
+  timeout: 15_000,
+});
+```
+
+## Shape
+
+- `params.path`: route template placeholder 값입니다.
+- `params.query`: ky `searchParams`로 전달되는 query parameter입니다.
+- `params.cookie`: typed cookie parameter이며 현재 runtime에서는 type-only입니다.
+- `headers`: typed header parameter이며 세 번째 인자의 ky headers와 merge됩니다.
+- `json`: JSON request body입니다.
+- `formData`: multipart request body입니다.
+- `formUrlEncoded`: URL-encoded request body입니다.
+- 세 번째 인자: 일반 ky options입니다.
+
+## Runtime normalization
+
+Wrapper는 dispatch 전에 grouped object를 ky options로 바꿉니다.
+
+1. `params.path`로 route template을 interpolation합니다.
+2. `params.query`를 `searchParams`로 옮깁니다.
+3. grouped `headers`와 explicit ky headers를 merge합니다.
+4. body source 하나를 선택합니다.
+5. `context.openapi`를 주입합니다.
+6. `ky`에 위임합니다.
+
+Cookie parameter는 OpenAPI type parity를 위해 존재하지만 `Cookie` header로 자동 serialize되지는 않습니다.
