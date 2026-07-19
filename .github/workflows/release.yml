@@ -1,5 +1,11 @@
 name: Release
 
+# PR-first release flow:
+# 1. Contributors open PRs with changesets.
+# 2. On merge to main, if pending changesets exist, a "ci: release" PR is opened.
+# 3. When that release PR is merged, packages are published to npm.
+# Enable branch protection on main to require PR reviews before merge.
+
 on:
   push:
     branches:
