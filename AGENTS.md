@@ -1,6 +1,6 @@
 # @ilokesto/fetcher
 
-This repository contains the `@ilokesto/fetcher` package. It is an independent repository within the ilokesto ecosystem.
+This directory contains the `@ilokesto/fetcher` package in the ilokesto pnpm monorepo.
 
 ## What this package is
 
@@ -8,7 +8,7 @@ A type-safe HTTP client facade with OpenAPI awareness, built on top of `ky`.
 
 ## When modifying this package
 
-1. Read the ilokesto handbook at `https://github.com/ilokesto/metarepo` (`AGENTS.md`, `PACKAGES.md`, `ARCHITECTURE.md`).
+1. Read the root `AGENTS.md`, `PACKAGES.md`, and `ARCHITECTURE.md`.
 2. Load the `ilokesto-fetcher` skill from `.opencode/skills/ilokesto-fetcher/SKILL.md`.
 3. Preserve `ky`'s runtime ergonomics while adding TypeScript/OpenAPI conveniences.
 4. Run `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:dist` before committing.
@@ -16,8 +16,8 @@ A type-safe HTTP client facade with OpenAPI awareness, built on top of `ky`.
 
 ## Release flow
 
-1. Open a PR with a changeset.
-2. After merge to `main`, the `release.yml` workflow opens a `ci: release` PR.
+1. Open a PR with a root changeset.
+2. After merge to `main`, the root `release.yml` workflow opens a `ci: release` PR.
 3. Merge the release PR to publish to npm.
 
 ## Must not do
