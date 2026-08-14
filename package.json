@@ -37,10 +37,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilokesto/fetcher.git"
+    "url": "git+https://github.com/ilokesto/metarepo.git",
+    "directory": "packages/fetcher"
   },
   "homepage": "https://github.com/ilokesto/fetcher",
-  "packageManager": "pnpm@10.17.1",
   "engines": {
     "node": ">=22"
   },
@@ -48,10 +48,7 @@
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "test:dist": "node ./scripts/verify-dist.mjs",
-    "changeset": "changeset",
-    "version": "changeset version",
-    "release": "changeset publish"
+    "test:dist": "node ./scripts/verify-dist.mjs"
   },
   "peerDependencies": {
     "ky": "^1.14.0"
@@ -61,7 +58,6 @@
     "ky": "^1.14.0",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.18",
-    "@changesets/cli": "^2.28.0"
+    "vitest": "^4.0.18"
   }
 }
