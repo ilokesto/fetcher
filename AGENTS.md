@@ -17,7 +17,7 @@ A type-safe HTTP client facade with OpenAPI awareness, built on top of `ky`.
 ## Release flow
 
 1. Open a PR with a root changeset.
-2. After merge to `main`, the root `release.yml` workflow opens a `ci: release` PR.
+2. After CI passes on `main`, the root workflow's release job opens a `ci: release` PR and publishes this package with the `beta` dist-tag.
 3. Merge the release PR to publish to npm.
 
 ## Must not do
