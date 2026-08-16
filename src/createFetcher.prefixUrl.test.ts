@@ -157,7 +157,7 @@ describe('createFetcher prefixUrl behavior', () => {
   it('does not retry no-prefix invalid URL behavior', () => {
     const api = createFetcher<ApiPaths>();
 
-    expect(() => api('/posts')).toThrow(/Invalid URL|Failed to parse URL/);
+    expect(() => api('/unknown')).toThrow(/Invalid URL|Failed to parse URL/);
   });
 
   it('does not retry non-string URL or Request inputs with prefixUrl', async () => {
@@ -208,8 +208,8 @@ describe('createFetcher prefixUrl behavior', () => {
     }) as unknown as KyInstance;
     const api = createFetcher<ApiPaths>(throwingInstance);
 
-    expect(() => api('/posts')).toThrow(thrownError);
-    expect(seenInputs).toEqual(['/posts']);
+    expect(() => api('/unknown')).toThrow(thrownError);
+    expect(seenInputs).toEqual(['/unknown']);
   });
 
   it('does not retry absolute URL strings or rewrite normalized relative inputs', async () => {
