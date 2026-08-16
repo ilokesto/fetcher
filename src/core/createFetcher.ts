@@ -9,8 +9,8 @@ import {
 } from '../internal/runtime';
 import type { PathsLike, SafeResult, Fetcher } from '../openapi/types';
 
-type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
-type SafeShortcutMethod = Exclude<ShortcutMethod, 'head'>;
+type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
+type SafeShortcutMethod = ShortcutMethod;
 type SafeResponse<Json = unknown> = Awaited<ResponsePromise<Json>>;
 
 const executeKyCall = <Result>(
@@ -175,20 +175,11 @@ const prepareShortcutRequest = ({
   });
 };
 
-const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): Fetcher<PathsLike>[ShortcutMethod] => {
+const bindShortcutMethod = <Paths extends PathsLike, Method extends ShortcutMethod>(
+  instance: KyInstance,
+  method: Method,
+): Fetcher<Paths>[Method] => {
   return ((input: Input, request?: unknown, options?: Options) => {
-    if (method === 'head') {
-      const preparedRequest = prepareKyRequest({
-        input,
-        method: 'head',
-        options: request as Options | undefined,
-      });
-
-      return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
-        instance.head(nextInput, nextOptions),
-      );
-    }
-
     const preparedRequest = prepareShortcutRequest({
       input,
       method,
@@ -199,7 +190,25 @@ const bindShortcutMethod = (instance: KyInstance, method: ShortcutMethod): Fetch
     return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
       instance[method](nextInput, nextOptions),
     );
-  }) as Fetcher<PathsLike>[ShortcutMethod];
+  }) as Fetcher<Paths>[Method];
+};
+
+const bindHeadMethod = <Paths extends PathsLike>(instance: KyInstance): Fetcher<Paths>['head'] => {
+  return ((input: Input, request?: unknown, options?: Options) => {
+    const usesGroupedRequest = isObjectRecord(request) && ('params' in request || options !== undefined);
+    const runtimeOptions = usesGroupedRequest
+      ? normalizeGroupedRequestOptions({ request: toGroupedRequest(request), options })
+      : (request as Options | undefined);
+    const preparedRequest = prepareKyRequest({
+      input,
+      method: 'head',
+      options: runtimeOptions,
+    });
+
+    return executeKyCall(preparedRequest.input, preparedRequest.options, (nextInput, nextOptions) =>
+      instance.head(nextInput, nextOptions),
+    );
+  }) as Fetcher<Paths>['head'];
 };
 
 const bindSafeShortcutMethod = <Paths extends PathsLike, Method extends SafeShortcutMethod>(
@@ -255,12 +264,12 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetc
   fetcher.safe.patch = bindSafeShortcutMethod<Paths, 'patch'>(instance, 'patch');
   fetcher.safe.delete = bindSafeShortcutMethod<Paths, 'delete'>(instance, 'delete');
 
-  fetcher.get = bindShortcutMethod(instance, 'get') as Fetcher<Paths>['get'];
-  fetcher.post = bindShortcutMethod(instance, 'post') as Fetcher<Paths>['post'];
-  fetcher.put = bindShortcutMethod(instance, 'put') as Fetcher<Paths>['put'];
-  fetcher.patch = bindShortcutMethod(instance, 'patch') as Fetcher<Paths>['patch'];
-  fetcher.delete = bindShortcutMethod(instance, 'delete') as Fetcher<Paths>['delete'];
-  fetcher.head = bindShortcutMethod(instance, 'head') as Fetcher<Paths>['head'];
+  fetcher.get = bindShortcutMethod<Paths, 'get'>(instance, 'get');
+  fetcher.post = bindShortcutMethod<Paths, 'post'>(instance, 'post');
+  fetcher.put = bindShortcutMethod<Paths, 'put'>(instance, 'put');
+  fetcher.patch = bindShortcutMethod<Paths, 'patch'>(instance, 'patch');
+  fetcher.delete = bindShortcutMethod<Paths, 'delete'>(instance, 'delete');
+  fetcher.head = bindHeadMethod<Paths>(instance);
   Object.defineProperty(fetcher, 'stop', {
     value: instance.stop,
     enumerable: true,
