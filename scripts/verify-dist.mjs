@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { verifyPackedDist } from './verify-packed-dist.mjs';
 
 const root = await import('../dist/index.js');
 const core = await import('../dist/core.js');
@@ -16,7 +17,6 @@ assert.equal(
 );
 
 const seenRequests = [];
-
 const api = root.createFetcher({
   prefixUrl: 'https://example.com/api',
   fetch: async (input) => {
@@ -47,3 +47,5 @@ const payload = await api
 assert.deepEqual(payload, { id: '42', role: 'member' });
 assert.equal(seenRequests[0]?.url, 'https://example.com/api/users/42');
 assert.equal(seenRequests[0]?.method, 'GET');
+
+verifyPackedDist();
