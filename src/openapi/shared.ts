@@ -9,8 +9,8 @@ export type OpenApiHttpMethod =
 
 export type PathsLike = Record<string, Partial<Record<OpenApiHttpMethod, unknown>>>;
 
-export type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
-export type CallableMethod = ShortcutMethod | 'head';
+export type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
+export type CallableMethod = ShortcutMethod | 'options';
 export type PathKey<Paths extends PathsLike> = Extract<keyof Paths, string>;
 export type Simplify<T> = { [K in keyof T]: T[K] } & {};
 export type DistributiveSimplify<T> = T extends unknown ? Simplify<T> : never;

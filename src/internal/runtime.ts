@@ -13,6 +13,7 @@ type RuntimeContext = Record<string, unknown> & {
 
 type RuntimeOptions = Options & {
   path?: Record<string, PathParameterValue>;
+  cookie?: Record<string, unknown>;
   context?: RuntimeContext;
 };
 
@@ -350,6 +351,7 @@ export const prepareKyRequest = ({
   }
 
   delete runtimeOptions.path;
+  delete runtimeOptions.cookie;
 
   runtimeOptions.context = {
     ...runtimeOptions.context,

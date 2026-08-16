@@ -643,7 +643,7 @@ export const assertNoTypedOptionsShortcut = (api: Fetcher<ApiPaths>) => {
   );
 };
 
-export const assertHeadStaysOnPlainKyTyping = (api: Fetcher<ApiPaths>) => {
+export const assertUntypedHeadKeepsKyTyping = (api: Fetcher<ApiPaths>) => {
   api.head('/health', {
     headers: {
       authorization: 'Bearer token',

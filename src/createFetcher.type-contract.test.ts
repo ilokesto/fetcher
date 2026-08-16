@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
 import type { Fetcher } from './openapi';
+import { assertTypedHeadAndCallableOptions, type HeadPaths } from './test-fixtures/head';
 import {
   assertBarrelImportContinuity,
-  assertHeadStaysOnPlainKyTyping,
+  assertUntypedHeadKeepsKyTyping,
   assertMergePathsTyping,
   assertNoTypedOptionsShortcut,
   assertReadmeQuickStartSnippet,
@@ -21,10 +22,13 @@ describe('createFetcher type contracts', () => {
       assertTypedShortcutUrlOptionFoundations(api);
       assertUnknownShortcutUrlOptionFallback(api);
       assertNoTypedOptionsShortcut(api);
-      assertHeadStaysOnPlainKyTyping(api);
+      assertUntypedHeadKeepsKyTyping(api);
       assertBarrelImportContinuity();
       assertReadmeQuickStartSnippet();
       assertSafeSurfaceTyping(api);
+
+      const headApi = undefined as unknown as Fetcher<HeadPaths>;
+      assertTypedHeadAndCallableOptions(headApi);
     }
   });
 });
