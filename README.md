@@ -185,9 +185,14 @@ await api('/users/{id}', {
   path: { id: '42' },
   searchParams: { include: 'profile' },
 }).json();
+
+await api('/users/{id}', {
+  method: 'OPTIONS',
+  path: { id: '42' },
+}).json();
 ```
 
-That split is intentional in v1. Shortcut methods use the grouped OSS request contract. The callable surface stays close to plain `ky`.
+That split is intentional in v1. Shortcut methods use the grouped OSS request contract. The callable surface stays close to plain `ky`. OpenAPI `OPTIONS` operations are typed through this callable form; there is intentionally no `api.options()` shortcut.
 
 ## `safe` surface
 
@@ -246,6 +251,8 @@ The runtime stays intentionally small: it prepares OpenAPI-shaped requests and t
 - `create()`, `extend()`, hooks, `prefixUrl`, custom `fetch`, `HTTPError`, timeout behavior, and lazy body parsing keep following ky semantics.
 - Public entrypoint paths stay `@ilokesto/fetcher`, `@ilokesto/fetcher/core`, and `@ilokesto/fetcher/openapi`.
 - Typed shortcut methods use the grouped request contract documented here.
+- `head` adds OpenAPI-aware path, parameter, metadata, and declared response inference while delegating to `ky.head`.
+- `OPTIONS` remains available only through `api(path, { method: 'OPTIONS' })`; `api.options` is not added.
 - Legacy flat shortcut aliases remain runtime-only compatibility for unknown or untyped calls.
 
 ### Path interpolation
@@ -322,6 +329,8 @@ options.context.openapi = {
 };
 ```
 
+Typed `head` requests emit `method: 'head'`. The shortcut returns the normal lazy ky `ResponsePromise`; fetcher does not parse or otherwise assume a HEAD response body.
+
 ## Response inference
 
 `.json()` inference is deterministic.
@@ -355,11 +364,11 @@ createFetcher<Paths>(instance: KyInstance)
 The typed client keeps `ky` behavior while adding:
 
 - typed callable requests
-- typed shortcut methods for `get`, `post`, `put`, `patch`, and `delete`
-- `safe` mirrors for the callable and those shortcut methods
+- typed shortcut methods for `get`, `post`, `put`, `patch`, `delete`, and `head`
+- `safe` mirrors for the callable and body-bearing shortcut methods, excluding `head`
 - typed `create()` and `extend()` return values
 
-`head` intentionally remains on the plain `ky` surface in v1. It is available at runtime, but it does not get the OpenAPI shortcut typing that the other methods have.
+`head` keeps ky-compatible two-argument options for untyped URLs while adding grouped OpenAPI typing for declared HEAD routes. It is intentionally absent from `safe`, because `safe` parses JSON and HEAD does not imply a response body. `OPTIONS` remains typed on the callable surface and does not add an `api.options()` shortcut.
 
 ### Public OpenAPI types
 
@@ -474,11 +483,12 @@ pnpm build
 pnpm test:dist
 ```
 
-`pnpm test:dist` must run after `pnpm build`. It verifies the built package surface, including strict `createFetcher` identity across the root, core, and OpenAPI entrypoints. CI runs these checks on Node 22, which matches the package engine requirement.
+`pnpm test:dist` must run after `pnpm build`. It verifies the built package surface, including strict `createFetcher` identity across the root, core, and OpenAPI entrypoints, then packs a tarball and checks typed HEAD/callable OPTIONS contracts plus HEAD runtime behavior from a temporary consumer. CI runs these checks on Node 22, which matches the package engine requirement.
 
 ## Current limitations
 
-- `head` remains plain `ky` typing in v1
+- `OPTIONS` is callable-only and has no `api.options()` shortcut
+- `safe.head` is intentionally unavailable because HEAD does not imply a response body
 - `params.cookie` is type-only and intentionally not serialized
 - response inference only considers `200`, `201`, `204`, and `default`
 - this package does not claim automatic auth or cookie management

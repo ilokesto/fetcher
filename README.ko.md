@@ -185,9 +185,14 @@ await api('/users/{id}', {
   path: { id: '42' },
   searchParams: { include: 'profile' },
 }).json();
+
+await api('/users/{id}', {
+  method: 'OPTIONS',
+  path: { id: '42' },
+}).json();
 ```
 
-이 분리는 v1에서 의도된 설계입니다. shortcut method는 grouped OSS request contract를 따르고, callable surface는 plain `ky`에 더 가깝게 남겨둡니다.
+이 분리는 v1에서 의도된 설계입니다. shortcut method는 grouped OSS request contract를 따르고, callable surface는 plain `ky`에 더 가깝게 남겨둡니다. OpenAPI `OPTIONS` operation은 이 callable 형태로 타입을 지원하며, `api.options()` shortcut은 의도적으로 제공하지 않습니다.
 
 ## `safe` surface
 
@@ -246,6 +251,8 @@ type SafeResult<Data, Error = unknown> =
 - `create()`, `extend()`, hooks, `prefixUrl`, custom `fetch`, `HTTPError`, timeout 동작, lazy body parsing은 계속 ky semantics를 따릅니다.
 - 공개 엔트리포인트 경로는 `@ilokesto/fetcher`, `@ilokesto/fetcher/core`, `@ilokesto/fetcher/openapi`로 유지됩니다.
 - typed shortcut method는 이 문서의 grouped request contract를 사용합니다.
+- `head`는 OpenAPI-aware path, parameter, metadata, 선언된 response inference를 추가하면서 실제 실행은 `ky.head`에 위임합니다.
+- `OPTIONS`는 `api(path, { method: 'OPTIONS' })` callable 형태로만 제공하며 `api.options`를 추가하지 않습니다.
 - 예전 flat shortcut alias는 unknown 또는 untyped call을 위한 runtime-only compatibility로만 남습니다.
 
 ### Path interpolation
@@ -322,6 +329,8 @@ options.context.openapi = {
 };
 ```
 
+typed `head` request는 `method: 'head'`를 기록합니다. shortcut은 일반 ky lazy `ResponsePromise`를 반환하며, fetcher는 HEAD response body를 파싱하거나 존재한다고 가정하지 않습니다.
+
 ## 응답 추론
 
 `.json()` 추론은 결정적입니다.
@@ -355,11 +364,11 @@ createFetcher<Paths>(instance: KyInstance)
 typed client는 `ky` 동작을 유지하면서 다음을 추가합니다.
 
 - typed callable request
-- `get`, `post`, `put`, `patch`, `delete`용 typed shortcut method
-- callable과 위 shortcut method를 비추는 `safe`
+- `get`, `post`, `put`, `patch`, `delete`, `head`용 typed shortcut method
+- callable과 body를 다루는 shortcut method를 비추되 `head`는 제외하는 `safe`
 - 타입을 유지하는 `create()`와 `extend()` 반환값
 
-`head`는 v1에서 의도적으로 plain `ky` surface에 남아 있습니다. 런타임에서는 사용 가능하지만, 다른 method처럼 OpenAPI shortcut typing은 붙지 않습니다.
+`head`는 선언된 HEAD route에 grouped OpenAPI typing을 추가하면서, untyped URL에서는 ky 호환 two-argument options를 유지합니다. `safe`는 JSON을 파싱하지만 HEAD는 response body를 전제하지 않으므로 `safe.head`는 의도적으로 제공하지 않습니다. `OPTIONS`는 callable surface에서만 타입을 지원하며 `api.options()` shortcut은 추가하지 않습니다.
 
 ### 공개 OpenAPI 타입
 
@@ -474,11 +483,12 @@ pnpm build
 pnpm test:dist
 ```
 
-`pnpm test:dist`는 `pnpm build` 이후에 실행해야 합니다. 이 명령은 root, core, OpenAPI 엔트리포인트 사이의 strict `createFetcher` identity를 포함해 빌드된 패키지 surface를 검증합니다. CI는 패키지 engine 요구사항과 맞는 Node 22에서 이 검증을 실행합니다.
+`pnpm test:dist`는 `pnpm build` 이후에 실행해야 합니다. 이 명령은 root, core, OpenAPI 엔트리포인트 사이의 strict `createFetcher` identity를 포함해 빌드된 패키지 surface를 검증한 뒤 tarball을 pack하고, 임시 consumer에서 typed HEAD/callable OPTIONS 계약과 HEAD 런타임 동작을 확인합니다. CI는 패키지 engine 요구사항과 맞는 Node 22에서 이 검증을 실행합니다.
 
 ## 현재 한계
 
-- `head`는 v1에서 plain `ky` typing에 남아 있습니다
+- `OPTIONS`는 callable-only이며 `api.options()` shortcut이 없습니다
+- HEAD는 response body를 전제하지 않으므로 `safe.head`를 의도적으로 제공하지 않습니다
 - `params.cookie`는 type-only이며 의도적으로 직렬화되지 않습니다
 - 응답 추론은 `200`, `201`, `204`, `default`만 고려합니다
 - 이 패키지는 자동 auth 또는 cookie 관리를 약속하지 않습니다
