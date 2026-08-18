@@ -3,6 +3,7 @@ import type { Fetcher } from './openapi';
 import { assertTypedHeadAndCallableOptions, type HeadPaths } from './test-fixtures/head';
 import {
   assertBarrelImportContinuity,
+  assertInterfacePathsSatisfyPathsLike,
   assertUntypedHeadKeepsKyTyping,
   assertMergePathsTyping,
   assertNoTypedOptionsShortcut,
@@ -26,6 +27,7 @@ describe('createFetcher type contracts', () => {
       assertBarrelImportContinuity();
       assertReadmeQuickStartSnippet();
       assertSafeSurfaceTyping(api);
+      assertInterfacePathsSatisfyPathsLike();
 
       const headApi = undefined as unknown as Fetcher<HeadPaths>;
       assertTypedHeadAndCallableOptions(headApi);

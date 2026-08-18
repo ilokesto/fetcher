@@ -7,7 +7,7 @@ export type OpenApiHttpMethod =
   | 'head'
   | 'options';
 
-export type PathsLike = Record<string, Partial<Record<OpenApiHttpMethod, unknown>>>;
+export type PathsLike = object;
 
 export type ShortcutMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'head';
 export type CallableMethod = ShortcutMethod | 'options';

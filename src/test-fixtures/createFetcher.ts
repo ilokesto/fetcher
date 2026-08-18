@@ -811,3 +811,48 @@ export const expectHttpError = (error: unknown): HTTPError => {
 
   return error;
 };
+
+interface CanonicalInterfacePaths {
+  '/users/{id}': {
+    get: {
+      parameters: {
+        path: {
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            'application/json': {
+              id: string;
+              role: 'admin' | 'member';
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+export const assertInterfacePathsSatisfyPathsLike = () => {
+  const api = createFetcher<CanonicalInterfacePaths>({
+    prefixUrl: '/api',
+  });
+
+  expectTypeOf(api).toEqualTypeOf<Fetcher<CanonicalInterfacePaths>>();
+
+  const user = api
+    .get('/users/{id}', {
+      params: {
+        path: { id: '42' },
+      },
+    })
+    .json();
+
+  expectTypeOf(user).toEqualTypeOf<
+    Promise<{
+      id: string;
+      role: 'admin' | 'member';
+    }>
+  >();
+};
