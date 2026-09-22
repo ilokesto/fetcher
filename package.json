@@ -37,10 +37,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilokesto/metarepo.git",
+    "url": "git+https://github.com/ilokesto/ilokesto.git",
     "directory": "packages/fetcher"
   },
-  "homepage": "https://github.com/ilokesto/fetcher",
+  "homepage": "https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher",
   "engines": {
     "node": ">=22"
   },
