@@ -1,15 +1,16 @@
 # @ilokesto/fetcher
 
-<p align="center">
-  <a href="./README.md"><kbd>English</kbd></a>
-  <a href="./README.ko.md"><kbd>한국어</kbd></a>
-</p>
+**English** | [한국어](./README.ko.md)
 
 `@ilokesto/fetcher` is a thin, OpenAPI-aware wrapper around the real [`ky`](https://github.com/sindresorhus/ky) runtime.
 
 It keeps the parts people already like about `ky`, such as `create()`, `extend()`, hooks, `prefixUrl`, custom `fetch`, and lazy `ResponsePromise` parsing, while adding OpenAPI-driven typing for route templates, grouped shortcut requests, and inferred `.json()` results.
 
-This README is the canonical documentation for the package. Until a separate docs site exists, treat the English and Korean README pair as the official reference for installation, public entrypoints, request contracts, runtime behavior, migration notes, and development verification.
+## Documentation
+
+- Full docs: [English](https://ilokesto.ayden94.com/en/fetcher) · [한국어](https://ilokesto.ayden94.com/ko/fetcher)
+- Source: [packages/fetcher](https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher)
+- npm: [@ilokesto/fetcher](https://www.npmjs.com/package/@ilokesto/fetcher)
 
 ## Status
 
@@ -20,9 +21,7 @@ This README is the canonical documentation for the package. Until a separate doc
 - Built entrypoints share one runtime `createFetcher` implementation identity
 - Runtime stance in v1: wrapper over `ky`, not a `ky` fork
 
-This package now ships as a normal dist-based library, not as a source-export-only prototype.
-
-## Documentation map
+## In this README
 
 - [Installation](#installation) and [public entrypoints](#public-entrypoints)
 - [Quick start](#quick-start)

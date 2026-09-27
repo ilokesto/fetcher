@@ -1,15 +1,16 @@
 # @ilokesto/fetcher
 
-<p align="center">
-  <a href="./README.md"><kbd>English</kbd></a>
-  <a href="./README.ko.md"><kbd>한국어</kbd></a>
-</p>
+[English](./README.md) | **한국어**
 
 `@ilokesto/fetcher`는 실제 [`ky`](https://github.com/sindresorhus/ky) 런타임 위에 얇게 얹힌 OpenAPI-aware wrapper입니다.
 
 이 패키지는 `create()`, `extend()`, hooks, `prefixUrl`, custom `fetch`, lazy `ResponsePromise` parsing처럼 사람들이 이미 좋아하는 `ky`의 사용감을 유지하면서, route template, grouped shortcut request, `.json()` 결과 추론에 OpenAPI 기반 타입을 더합니다.
 
-이 README는 패키지의 기준 문서입니다. 별도 문서 사이트가 생기기 전까지 영어/한국어 README 쌍을 설치, 공개 엔트리포인트, 요청 계약, 런타임 동작, 마이그레이션, 개발 검증에 대한 공식 레퍼런스로 봅니다.
+## 문서
+
+- 전체 문서: [English](https://ilokesto.ayden94.com/en/fetcher) · [한국어](https://ilokesto.ayden94.com/ko/fetcher)
+- 소스: [packages/fetcher](https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher)
+- npm: [@ilokesto/fetcher](https://www.npmjs.com/package/@ilokesto/fetcher)
 
 ## 상태
 
@@ -20,9 +21,7 @@
 - 빌드된 엔트리포인트들은 하나의 런타임 `createFetcher` 구현 identity를 공유합니다
 - v1 런타임 방향: `ky` fork가 아니라 `ky` wrapper
 
-이 패키지는 이제 source-export-only 프로토타입이 아니라, 일반적인 dist 기반 라이브러리로 배포되는 형태를 기준으로 문서화됩니다.
-
-## 문서 지도
+## 이 README 안에서
 
 - [설치](#설치)와 [공개 엔트리포인트](#공개-엔트리포인트)
 - [빠른 시작](#빠른-시작)
