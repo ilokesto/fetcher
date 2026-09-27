@@ -3,7 +3,7 @@ title: "그룹 요청"
 description: "타입 안전한 단축 메서드가 사용하는 요청 형태입니다."
 ---
 
-# Grouped request
+# 그룹 요청
 
 Typed shortcut method는 grouped request object를 사용합니다. 이 grouping은 OpenAPI 개념을 반영하지만, 별도 runtime client model을 만들지는 않습니다.
 
@@ -26,7 +26,7 @@ api.post('/uploads/{uploadId}', {
 });
 ```
 
-## Shape
+## 구조
 
 - `params.path`: route template placeholder 값입니다.
 - `params.query`: ky `searchParams`로 전달되는 query parameter입니다.
@@ -37,7 +37,7 @@ api.post('/uploads/{uploadId}', {
 - `formUrlEncoded`: URL-encoded request body입니다.
 - 세 번째 인자: 일반 ky options입니다.
 
-## Runtime normalization
+## 런타임 정규화
 
 Wrapper는 dispatch 전에 grouped object를 ky options로 바꿉니다.
 

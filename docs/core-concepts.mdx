@@ -71,3 +71,9 @@ const api = createFetcher<paths>({
 ## Default throws, safe resolves
 
 The default surface returns `ky` `ResponsePromise` objects and throws on HTTP failures. The `safe` surface performs the same request but resolves to `{ ok: true, data, response }` or `{ ok: false, error, response }`.
+
+## Next steps
+
+- Read [Grouped request](/en/fetcher/reference/request-grouped-request) for shortcut normalization rules.
+- Read [Error handling](/en/fetcher/guides/error-handling) to choose between exceptions and `safe` results.
+- Read [ky hooks](/en/fetcher/guides/ky-hooks) to use the injected OpenAPI context.

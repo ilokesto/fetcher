@@ -3,7 +3,7 @@ title: "런타임 컨텍스트"
 description: "ky hook context에 주입되는 OpenAPI metadata입니다."
 ---
 
-# Runtime context
+# 런타임 컨텍스트
 
 Fetcher는 string URL request에 OpenAPI metadata를 ky context로 주입합니다.
 
@@ -18,7 +18,7 @@ const api = createFetcher<paths>({
 });
 ```
 
-## Shape
+## 구조
 
 ```ts
 type OpenApiContext<Path extends string, Method extends string> = {
@@ -31,7 +31,7 @@ type OpenApiContext<Path extends string, Method extends string> = {
 
 `pathTemplate`은 interpolated URL이 아니라 client에 넘긴 original template입니다. `method`는 runtime에서 lowercase로 normalize됩니다.
 
-## Existing context 보존
+## 기존 컨텍스트 보존
 
 직접 ky `context`를 넘기면 fetcher는 전체 object를 대체하지 않고 `openapi`를 merge합니다.
 

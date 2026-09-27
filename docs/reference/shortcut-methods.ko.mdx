@@ -3,7 +3,7 @@ title: "단축 메서드"
 description: "Typed get, post, put, patch, delete와 ky-style head method입니다."
 ---
 
-# Shortcut methods
+# 단축 메서드
 
 Fetcher는 자주 쓰는 shortcut method에 OpenAPI typing을 더합니다.
 
@@ -34,7 +34,7 @@ api.post('/widgets/{widgetId}', {
 });
 ```
 
-## Untyped fallback
+## 타입이 없는 대체 호출
 
 `Paths` type에 없는 string path는 wide grouped request를 받습니다. Generic을 직접 주지 않으면 response JSON type은 `unknown`입니다.
 
@@ -42,7 +42,7 @@ api.post('/widgets/{widgetId}', {
 const response = api.get<{ ok: true }>('/internal/health', {});
 ```
 
-## Non-string input
+## 문자열이 아닌 입력
 
 `URL`과 `Request` input은 plain ky-style input으로 남습니다.
 

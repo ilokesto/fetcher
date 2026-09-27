@@ -3,7 +3,7 @@ title: "요청 본문"
 description: "JSON, multipart, URL-encoded, explicit body override behavior입니다."
 ---
 
-# Bodies
+# 요청 본문
 
 Shortcut request는 세 가지 OpenAPI body shortcut인 `json`, `formData`, `formUrlEncoded`를 지원합니다.
 
@@ -19,7 +19,7 @@ api.post('/posts', {
 
 Grouped `json`은 ky `json` option으로 매핑됩니다. 세 번째 인자에도 `json`이 있고 두 값이 모두 strict plain object이면 explicit ky value가 우선하도록 shallow merge됩니다.
 
-## Multipart form data
+## 멀티파트 폼 데이터
 
 ```ts lineNumbers
 api.post('/uploads/{uploadId}', {
@@ -34,7 +34,7 @@ api.post('/uploads/{uploadId}', {
 
 Object는 `FormData`로 변환됩니다. Array는 같은 key를 반복 append합니다. `Blob` value는 blob으로 append됩니다. `undefined` value는 건너뜁니다. 이미 `FormData` instance라면 그대로 전달됩니다.
 
-## URL encoded
+## URL 인코딩
 
 ```ts lineNumbers
 api.post('/sessions', {
@@ -48,7 +48,7 @@ api.post('/sessions', {
 
 Object는 `URLSearchParams`로 변환됩니다. Array는 같은 key를 반복 append하고 값은 string으로 변환됩니다.
 
-## Explicit override
+## 명시적 덮어쓰기
 
 세 번째 인자는 grouped body normalization을 override할 수 있습니다.
 

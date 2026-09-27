@@ -3,7 +3,7 @@ title: "ky 훅"
 description: "OpenAPI context와 함께 ky hook을 auth, logging, metrics에 사용합니다."
 ---
 
-# ky hooks
+# ky 훅
 
 Fetcher는 `ky`에 위임하므로 hook 기반 패턴이 그대로 유지됩니다. 추가로 제공되는 `context.openapi` metadata는 route-level instrumentation을 쉽게 만듭니다.
 
@@ -32,7 +32,7 @@ const api = createFetcher<paths>({
 });
 ```
 
-## Auth clients
+## 인증 클라이언트
 
 Base client를 한 번 만들고 authenticated branch에는 `extend`를 사용하세요.
 

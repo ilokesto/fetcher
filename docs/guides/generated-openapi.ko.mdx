@@ -3,7 +3,7 @@ title: "생성된 OpenAPI 타입"
 description: "Generated paths를 사용하고 application-only endpoint를 확장합니다."
 ---
 
-# Generated OpenAPI types
+# 생성된 OpenAPI 타입
 
 Fetcher는 generated `paths` type과 함께 쓰도록 설계되었지만 특정 generator를 요구하지 않습니다. 필요한 것은 OpenAPI paths처럼 생긴 path map뿐입니다.
 
@@ -38,7 +38,7 @@ type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
 const api = createFetcher<ApiPaths>({ prefixUrl: '/api' });
 ```
 
-## Extra path를 추가할 때
+## 추가 경로를 정의할 때
 
 Upstream OpenAPI file 밖에 의도적으로 존재하는 endpoint에는 `MergePaths`를 사용하세요.
 
