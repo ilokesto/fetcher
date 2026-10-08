@@ -91,43 +91,30 @@ const readCompatibilityParams = (value: Record<string, unknown>): GroupedRequest
   return Object.keys(params).length > 0 ? params : undefined;
 };
 
-const toCompatibilityGroupedRequest = (value: Record<string, unknown>): GroupedRequest => {
-  const groupedRequest: GroupedRequest = {};
-  const params = readCompatibilityParams(value);
-
-  if (params) {
-    groupedRequest.params = params;
-  }
-
-  if ('header' in value) {
-    groupedRequest.headers = value.header as GroupedRequest['headers'];
-  }
-
-  return groupedRequest;
-};
-
 const toGroupedRequest = (value: unknown): GroupedRequest | undefined => {
   if (!isObjectRecord(value)) {
     return undefined;
   }
 
-  const compatibilityRequest = toCompatibilityGroupedRequest(value);
+  const compatibilityParams = readCompatibilityParams(value);
+  const compatibilityHeaders =
+    'header' in value ? (value.header as GroupedRequest['headers']) : undefined;
   const groupedRequest: GroupedRequest = {};
   let hasGroupedRequest = false;
 
   if ('params' in value) {
     groupedRequest.params = value.params as GroupedRequest['params'];
     hasGroupedRequest = true;
-  } else if (compatibilityRequest.params) {
-    groupedRequest.params = compatibilityRequest.params;
+  } else if (compatibilityParams) {
+    groupedRequest.params = compatibilityParams;
     hasGroupedRequest = true;
   }
 
   if ('headers' in value) {
     groupedRequest.headers = value.headers as GroupedRequest['headers'];
     hasGroupedRequest = true;
-  } else if (compatibilityRequest.headers) {
-    groupedRequest.headers = compatibilityRequest.headers;
+  } else if (compatibilityHeaders) {
+    groupedRequest.headers = compatibilityHeaders;
     hasGroupedRequest = true;
   }
 

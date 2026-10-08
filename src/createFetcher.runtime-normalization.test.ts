@@ -299,6 +299,30 @@ describe('createFetcher runtime normalization', () => {
     expect(seenRequests[2]?.body).toEqual({ title: 'mixed precedence' });
   });
 
+  it('keeps explicit undefined canonical fields from falling back to legacy aliases', async () => {
+    const seenRequests: Request[] = [];
+    const api = createFetcher<ApiPaths>({
+      prefixUrl: 'https://example.com/api',
+      fetch: async (input) => {
+        seenRequests.push(input instanceof Request ? input : new Request(input));
+        return Response.json({ ok: true });
+      },
+    });
+    const request = {
+      params: undefined,
+      headers: undefined,
+      query: { legacy: 'ignored' },
+      header: { 'x-legacy': 'ignored' },
+      json: {},
+    };
+
+    await api.post('/unknown', request).json();
+
+    expect(seenRequests).toHaveLength(1);
+    expect(seenRequests[0]?.url).toBe('https://example.com/api/unknown');
+    expect(seenRequests[0]?.headers.get('x-legacy')).toBeNull();
+  });
+
   it('replaces grouped json with explicit ky json when either side is non-plain', async () => {
     const seenBodies: string[] = [];
 
