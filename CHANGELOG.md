@@ -1,5 +1,11 @@
 # @ilokesto/fetcher
 
+## 1.0.1
+
+### Patch Changes
+
+- b4d905e: Remove an intermediate compatibility request conversion while preserving canonical field precedence and legacy aliases.
+
 ## 1.0.0
 
 ### Minor Changes
