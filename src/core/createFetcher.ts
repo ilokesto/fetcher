@@ -219,30 +219,29 @@ const bindSafeShortcutMethod = <Paths extends PathsLike, Method extends SafeShor
 };
 
 const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetcher<Paths> => {
-  const fetcher = ((input: Input, options?: Options) => {
+  let defaultOptions: Options = {};
+  // The extend callback is ky's public access to defaults, including wrapped instances.
+  instance.extend((defaults) => {
+    defaultOptions = defaults;
+    return {};
+  });
+
+  const call = (input: Input, options?: Options) => {
+    const method = options && Object.hasOwn(options, 'method') ? options.method : defaultOptions.method;
     const request = prepareKyRequest({
       input,
-      method: toOpenApiMethod(options?.method),
+      method: toOpenApiMethod(method ?? (input instanceof Request ? input.method : undefined)),
       options,
     });
 
     return executeKyCall(request.input, request.options, (nextInput, nextOptions) =>
       instance(nextInput, nextOptions),
     );
-  }) as Fetcher<Paths>;
+  };
+  const fetcher = call as Fetcher<Paths>;
 
-  fetcher.safe = (async (input: Input, options?: Options) => {
-    return resolveSafeResult(() => {
-      const request = prepareKyRequest({
-        input,
-        method: toOpenApiMethod(options?.method),
-        options,
-      });
-
-      return executeKyCall(request.input, request.options, (nextInput, nextOptions) =>
-        instance(nextInput, nextOptions),
-      );
-    });
+  fetcher.safe = ((input: Input, options?: Options) => {
+    return resolveSafeResult(() => call(input, options));
   }) as Fetcher<Paths>['safe'];
 
   fetcher.safe.get = bindSafeShortcutMethod<Paths, 'get'>(instance, 'get');

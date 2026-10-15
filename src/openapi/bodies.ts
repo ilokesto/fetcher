@@ -44,8 +44,8 @@ export type FormUrlEncodedRequestBody<Operation> = FormUrlEncodedContent<
   ContentFor<RequestBodyFor<Operation>>
 >;
 
-export type RequestBodyRequired<Operation> = RequestBodyFor<Operation> extends {
-  content: infer _Content;
+export type RequestBodyRequired<Operation> = Operation extends {
+  requestBody: { content: infer _Content };
 }
   ? true
   : false;

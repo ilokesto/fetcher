@@ -61,18 +61,15 @@ const applyHeaders = (headers: Headers, source?: RuntimeHeaders): void => {
 
   if (Array.isArray(source)) {
     source.forEach(([key, value]) => {
-      if (value !== undefined) {
-        headers.set(key, value);
-      }
+      headers.set(key, String(value));
     });
 
     return;
   }
 
   Object.entries(source).forEach(([key, value]) => {
-    if (value !== undefined) {
-      headers.set(key, value);
-    }
+    // ky interprets "undefined" in Headers as a deletion, including inherited defaults.
+    headers.set(key, String(value));
   });
 };
 
@@ -323,32 +320,14 @@ export const prepareKyRequest = ({
   method: string;
   options?: Options;
 }): { input: Input; options: Options | undefined } => {
-  const runtimeOptions = options ? ({ ...options } as RuntimeOptions) : undefined;
-  const path = runtimeOptions?.path;
+  const runtimeOptions: RuntimeOptions = options ? { ...options } : {};
+  const path = runtimeOptions.path;
 
   if (path && typeof input !== 'string') {
     throw new Error('The OpenAPI path option can only be used with string URL templates.');
   }
 
   const interpolatedInput = typeof input === 'string' ? interpolatePathTemplate(input, path) : input;
-
-  if (!runtimeOptions) {
-    if (typeof input !== 'string') {
-      return { input: interpolatedInput, options: undefined };
-    }
-
-    return {
-      input: interpolatedInput,
-      options: {
-        context: {
-          openapi: {
-            method,
-            pathTemplate: input,
-          },
-        },
-      },
-    };
-  }
 
   delete runtimeOptions.path;
   delete runtimeOptions.cookie;
