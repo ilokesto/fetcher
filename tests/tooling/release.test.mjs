@@ -168,6 +168,9 @@ test('CI dispatch: main, PR, moving head, and foreign repository -> exact gate s
   }
   assert.equal(workflow.jobs.verify.name, 'verify');
   assert.equal(workflow.jobs.quality.steps[1].with['fetch-depth'], 0);
+  const changesets = workflow.jobs.quality.steps.find(step => step.run === 'pnpm changeset:status --since=origin/main');
+  assert.ok(changesets);
+  assert.equal(changesets.if, "github.event_name == 'pull_request' && github.head_ref != 'changeset-release/main'");
 });
 
 test('publisher bootstrap: workflow and executable policy -> no publish path reachable', async () => {

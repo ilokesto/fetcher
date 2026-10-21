@@ -1,4 +1,5 @@
 packages:
+  - .
   - website
   - docs-publication/runtime
 
