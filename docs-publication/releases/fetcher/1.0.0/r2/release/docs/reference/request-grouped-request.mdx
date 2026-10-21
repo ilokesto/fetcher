@@ -1,0 +1,51 @@
+---
+title: "Grouped request"
+description: "The request shape used by typed shortcut methods."
+---
+
+# Grouped request
+
+Typed shortcut methods use a grouped request object. The grouping mirrors OpenAPI concepts while avoiding a custom runtime client model.
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: {
+    path: { uploadId: 'upload-1' },
+    query: { draft: true },
+    cookie: { session: 'type-only' },
+  },
+  headers: {
+    'x-upload-token': token,
+  },
+  formData: {
+    file,
+    tags: ['a', 'b'],
+  },
+}, {
+  timeout: 15_000,
+});
+```
+
+## Shape
+
+- `params.path`: values for route template placeholders.
+- `params.query`: query parameters sent as ky `searchParams`.
+- `params.cookie`: typed cookie parameters, currently type-only at runtime.
+- `headers`: typed header parameters, merged with third-argument ky headers.
+- `json`: JSON request body.
+- `formData`: multipart request body.
+- `formUrlEncoded`: URL-encoded request body.
+- third argument: normal ky options.
+
+## Runtime normalization
+
+The wrapper turns the grouped object into ky options before dispatch:
+
+1. interpolate route templates from `params.path`
+2. move `params.query` to `searchParams`
+3. merge grouped `headers` with explicit ky headers
+4. choose one body source
+5. inject `context.openapi`
+6. delegate to `ky`
+
+Cookie parameters are present for type parity with OpenAPI, but they are not automatically serialized into a `Cookie` header.

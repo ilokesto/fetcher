@@ -1,0 +1,113 @@
+---
+title: "빠른 시작"
+description: "타입 안전한 fetcher를 만들고 OpenAPI 경로를 호출하면서 ky 옵션을 유지합니다."
+---
+
+# 빠른 시작
+
+이 안내에서는 직접 작성한 작은 OpenAPI 호환 타입으로 실제 요청을 보냅니다. 애플리케이션에서는 보통 이 타입을 `openapi-typescript` 같은 도구가 생성한 `paths` 타입으로 바꿉니다.
+
+## 1. 설치
+
+Fetcher는 현재 `beta` 배포 태그로 게시됩니다. 이 프리릴리스와 피어 의존성인 `ky`를 함께 설치하세요.
+
+```package-install
+@ilokesto/fetcher@beta ky
+```
+
+`quick-start.ts`를 만드세요.
+
+```ts lineNumbers
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+
+type ApiPaths = {
+  '/users/{id}': {
+    get: {
+      parameters: { path: { id: string } };
+      responses: {
+        200: { content: { 'application/json': { id: number; name: string } } };
+      };
+    };
+  };
+  '/posts': {
+    post: {
+      requestBody: {
+        required: true;
+        content: { 'application/json': { title: string } };
+      };
+      responses: {
+        201: { content: { 'application/json': { id: number; title: string } } };
+      };
+    };
+  };
+};
+
+const api = createFetcher<ApiPaths>({
+  prefixUrl: 'https://jsonplaceholder.typicode.com',
+});
+
+const user = await api
+  .get('/users/{id}', {
+    params: { path: { id: '1' } },
+  })
+  .json();
+
+console.log(user.name);
+```
+
+TypeScript 실행기로 실행하세요(예: `npx tsx quick-start.ts`). `Leanne Graham`이 출력됩니다. 경로 템플릿은 `ky`에 도달하기 전에 실제 값으로 채워지고, `user`는 JSON 응답에서 `{ id: number; name: string }`으로 추론됩니다.
+
+아래 예시는 위에서 만든 `api` 클라이언트를 확장하는 코드 조각입니다. 생성된 `paths` 타입도 자체 엔드포인트에 같은 계약을 제공합니다.
+
+## 타입 안전한 본문 보내기
+
+```ts lineNumbers
+const post = await api
+  .post('/posts', {
+    json: {
+      title: 'Typed facade',
+    },
+  })
+  .json();
+```
+
+`json`, `formData`, `formUrlEncoded`는 서로 동시에 쓸 수 없는 단축 본문 형태입니다. 세 번째 인자는 `timeout`, `signal`, `hooks`, `context`, 명시적인 본문 덮어쓰기 같은 일반 `ky` 옵션에 사용하세요.
+
+## ky 조합 방식 유지하기
+
+```ts lineNumbers
+const authed = api.extend({
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+});
+
+await authed.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+`create`, `extend`, 훅, 재시도, timeout, 커스텀 `fetch`, `HTTPError` 동작은 `ky`와 호환되게 유지됩니다. `fetcher`는 OpenAPI 형태의 입력을 준비한 뒤 내부 `KyInstance`에 요청을 위임합니다.
+
+## 예외를 원하지 않으면 safe 사용하기
+
+```ts lineNumbers
+const result = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+
+if (result.ok) {
+  result.data;
+} else {
+  result.error;
+  result.response;
+}
+```
+
+기본 API는 여전히 `ky`처럼 예외를 던집니다. `safe`는 같은 요청을 판별 가능한 결과로 변환합니다.
+
+## 다음 단계
+
+- [핵심 개념](/ko/fetcher/core-concepts)에서 ky 중심의 동작 모델을 이해하세요.
+- [생성된 OpenAPI 타입](/ko/fetcher/guides/generated-openapi)에서 직접 작성한 타입을 교체하는 방법을 확인하세요.
+- [그룹 요청](/ko/fetcher/reference/request-grouped-request)에서 단축 메서드 입력 규칙을 정확히 확인하세요.

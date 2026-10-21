@@ -1,0 +1,44 @@
+---
+title: "Error handling"
+description: "Choose ky exceptions or safe results per boundary."
+---
+
+# Error handling
+
+Fetcher gives you two styles. Use the default surface when exceptions are the right control flow, and use `safe` when a component, action, or loader should branch on a result object.
+
+## Default ky behavior
+
+```ts lineNumbers
+import { HTTPError } from '@ilokesto/fetcher/core';
+
+try {
+  const user = await api.get('/users/{id}', {
+    params: { path: { id: '42' } },
+  }).json();
+} catch (error) {
+  if (error instanceof HTTPError) {
+    const status = error.response.status;
+  }
+}
+```
+
+Use this style inside service functions that already have a top-level error boundary.
+
+## Safe result branch
+
+```ts lineNumbers
+const result = await api.safe.post('/posts', {
+  json: { title },
+});
+
+return result.ok
+  ? { status: 'created', post: result.data }
+  : { status: 'failed', error: result.error };
+```
+
+Use this style at UI boundaries, route actions, or workflow steps where failure is an expected branch.
+
+## Parsing errors
+
+`safe` starts reading JSON immediately and returns the parsed data on success. If JSON parsing fails, the result is an error branch. For non-JSON endpoints, prefer the default surface and read the body manually.

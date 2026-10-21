@@ -1,26 +1,20 @@
 # @ilokesto/fetcher
 
-This directory contains the `@ilokesto/fetcher` package in the ilokesto pnpm monorepo.
+This repository owns one public library and its private local documentation workspace.
+Use Node 22 and pnpm 10.17.1. Run commands from this root.
 
-## What this package is
-
-A type-safe HTTP client facade with OpenAPI awareness, built on top of `ky`.
-
-## When modifying this package
-
-1. Read the root `AGENTS.md`, `PACKAGES.md`, and `ARCHITECTURE.md`.
-2. Load the `ilokesto-fetcher` skill from `.opencode/skills/ilokesto-fetcher/SKILL.md`.
-3. Preserve `ky`'s runtime ergonomics while adding TypeScript/OpenAPI conveniences.
-4. Run `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm test:dist` before committing.
-5. Add a changeset with `pnpm changeset` for any consumer-facing change.
-
-## Release flow
-
-1. Open a PR with a root changeset.
-2. After CI passes on `main`, the root workflow's release job opens a `ci: release` PR and publishes this package with the `beta` dist-tag.
-3. Merge the release PR to publish to npm.
-
-## Must not do
-
-- Do not add internal ilokesto dependencies; this package is standalone.
-- Do not break the public `ky`-like API without a major version bump.
+- Keep the ky-compatible core and OpenAPI exports intact.
+- Library source and tests are in `src/`; canonical bilingual MDX is in `docs/`.
+- The renderer is `website/`; immutable released inputs are in `docs-publication/`.
+- Preserve every historical receipt and archive byte. New captures use explicit schema 3.
+- Keep other libraries as registry dependencies. Only this library and private workspaces
+  inside this repository may use workspace links.
+- Run `pnpm build`, `pnpm typecheck`, `pnpm test`, `pnpm test:dist`,
+  `pnpm test:tooling`, `pnpm migrate:verify`, and the four docs quality commands in README.
+- Consumer-facing changes need a root Changeset; repository migration alone does not.
+- Preserve `.migration/source-manifest.json`, original archive refs and tag objects.
+  `migrate:verify` protects immutable history and present standalone safety without
+  fixing future HEAD, package version, or API to the migration checkpoint.
+- `release:verify --sha <full-SHA>` is read-only. Publishing is disabled by
+  `.release/policy.json`; never publish locally or deploy docs during migration.
+- Future publication remains token-based GitHub Actions with the beta dist-tag.

@@ -1,0 +1,46 @@
+---
+title: "Next.js"
+description: "Use fetcher in server code, route handlers, and client components."
+---
+
+# Next.js
+
+Fetcher can be used in server modules, route handlers, server actions, and client components. Choose the `prefixUrl` based on where the request runs.
+
+## Server-side API client
+
+```ts title="lib/api.server.ts"
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from '@/generated/openapi';
+
+export const api = createFetcher<paths>({
+  prefixUrl: process.env.API_ORIGIN,
+  headers: {
+    'x-runtime': 'next-server',
+  },
+});
+```
+
+Use an absolute origin for server-side calls when the backend is outside the Next.js app.
+
+## Route handler proxy
+
+```ts title="app/api/users/[id]/route.ts"
+import { api } from '@/lib/api.server';
+
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const response = await api.get('/users/{id}', {
+    params: { path: { id } },
+  });
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: response.headers,
+  });
+}
+```
+
+## Client-side calls
+
+For browser components, use a relative `prefixUrl` such as `/api` so requests go through your Next.js routes.

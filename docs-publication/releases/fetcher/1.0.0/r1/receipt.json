@@ -1,0 +1,1425 @@
+{
+  "schemaVersion": 1,
+  "package": {
+    "name": "@ilokesto/fetcher",
+    "version": "1.0.0",
+    "channel": "beta",
+    "revision": 1,
+    "releaseCommit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "docsCommit": "fc8bd4755137b75767284dbe84a0774185dfbdde",
+    "snapshot": "docs-publication/releases/fetcher/1.0.0/r1"
+  },
+  "releaseSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "packageTree": "9f8885cb160b58479b835cc95ad6bbcd4aa0be21",
+    "docsTree": "32bb8477d80a4cdeddc5d555c451ece383ec4daa",
+    "files": [
+      {
+        "path": "packages/fetcher/README.ko.md",
+        "mode": "100644",
+        "blob": "679f9538a8bb3a26d89bc29359e363814c606e71"
+      },
+      {
+        "path": "packages/fetcher/README.md",
+        "mode": "100644",
+        "blob": "a53eb20030a96b4ca55f5c63388e22622b61d8e5"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/meta.json",
+        "mode": "100644",
+        "blob": "5ceb2f926c23c2d0b02a585ef80940d0f6ed3edb"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/migration.ko.mdx",
+        "mode": "100644",
+        "blob": "61f92e7423e5668d63047843a2541a326f34fd84"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/migration.mdx",
+        "mode": "100644",
+        "blob": "34c974346cf0157187085ed14744e967a739c7b4"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/prefix-url.ko.mdx",
+        "mode": "100644",
+        "blob": "6186f43b0382db51d66d8a5805cfd4c21b430823"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/prefix-url.mdx",
+        "mode": "100644",
+        "blob": "ab7efb23ebb9363bb3aebca925d476eecdb0095c"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/response-inference.ko.mdx",
+        "mode": "100644",
+        "blob": "321d84bbc7a5223bee48a270fce1bbafc88894bb"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/response-inference.mdx",
+        "mode": "100644",
+        "blob": "11be052858243f9281cdcb5b9cea062102745a47"
+      },
+      {
+        "path": "packages/fetcher/docs/core-concepts.ko.mdx",
+        "mode": "100644",
+        "blob": "1682ea7ff65091c030849b82a12b80a7f9e980ff"
+      },
+      {
+        "path": "packages/fetcher/docs/core-concepts.mdx",
+        "mode": "100644",
+        "blob": "80f44aca86ad6da2d8626b9733bf98c4e6837099"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/error-handling.ko.mdx",
+        "mode": "100644",
+        "blob": "11420cfd3dfb258156e7a335f559609d40238e76"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/error-handling.mdx",
+        "mode": "100644",
+        "blob": "394476edc7691e2f5ca06e236538923f466ac321"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/generated-openapi.ko.mdx",
+        "mode": "100644",
+        "blob": "d996366d317f590aadd4dc2ad86107c4dd7f5a71"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/generated-openapi.mdx",
+        "mode": "100644",
+        "blob": "0be8ddc1b417fef27460cbcf36e8532246945766"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/ky-hooks.ko.mdx",
+        "mode": "100644",
+        "blob": "9b85ab64e580bb963c957b996b66503789a8307b"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/ky-hooks.mdx",
+        "mode": "100644",
+        "blob": "1927aafc215e5b45c2d32d62e49088eb2978a236"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/meta.json",
+        "mode": "100644",
+        "blob": "899dfc3a019418c0b0cf764bd8ab8d028738b8d4"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/uploads-and-forms.ko.mdx",
+        "mode": "100644",
+        "blob": "2fb7d185e3fada43a5dc8cfcdb1a3e24185098db"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/uploads-and-forms.mdx",
+        "mode": "100644",
+        "blob": "53fe23b46062f45cd47ff5c8da5789e4d30c27ae"
+      },
+      {
+        "path": "packages/fetcher/docs/index.ko.mdx",
+        "mode": "100644",
+        "blob": "035bb503425e70424ea385cf5a6fce84e1a79c70"
+      },
+      {
+        "path": "packages/fetcher/docs/index.mdx",
+        "mode": "100644",
+        "blob": "9fbdb7e77113f8ac329d759068363f6198066e9a"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/meta.json",
+        "mode": "100644",
+        "blob": "9900a6d2871bd24ccd0bb4132697c89ca1d15a78"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/nextjs.ko.mdx",
+        "mode": "100644",
+        "blob": "40782c932e3c957041710e49afd652d77cbffc85"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/nextjs.mdx",
+        "mode": "100644",
+        "blob": "05a103c6905439d676fe1721a4e840b65242012f"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/react.ko.mdx",
+        "mode": "100644",
+        "blob": "d951fa8b57e63855e20f52f1ef2503635f75b5a7"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/react.mdx",
+        "mode": "100644",
+        "blob": "67d965334479eb4bed6fc8fd28eaef57fb19c04f"
+      },
+      {
+        "path": "packages/fetcher/docs/meta.json",
+        "mode": "100644",
+        "blob": "980322552e54762fbd8a0eaf4c190e0f0e28bf79"
+      },
+      {
+        "path": "packages/fetcher/docs/quick-start.ko.mdx",
+        "mode": "100644",
+        "blob": "59fa826fe3f836a38910c7335746588f08b01352"
+      },
+      {
+        "path": "packages/fetcher/docs/quick-start.mdx",
+        "mode": "100644",
+        "blob": "01173dd1026a4060f0a951aa7c872defd70c54d3"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/create-fetcher.ko.mdx",
+        "mode": "100644",
+        "blob": "3418cc29228e1372f0cb77b4dd12d743eeb3585f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/create-fetcher.mdx",
+        "mode": "100644",
+        "blob": "5a7bbd21a00af2cf3c69186301155148aaf4d257"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/entrypoints.ko.mdx",
+        "mode": "100644",
+        "blob": "c3b0258daa892fceba003dd43d125a4e15b4dc6f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/entrypoints.mdx",
+        "mode": "100644",
+        "blob": "1bb3dd81ef51a71c71d8ea7f49aae2311c482c3e"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/meta.json",
+        "mode": "100644",
+        "blob": "5c8513e62a89f9e636107c4eb4b8b419e495ff66"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-bodies.ko.mdx",
+        "mode": "100644",
+        "blob": "613754f48d9572f13ecc5cf238a4a38cca00dc76"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-bodies.mdx",
+        "mode": "100644",
+        "blob": "41606fe3783783bfd27d45230f96a5c167f548e4"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-grouped-request.ko.mdx",
+        "mode": "100644",
+        "blob": "cc178e9a74ae91cc832aaf8ef5dfad53849e3d91"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-grouped-request.mdx",
+        "mode": "100644",
+        "blob": "139156fbf15c6fda39871413c8eacc5690c7957f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-path-and-query.ko.mdx",
+        "mode": "100644",
+        "blob": "df3c699dcec7e2d4dcfd44cdbc05ceeb7523dc2b"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-path-and-query.mdx",
+        "mode": "100644",
+        "blob": "4d3cecc4e809db7292bf3b4ab7e2fa2db9c58175"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-runtime-context.ko.mdx",
+        "mode": "100644",
+        "blob": "148ffa97bca3d8680e7b05b60c46b0404e011b87"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-runtime-context.mdx",
+        "mode": "100644",
+        "blob": "a7fad87d9d549f2f0f7f9d9631a0e71d394bb8f6"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/safe.ko.mdx",
+        "mode": "100644",
+        "blob": "e0bd01fb6be30c46b82e274f887a5cac061d5362"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/safe.mdx",
+        "mode": "100644",
+        "blob": "d659a17f34d6986c38f1407563247c6f6fb01d99"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/shortcut-methods.ko.mdx",
+        "mode": "100644",
+        "blob": "f517e9e3aa7d5121bf30eb467fbada18ac389ad0"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/shortcut-methods.mdx",
+        "mode": "100644",
+        "blob": "eee3e2eaa0b604a861801f3a0fcd31afa7753912"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/types.ko.mdx",
+        "mode": "100644",
+        "blob": "4b10c9234ab0792e13bf2a210ba80ccbc4c26244"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/types.mdx",
+        "mode": "100644",
+        "blob": "2ab14752b5eaaa60278d70a8e0adbc0c4b02b5cc"
+      },
+      {
+        "path": "packages/fetcher/docs/troubleshooting.ko.mdx",
+        "mode": "100644",
+        "blob": "81443bce8dfef69a098b4af923ab13bacae1b9ab"
+      },
+      {
+        "path": "packages/fetcher/docs/troubleshooting.mdx",
+        "mode": "100644",
+        "blob": "5290dea1416f8571b66df1f7e222e860b34ca3c5"
+      }
+    ]
+  },
+  "docsRevision": {
+    "commit": "fc8bd4755137b75767284dbe84a0774185dfbdde",
+    "packageTree": "fba5b49ad71a4ddf32d13e989bd9f1aed661ae67",
+    "docsTree": "2c1af867a28642b5448b998a369ebf1d1579b166",
+    "files": [
+      {
+        "path": "packages/fetcher/README.ko.md",
+        "mode": "100644",
+        "blob": "679f9538a8bb3a26d89bc29359e363814c606e71"
+      },
+      {
+        "path": "packages/fetcher/README.md",
+        "mode": "100644",
+        "blob": "a53eb20030a96b4ca55f5c63388e22622b61d8e5"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/meta.json",
+        "mode": "100644",
+        "blob": "5ceb2f926c23c2d0b02a585ef80940d0f6ed3edb"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/migration.ko.mdx",
+        "mode": "100644",
+        "blob": "61f92e7423e5668d63047843a2541a326f34fd84"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/migration.mdx",
+        "mode": "100644",
+        "blob": "34c974346cf0157187085ed14744e967a739c7b4"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/prefix-url.ko.mdx",
+        "mode": "100644",
+        "blob": "6186f43b0382db51d66d8a5805cfd4c21b430823"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/prefix-url.mdx",
+        "mode": "100644",
+        "blob": "ab7efb23ebb9363bb3aebca925d476eecdb0095c"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/response-inference.ko.mdx",
+        "mode": "100644",
+        "blob": "321d84bbc7a5223bee48a270fce1bbafc88894bb"
+      },
+      {
+        "path": "packages/fetcher/docs/advanced/response-inference.mdx",
+        "mode": "100644",
+        "blob": "11be052858243f9281cdcb5b9cea062102745a47"
+      },
+      {
+        "path": "packages/fetcher/docs/core-concepts.ko.mdx",
+        "mode": "100644",
+        "blob": "1682ea7ff65091c030849b82a12b80a7f9e980ff"
+      },
+      {
+        "path": "packages/fetcher/docs/core-concepts.mdx",
+        "mode": "100644",
+        "blob": "80f44aca86ad6da2d8626b9733bf98c4e6837099"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/error-handling.ko.mdx",
+        "mode": "100644",
+        "blob": "11420cfd3dfb258156e7a335f559609d40238e76"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/error-handling.mdx",
+        "mode": "100644",
+        "blob": "394476edc7691e2f5ca06e236538923f466ac321"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/generated-openapi.ko.mdx",
+        "mode": "100644",
+        "blob": "d996366d317f590aadd4dc2ad86107c4dd7f5a71"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/generated-openapi.mdx",
+        "mode": "100644",
+        "blob": "0be8ddc1b417fef27460cbcf36e8532246945766"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/ky-hooks.ko.mdx",
+        "mode": "100644",
+        "blob": "9b85ab64e580bb963c957b996b66503789a8307b"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/ky-hooks.mdx",
+        "mode": "100644",
+        "blob": "1927aafc215e5b45c2d32d62e49088eb2978a236"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/meta.json",
+        "mode": "100644",
+        "blob": "899dfc3a019418c0b0cf764bd8ab8d028738b8d4"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/uploads-and-forms.ko.mdx",
+        "mode": "100644",
+        "blob": "2fb7d185e3fada43a5dc8cfcdb1a3e24185098db"
+      },
+      {
+        "path": "packages/fetcher/docs/guides/uploads-and-forms.mdx",
+        "mode": "100644",
+        "blob": "53fe23b46062f45cd47ff5c8da5789e4d30c27ae"
+      },
+      {
+        "path": "packages/fetcher/docs/index.ko.mdx",
+        "mode": "100644",
+        "blob": "6809ec29d08b74cf03ba44f344f9ce86acb64472"
+      },
+      {
+        "path": "packages/fetcher/docs/index.mdx",
+        "mode": "100644",
+        "blob": "0aea5b5b4f04116339da3e602fd3f75c9b188691"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/meta.json",
+        "mode": "100644",
+        "blob": "9900a6d2871bd24ccd0bb4132697c89ca1d15a78"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/nextjs.ko.mdx",
+        "mode": "100644",
+        "blob": "40782c932e3c957041710e49afd652d77cbffc85"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/nextjs.mdx",
+        "mode": "100644",
+        "blob": "05a103c6905439d676fe1721a4e840b65242012f"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/react.ko.mdx",
+        "mode": "100644",
+        "blob": "d951fa8b57e63855e20f52f1ef2503635f75b5a7"
+      },
+      {
+        "path": "packages/fetcher/docs/integrations/react.mdx",
+        "mode": "100644",
+        "blob": "67d965334479eb4bed6fc8fd28eaef57fb19c04f"
+      },
+      {
+        "path": "packages/fetcher/docs/meta.json",
+        "mode": "100644",
+        "blob": "980322552e54762fbd8a0eaf4c190e0f0e28bf79"
+      },
+      {
+        "path": "packages/fetcher/docs/quick-start.ko.mdx",
+        "mode": "100644",
+        "blob": "781c1f96acb5626ed51a82b710702c68fab016eb"
+      },
+      {
+        "path": "packages/fetcher/docs/quick-start.mdx",
+        "mode": "100644",
+        "blob": "43587e1e96971442608978ac840596dcfeab706f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/create-fetcher.ko.mdx",
+        "mode": "100644",
+        "blob": "3418cc29228e1372f0cb77b4dd12d743eeb3585f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/create-fetcher.mdx",
+        "mode": "100644",
+        "blob": "5a7bbd21a00af2cf3c69186301155148aaf4d257"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/entrypoints.ko.mdx",
+        "mode": "100644",
+        "blob": "c3b0258daa892fceba003dd43d125a4e15b4dc6f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/entrypoints.mdx",
+        "mode": "100644",
+        "blob": "1bb3dd81ef51a71c71d8ea7f49aae2311c482c3e"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/meta.json",
+        "mode": "100644",
+        "blob": "5c8513e62a89f9e636107c4eb4b8b419e495ff66"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-bodies.ko.mdx",
+        "mode": "100644",
+        "blob": "613754f48d9572f13ecc5cf238a4a38cca00dc76"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-bodies.mdx",
+        "mode": "100644",
+        "blob": "41606fe3783783bfd27d45230f96a5c167f548e4"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-grouped-request.ko.mdx",
+        "mode": "100644",
+        "blob": "cc178e9a74ae91cc832aaf8ef5dfad53849e3d91"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-grouped-request.mdx",
+        "mode": "100644",
+        "blob": "139156fbf15c6fda39871413c8eacc5690c7957f"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-path-and-query.ko.mdx",
+        "mode": "100644",
+        "blob": "df3c699dcec7e2d4dcfd44cdbc05ceeb7523dc2b"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-path-and-query.mdx",
+        "mode": "100644",
+        "blob": "4d3cecc4e809db7292bf3b4ab7e2fa2db9c58175"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-runtime-context.ko.mdx",
+        "mode": "100644",
+        "blob": "148ffa97bca3d8680e7b05b60c46b0404e011b87"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/request-runtime-context.mdx",
+        "mode": "100644",
+        "blob": "a7fad87d9d549f2f0f7f9d9631a0e71d394bb8f6"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/safe.ko.mdx",
+        "mode": "100644",
+        "blob": "e0bd01fb6be30c46b82e274f887a5cac061d5362"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/safe.mdx",
+        "mode": "100644",
+        "blob": "d659a17f34d6986c38f1407563247c6f6fb01d99"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/shortcut-methods.ko.mdx",
+        "mode": "100644",
+        "blob": "f517e9e3aa7d5121bf30eb467fbada18ac389ad0"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/shortcut-methods.mdx",
+        "mode": "100644",
+        "blob": "eee3e2eaa0b604a861801f3a0fcd31afa7753912"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/types.ko.mdx",
+        "mode": "100644",
+        "blob": "4b10c9234ab0792e13bf2a210ba80ccbc4c26244"
+      },
+      {
+        "path": "packages/fetcher/docs/reference/types.mdx",
+        "mode": "100644",
+        "blob": "2ab14752b5eaaa60278d70a8e0adbc0c4b02b5cc"
+      },
+      {
+        "path": "packages/fetcher/docs/troubleshooting.ko.mdx",
+        "mode": "100644",
+        "blob": "81443bce8dfef69a098b4af923ab13bacae1b9ab"
+      },
+      {
+        "path": "packages/fetcher/docs/troubleshooting.mdx",
+        "mode": "100644",
+        "blob": "5290dea1416f8571b66df1f7e222e860b34ca3c5"
+      }
+    ]
+  },
+  "runtimeSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "files": [
+      {
+        "path": "packages/fetcher/.gitignore",
+        "bytes": 37,
+        "sha256": "ec1396cede45fd7bb19870e4a5701fe031bef4bfcb648798feb7cdb66f68fa9e",
+        "blob": "ca865c09353384147cfe1568f685d507712c3119",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/AGENTS.md",
+        "bytes": 1046,
+        "sha256": "0437b8d2effd3c8d04d7367ea8bdda9ececb8d1077197901386c889d70bcb1c0",
+        "blob": "977e80d8b6208ebdc768d656f6162f9ba8f58931",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/CHANGELOG.md",
+        "bytes": 758,
+        "sha256": "ebb671900f99510baaae638f841c1dc23ef8796b15dfb45f20dc9af771c279f9",
+        "blob": "4b14e9fd47871fa57da48ac9256db103d112a5eb",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/LICENSE",
+        "bytes": 1056,
+        "sha256": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685",
+        "blob": "14fac913ccf80234b1848540089a3bbcb6e5283d",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/core.d.ts",
+        "bytes": 16668,
+        "sha256": "5faa302969fe0d2578bfdf499b6023bf0a54e8dc2d0665feae1be3f82a4bc4e9",
+        "blob": "4ab6e4ee33535a25ad8464f4d40034b85b645f14",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/core.js",
+        "bytes": 351,
+        "sha256": "c75c605dda85b325bfb0e82f99e068a33fc8a9ba0b3812fad77379bb4d90a953",
+        "blob": "4ba637dab9aa1ad67ddf5ddcba011be909d9de8a",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/index.d.ts",
+        "bytes": 460,
+        "sha256": "4655d9a2103870df38ddb5de38b46a986bdee02bb245468ffd9cc0fb56280a6b",
+        "blob": "0bcf981801b2ff3ae827b97166c7226693a13115",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/index.js",
+        "bytes": 381,
+        "sha256": "16b3f07215d5d1b250fa732cb9ca3a398244ee5611fec7ca572f1a5e90bf768c",
+        "blob": "7153154e383331993158f8d14c07cb0895752a2e",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/openapi.d.ts",
+        "bytes": 276,
+        "sha256": "28c18f38445f43607122493220f005e72de67718b8a11a54886c625d493b2fc2",
+        "blob": "2a9a9ecd0d7a9c78e229ca7d77efa5b5b5870f2c",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/dist/openapi.js",
+        "bytes": 113,
+        "sha256": "91e2e58608361acaa412489f261e189322f5cc55799729d2e52f65181e0775dc",
+        "blob": "96ec782cab95821456e40a698fdeb6e47ff7e445",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/package.json",
+        "bytes": 1393,
+        "sha256": "289301381e8ceca210cde68f8034e90ef64dcef198157e5f6923925d5703d37c",
+        "blob": "a43f40031d210cbba97fd23603a8d07f014c0158",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/scripts/verify-dist.mjs",
+        "bytes": 1288,
+        "sha256": "c8cd2b72cf97457c5b6fa3d6536fffb25d9d6e06136f2d3be2a6aedf515d3128",
+        "blob": "4535c383f6af507f7248551bffce77412f57500a",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/scripts/verify-packed-dist.mjs",
+        "bytes": 7930,
+        "sha256": "bec83cbfc7bd44e721119346ac071171c938862332a606bf33d2f1bc5961a155",
+        "blob": "00bfbfbdef8840cfb4e8d6b3c8ff68e0105e92f7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/core/createFetcher.ts",
+        "bytes": 9329,
+        "sha256": "f3538897f0ad30329e546d5525c9fcc5e777fba2aedb16ad2b3869a79fa9390a",
+        "blob": "ca4306e186e5760aba866505fb15d6c1ec41246d",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/core/index.ts",
+        "bytes": 302,
+        "sha256": "4f2c55f06d2d8b58c3cd524ff103913a189bf695078e54a863994ede7494a4fb",
+        "blob": "8b5ba7c8aa27173c30979158e376ae3685121d8e",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.barrel.test.ts",
+        "bytes": 7110,
+        "sha256": "c218d886f55649c3812f365633152712b2e91e6cac18dad61faca61db49a1b82",
+        "blob": "37b657d5e043ed43c433df2795efb870c59eb1b6",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.head.test.ts",
+        "bytes": 2181,
+        "sha256": "dc115bc8e35659c47ee57110c34e7be246b0a5bde27f916c7400fc48bf4d5532",
+        "blob": "5632856c0aa66efbd303b93ebb341d757e2137d0",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.prefixUrl.test.ts",
+        "bytes": 7217,
+        "sha256": "ccd0383e7f82362ca801653188b94c99087c8c27ea356634624b57d9d35171eb",
+        "blob": "a9346a445e608714cdf1106db1d327f5586aabea",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.runtime-normalization.test.ts",
+        "bytes": 21107,
+        "sha256": "8cac89a0f83003631ea6c3fae65ba1022ec12dcdbf23e556d69f8e6571a2e9ee",
+        "blob": "cbf90eaf1bb9e96d3496dcd9b50073b4f1572cf7",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.safe.test.ts",
+        "bytes": 4456,
+        "sha256": "4a7d1e7f4795d87a09c3deb9b3c7da1c72c078f14d4c808fe3db4c6b603fb85c",
+        "blob": "2703a039fa02516d6875be337d60b3b3a1d6dfa3",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/createFetcher.type-contract.test.ts",
+        "bytes": 1325,
+        "sha256": "b8e23be23a549b9220bc698b0ea0c1420de56a32625550ea4d95b7e3d4dd80e6",
+        "blob": "0b30f63c0088a8af7204d4491f88ab06e0daaa2b",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/index.ts",
+        "bytes": 63,
+        "sha256": "cc21ad13d8e9ab5fa2f6f6bace9e53f75f97cc00f0acff4796ff785d6ca37372",
+        "blob": "53ab3d6946d7ea9a259c0120ecaa2254c8f053cc",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/internal/runtime.ts",
+        "bytes": 8605,
+        "sha256": "c237ab07768783a5567b5e1b9f649eb9f3a9218d88ced0a9b45db503d4ac0444",
+        "blob": "1231f1ec2ebe89bca236b4bc793b48b1b9add379",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/bodies.ts",
+        "bytes": 2824,
+        "sha256": "c3b53dc1c70f7f42399a9266010302fde539d18f09efa1ffec9fa49dd2b1d338",
+        "blob": "4ccd53cd6b8433878a498129dcc1c97d01bff7c2",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/fetcher.ts",
+        "bytes": 10684,
+        "sha256": "8a1b965d5f25b517d4505ece92451b77eab83535f29ded85d853b578f7e37022",
+        "blob": "aaaba6d3725474516f8b8c7d4416b85c69622d27",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/index.ts",
+        "bytes": 274,
+        "sha256": "4c0b10eefb5b2b226bc602ee5d1f15817834b30fd2ad2826c13b83e54e1ef229",
+        "blob": "f32d2a31d07e5277d97900816fc9d9e5c0e8e17e",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/parameters.ts",
+        "bytes": 2624,
+        "sha256": "8b6dcb6852768de933ac0a4380da93f31e8d0b8c57f0926b070a32a37c14ac80",
+        "blob": "0ef7b5c3921f2725c593c39205611f4e09643fa1",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/responses.ts",
+        "bytes": 1329,
+        "sha256": "af13fd0243cc6c7865a4198c8368f7c3ee9017e9d19c8e5371daaf39dc3ee4ae",
+        "blob": "621f267fc978c0a1638d4a8735e99e52822f34ec",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/shared.ts",
+        "bytes": 1690,
+        "sha256": "e4be76c449f20f26255332cc406c2f3c89d2aaaa25e2cd9986e5bf9b6394a91b",
+        "blob": "07d193096bb6fe35d0271167c83856e45287789f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/openapi/types.ts",
+        "bytes": 321,
+        "sha256": "6273c0f5764b7fcaf0198e2f7caed84ddb30ff13898dce43b953f40f198fb9df",
+        "blob": "2cf16ff2b2b4ef31d9fddd4857873ae593774c07",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/test-fixtures/createFetcher.ts",
+        "bytes": 18968,
+        "sha256": "05c1d46168092692688846415d6ce3cd352384ad50256608b6deb460fa7cdd63",
+        "blob": "e46699589cc644a7a631a19bfa262e33f0ab11e1",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/src/test-fixtures/head.ts",
+        "bytes": 4576,
+        "sha256": "7c19980b7b22231688f333ea0a3b7dd615161316580a640c9a807efba2bcb724",
+        "blob": "3c3346feae1ee01b99f0edbfc630b39d06995009",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/tsconfig.json",
+        "bytes": 405,
+        "sha256": "6162ea20b63f42220cb2e33d493c8eb83a4e7c01f0c8b78c2a985b109a2cdb43",
+        "blob": "07e448b03b41175769226fde721404024d66e48f",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/tsup.config.ts",
+        "bytes": 305,
+        "sha256": "b4712b1a369c50e84892cbb56744731b78d62408bc4b8d8f63cd4bb0e6558f0c",
+        "blob": "e8773635b1a3d8728d34dccca3549e276654e147",
+        "mode": "100644"
+      },
+      {
+        "path": "packages/fetcher/vitest.config.ts",
+        "bytes": 140,
+        "sha256": "dfe9c30331c753f6b0b79c74c42fa1b4f8a04bb4cd849f57270cf2824bf504c2",
+        "blob": "014f97ef76db415433ddcfd6c104e9ab6e099697",
+        "mode": "100644"
+      }
+    ]
+  },
+  "exampleSource": {
+    "commit": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "files": [
+      {
+        "path": "apps/docs/components/demos/fetcher-copy.ts",
+        "mode": "100644",
+        "blob": "7bd5525bd0371b6663e1bd023165b7a4b14afbca"
+      },
+      {
+        "path": "apps/docs/components/demos/fetcher-demo.tsx",
+        "mode": "100644",
+        "blob": "d317230b2c5376b2dafbbf6a504c5372361032b1"
+      }
+    ]
+  },
+  "registry": {
+    "tarball": "https://registry.npmjs.org/@ilokesto/fetcher/-/fetcher-1.0.0.tgz",
+    "integrity": "sha512-fzhRTXxkss9U9hwcxx4iJ9a2pStg4pBPQOvw3g3xdoR3wHoY+DF1mBFRTV5yVo/bQf9giuYF1SdPiULqxt3k9A==",
+    "shasum": "45d1f61288d27d372ecb49687ada13ba7adfedcd",
+    "gitHead": null,
+    "attestations": null,
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 1056,
+        "sha256": "1126322e2cc8d165adc4c792eeb195717de2bcc7b39be1ce77959d78e87ef685"
+      },
+      {
+        "path": "README.ko.md",
+        "bytes": 19844,
+        "sha256": "a80c99904b6a8deded998a89205f9dbeb5349848696c48345b1a1a109337f065"
+      },
+      {
+        "path": "README.md",
+        "bytes": 17728,
+        "sha256": "63990c783d0d50e414da62d56298e4cdb2e592a8f579de6145961ccbf9c15988"
+      },
+      {
+        "path": "dist/chunk-3HIAKPXX.js",
+        "bytes": 284,
+        "sha256": "25367b1aec1be3f9b1ad24b0b0477782d1215a65a731fa95c5930af07099b5c8"
+      },
+      {
+        "path": "dist/chunk-QRQ6FXBH.js",
+        "bytes": 13512,
+        "sha256": "201d353646aeb0fed98298d296fdf3883cb75347bb812669a1e6b106644bf1f1"
+      },
+      {
+        "path": "dist/chunk-UPJ4LFMJ.js",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "dist/core.d.ts",
+        "bytes": 17771,
+        "sha256": "097ef5b3cb1064e1db78a947536646bace8b65bb200fbf6a2d5539f1d258be4e"
+      },
+      {
+        "path": "dist/core.js",
+        "bytes": 351,
+        "sha256": "a2a54fd5204cfa993378834ca772812da19430ab4b4b8b2d8f81d3eabf1adbd3"
+      },
+      {
+        "path": "dist/index.d.ts",
+        "bytes": 460,
+        "sha256": "4655d9a2103870df38ddb5de38b46a986bdee02bb245468ffd9cc0fb56280a6b"
+      },
+      {
+        "path": "dist/index.js",
+        "bytes": 381,
+        "sha256": "2a6ff29512b9041c8afd8a7ddb46690c902324f04e11199a30fa677b88b03431"
+      },
+      {
+        "path": "dist/openapi.d.ts",
+        "bytes": 276,
+        "sha256": "28c18f38445f43607122493220f005e72de67718b8a11a54886c625d493b2fc2"
+      },
+      {
+        "path": "dist/openapi.js",
+        "bytes": 113,
+        "sha256": "0871fd2a32188152f7369ad5736dcc0baf3eef4669095ffda845c148533b5796"
+      },
+      {
+        "path": "package.json",
+        "bytes": 1392,
+        "sha256": "6bc7af4eadf22bd76f33db6a696821cd21c24ecfa9adc252af985cf7bb6acbe2"
+      }
+    ]
+  },
+  "provenance": {
+    "kind": "operational-evidence-not-cryptographic-source-provenance",
+    "report": "release-provenance.md",
+    "observedAt": "2026-09-27",
+    "publishRun": "https://github.com/ilokesto/ilokesto/actions/runs/36302267041",
+    "publishCheckout": "ecd9709b76d1976ec86865314e85b916f220c818",
+    "npmGitHead": null,
+    "npmAttestations": null,
+    "evidence": [
+      "The successful workflow checked out this commit; all eight annotated release tags peel to it.",
+      "Both shipped READMEs match source blobs; packed manifests differ only by workspace protocol rewrites.",
+      "The audit compared all published dist bytes with matching builds, including a fresh Fetcher build."
+    ],
+    "limitation": "npm exposes neither gitHead nor source provenance attestations for these versions. Workflow, tags, and byte comparisons support the source association but do not cryptographically prove it.",
+    "reportSha256": "374af7f4df1dd24d2e34aefb96656f779dbbbae0f6890cc817239b975fb29343",
+    "tag": "@ilokesto/fetcher@1.0.0",
+    "tagTarget": "ecd9709b76d1976ec86865314e85b916f220c818"
+  },
+  "files": [
+    {
+      "path": "examples/apps/docs/components/demos/fetcher-copy.ts",
+      "bytes": 2073,
+      "sha256": "d57400fe9f69b87e7668d50c911eae4f8f829a6b8cf97326c11e8cc838e8e004"
+    },
+    {
+      "path": "examples/apps/docs/components/demos/fetcher-demo.tsx",
+      "bytes": 6598,
+      "sha256": "cef4dd96691e876598f78ca66cd0327f0f7692105783ec4d7a3c50b55dbedff1"
+    },
+    {
+      "path": "npm/package.tgz",
+      "bytes": 18904,
+      "sha256": "45b6267ae7ccda5cb2eddfb82391e36eac5487d3c51000e48bcd6bb88bf164e7"
+    },
+    {
+      "path": "provenance/release-provenance.md",
+      "bytes": 21178,
+      "sha256": "374af7f4df1dd24d2e34aefb96656f779dbbbae0f6890cc817239b975fb29343"
+    },
+    {
+      "path": "release/README.ko.md",
+      "bytes": 19844,
+      "sha256": "a80c99904b6a8deded998a89205f9dbeb5349848696c48345b1a1a109337f065"
+    },
+    {
+      "path": "release/README.md",
+      "bytes": 17728,
+      "sha256": "63990c783d0d50e414da62d56298e4cdb2e592a8f579de6145961ccbf9c15988"
+    },
+    {
+      "path": "release/docs/advanced/meta.json",
+      "bytes": 104,
+      "sha256": "ccd1ec10a3ae21758c1a4e2f8edf24aa0f681e2aeb4b11c8f134767498c918dc"
+    },
+    {
+      "path": "release/docs/advanced/migration.ko.mdx",
+      "bytes": 1552,
+      "sha256": "620d2392d1fce6e5a43b1a668fa80fce0f86788556353dfa0b678bb4c146bdb7"
+    },
+    {
+      "path": "release/docs/advanced/migration.mdx",
+      "bytes": 1205,
+      "sha256": "190c94ca1f7f807e91976a20f181811f4adef7eeff47ff7357ad487a7bc2e982"
+    },
+    {
+      "path": "release/docs/advanced/prefix-url.ko.mdx",
+      "bytes": 1187,
+      "sha256": "2655e8cadf44957a7af0b192b1b63e074c1db8361de3322d031e852486c0fc1f"
+    },
+    {
+      "path": "release/docs/advanced/prefix-url.mdx",
+      "bytes": 1053,
+      "sha256": "fc743716b1b70238fcc3137fc3a07242a9bea343f382fc55f0bc2821d2b97813"
+    },
+    {
+      "path": "release/docs/advanced/response-inference.ko.mdx",
+      "bytes": 1006,
+      "sha256": "efda648055c92b3ad25d959dd0ed4d900e4825c0a267ab755686e6e1cee3a912"
+    },
+    {
+      "path": "release/docs/advanced/response-inference.mdx",
+      "bytes": 938,
+      "sha256": "96827cc6df6df3f02926164dbc22290ce90d0d833718443b72831bf53ed184f3"
+    },
+    {
+      "path": "release/docs/core-concepts.ko.mdx",
+      "bytes": 2908,
+      "sha256": "aedac9a504ae63feb70d653aafabc6ca255dbae58699898dc25d0b2fa2f267f5"
+    },
+    {
+      "path": "release/docs/core-concepts.mdx",
+      "bytes": 2614,
+      "sha256": "66bd39d49a7c2138c5a420fed960c38ff191a706a1c728da64eb62bbf492ff31"
+    },
+    {
+      "path": "release/docs/guides/error-handling.ko.mdx",
+      "bytes": 1362,
+      "sha256": "80adf3faf3e552a3753abf032f4fe3f717d57aafc7c344311a525c2983693ba6"
+    },
+    {
+      "path": "release/docs/guides/error-handling.mdx",
+      "bytes": 1252,
+      "sha256": "d396252ca625bdeb35b0c31aee1381ffa696d768ba80de78c200d0cc8c3ecb85"
+    },
+    {
+      "path": "release/docs/guides/generated-openapi.ko.mdx",
+      "bytes": 1509,
+      "sha256": "368472158b9689e50657b7216da9a7967d2b4b79441cc9f7852824913417b718"
+    },
+    {
+      "path": "release/docs/guides/generated-openapi.mdx",
+      "bytes": 1403,
+      "sha256": "0796bfa498b3fab7561ed08db1c67929b9110e410abaeb6f78db161eb6460bcf"
+    },
+    {
+      "path": "release/docs/guides/ky-hooks.ko.mdx",
+      "bytes": 1350,
+      "sha256": "4f9d2b400e628d0e7aad81e776dc10922ddae69794575ff8957c7625f255deb7"
+    },
+    {
+      "path": "release/docs/guides/ky-hooks.mdx",
+      "bytes": 1258,
+      "sha256": "23304bae4978e8956ba7613a8496235d0eb2b166f6869b0fb2d90c21bc4d376b"
+    },
+    {
+      "path": "release/docs/guides/meta.json",
+      "bytes": 129,
+      "sha256": "4a13a3500516f9951b82039364ac10fc80bcac4bbfe1ad3efaca0ab6aa85b184"
+    },
+    {
+      "path": "release/docs/guides/uploads-and-forms.ko.mdx",
+      "bytes": 1291,
+      "sha256": "a27b008dd2e98c578dda3b998b900d6ac78770a0b9f790668099d9cfb0753c8b"
+    },
+    {
+      "path": "release/docs/guides/uploads-and-forms.mdx",
+      "bytes": 1194,
+      "sha256": "3d7c9ce232de084d7a08658145ad375d824a0d0c64acfe1c99ebd98dfe9cb608"
+    },
+    {
+      "path": "release/docs/index.ko.mdx",
+      "bytes": 2431,
+      "sha256": "e951c4ca695ba15dd1a465ec773161e4d072f1e8a9f8f7890032b452795101ae"
+    },
+    {
+      "path": "release/docs/index.mdx",
+      "bytes": 2150,
+      "sha256": "2bee73c41227c6cf32ebf52b3e4c6fe8acf778f46b6ea4b3a95618418806e0c5"
+    },
+    {
+      "path": "release/docs/integrations/meta.json",
+      "bytes": 74,
+      "sha256": "c3d35862f3668b4791b2c4dae0934028f36f9bc6707ab862a55ac1482cb9f403"
+    },
+    {
+      "path": "release/docs/integrations/nextjs.ko.mdx",
+      "bytes": 1349,
+      "sha256": "c22945b72f6d2397bbbc6e4a2cc9f1c7c6d44378cd0ad95d787e71f053fe8470"
+    },
+    {
+      "path": "release/docs/integrations/nextjs.mdx",
+      "bytes": 1233,
+      "sha256": "d426ae4e97f47fee73a2cb0047422cb8fd330e7d7473c80941cb39856631509e"
+    },
+    {
+      "path": "release/docs/integrations/react.ko.mdx",
+      "bytes": 1443,
+      "sha256": "8d5834c2596630471b656a7edc93545ca028273781b1cbd1c462599beda504cb"
+    },
+    {
+      "path": "release/docs/integrations/react.mdx",
+      "bytes": 1406,
+      "sha256": "bd8b2fc43e31b30e369d48fe8cc165de1a0058d5de5d86d5ab54237b6306805f"
+    },
+    {
+      "path": "release/docs/meta.json",
+      "bytes": 333,
+      "sha256": "3e8a8acbc8af0565bcd2a40a549989236f6441eaaa19d3948a20d96b96c2a7de"
+    },
+    {
+      "path": "release/docs/quick-start.ko.mdx",
+      "bytes": 3493,
+      "sha256": "40fae14b2cd3fda52492ef9503d5f96692979afac4b4224fa4b685cc7c163e2b"
+    },
+    {
+      "path": "release/docs/quick-start.mdx",
+      "bytes": 3147,
+      "sha256": "6dc68742270f1054644c9a30fb59f711b5c3bec71cfa07575127d1cf723eabaa"
+    },
+    {
+      "path": "release/docs/reference/create-fetcher.ko.mdx",
+      "bytes": 1235,
+      "sha256": "7dfe805840be39a17c6781f59f2b8a712a0c7ab9f87ceac452d6e6ab81445983"
+    },
+    {
+      "path": "release/docs/reference/create-fetcher.mdx",
+      "bytes": 1128,
+      "sha256": "c84c191eaa798c195282bed3d439a0a8085aa526a3a22a5a32573520174c5fc9"
+    },
+    {
+      "path": "release/docs/reference/entrypoints.ko.mdx",
+      "bytes": 1431,
+      "sha256": "642318347febdaf3b99d655b6090a5bdbbda1f1d1257425780d828c0c6192a5c"
+    },
+    {
+      "path": "release/docs/reference/entrypoints.mdx",
+      "bytes": 1256,
+      "sha256": "a4e1e16edfe22ec21030b83b968be3258ace051ff72ff1c9aaf863cb84991029"
+    },
+    {
+      "path": "release/docs/reference/meta.json",
+      "bytes": 248,
+      "sha256": "ffc97fcf174e77c51faba084820f9e8899ef503786ed088c8754c52fb9b0e3a5"
+    },
+    {
+      "path": "release/docs/reference/request-bodies.ko.mdx",
+      "bytes": 1735,
+      "sha256": "ab620392a74d34d524e85762f6aa8ae74c4d911beb6d51d5f4d443e64ff198c1"
+    },
+    {
+      "path": "release/docs/reference/request-bodies.mdx",
+      "bytes": 1537,
+      "sha256": "7701fe0c86f8e509a90883e94285b302a80882889de0f9df9df15e39e830a64c"
+    },
+    {
+      "path": "release/docs/reference/request-grouped-request.ko.mdx",
+      "bytes": 1653,
+      "sha256": "74d9c3cdcf160216558ae0fca1579deb55381f3073d35397dec22747301ff159"
+    },
+    {
+      "path": "release/docs/reference/request-grouped-request.mdx",
+      "bytes": 1432,
+      "sha256": "8114acf168947a22bcf696cffeee26e2be5a4ac3ddee83580f66ce6d15e27a22"
+    },
+    {
+      "path": "release/docs/reference/request-path-and-query.ko.mdx",
+      "bytes": 1199,
+      "sha256": "13f112d15fa829d97ea817d4d9383dfc61450de8985462be820eeee7507326d7"
+    },
+    {
+      "path": "release/docs/reference/request-path-and-query.mdx",
+      "bytes": 1092,
+      "sha256": "b1b6a2fbeaab2ca35227fa9f9674991dfc7d7d0b68de396800aa1d0eff93c0b8"
+    },
+    {
+      "path": "release/docs/reference/request-runtime-context.ko.mdx",
+      "bytes": 1176,
+      "sha256": "1349d6eb30fa1fdde657247c9b582d99ab67c00ee9402c77cf2ed1b5fa283d75"
+    },
+    {
+      "path": "release/docs/reference/request-runtime-context.mdx",
+      "bytes": 1114,
+      "sha256": "ef41fbd659924228fc38d464f327e9331ca9c6c04ba940a17a8ac36d31ef5172"
+    },
+    {
+      "path": "release/docs/reference/safe.ko.mdx",
+      "bytes": 1334,
+      "sha256": "25dbe796e2258200de8aae4c7997bf2ea35163ddab39b83ed0249f528c707ba9"
+    },
+    {
+      "path": "release/docs/reference/safe.mdx",
+      "bytes": 1276,
+      "sha256": "fbda26c8873df921547e7497d0c7df268c9b80178bd5229c1ce6eac431e5ba64"
+    },
+    {
+      "path": "release/docs/reference/shortcut-methods.ko.mdx",
+      "bytes": 1365,
+      "sha256": "f4a78e655ed89fbfc62559db69fbf8e5250d5e03bd0846b127657bb13dc73069"
+    },
+    {
+      "path": "release/docs/reference/shortcut-methods.mdx",
+      "bytes": 1294,
+      "sha256": "a6dcff9941cf79017fa4c886f30ff4c4569fd2ca223ce365f4a5eb881b06ec2c"
+    },
+    {
+      "path": "release/docs/reference/types.ko.mdx",
+      "bytes": 1756,
+      "sha256": "d359b4fd58f1741de24e62fb5940ced16569a310729eeb337a0e666b0c676e45"
+    },
+    {
+      "path": "release/docs/reference/types.mdx",
+      "bytes": 1617,
+      "sha256": "61d595fc86d99a918bcdc3ba1048fb07f2a47d12d59c7e5d249a5502199f5e98"
+    },
+    {
+      "path": "release/docs/troubleshooting.ko.mdx",
+      "bytes": 1458,
+      "sha256": "de58ff7d188fe1f1d6988c049e18f5023ec64cd9545cf8d8ba3020dabe656faf"
+    },
+    {
+      "path": "release/docs/troubleshooting.mdx",
+      "bytes": 1261,
+      "sha256": "63e9e13cefaabadb173e862baab3ecc70c87ddc0844fc30898dcf2643126aa3a"
+    },
+    {
+      "path": "revision/README.ko.md",
+      "bytes": 19844,
+      "sha256": "a80c99904b6a8deded998a89205f9dbeb5349848696c48345b1a1a109337f065"
+    },
+    {
+      "path": "revision/README.md",
+      "bytes": 17728,
+      "sha256": "63990c783d0d50e414da62d56298e4cdb2e592a8f579de6145961ccbf9c15988"
+    },
+    {
+      "path": "revision/docs/advanced/meta.json",
+      "bytes": 104,
+      "sha256": "ccd1ec10a3ae21758c1a4e2f8edf24aa0f681e2aeb4b11c8f134767498c918dc"
+    },
+    {
+      "path": "revision/docs/advanced/migration.ko.mdx",
+      "bytes": 1552,
+      "sha256": "620d2392d1fce6e5a43b1a668fa80fce0f86788556353dfa0b678bb4c146bdb7"
+    },
+    {
+      "path": "revision/docs/advanced/migration.mdx",
+      "bytes": 1205,
+      "sha256": "190c94ca1f7f807e91976a20f181811f4adef7eeff47ff7357ad487a7bc2e982"
+    },
+    {
+      "path": "revision/docs/advanced/prefix-url.ko.mdx",
+      "bytes": 1187,
+      "sha256": "2655e8cadf44957a7af0b192b1b63e074c1db8361de3322d031e852486c0fc1f"
+    },
+    {
+      "path": "revision/docs/advanced/prefix-url.mdx",
+      "bytes": 1053,
+      "sha256": "fc743716b1b70238fcc3137fc3a07242a9bea343f382fc55f0bc2821d2b97813"
+    },
+    {
+      "path": "revision/docs/advanced/response-inference.ko.mdx",
+      "bytes": 1006,
+      "sha256": "efda648055c92b3ad25d959dd0ed4d900e4825c0a267ab755686e6e1cee3a912"
+    },
+    {
+      "path": "revision/docs/advanced/response-inference.mdx",
+      "bytes": 938,
+      "sha256": "96827cc6df6df3f02926164dbc22290ce90d0d833718443b72831bf53ed184f3"
+    },
+    {
+      "path": "revision/docs/core-concepts.ko.mdx",
+      "bytes": 2908,
+      "sha256": "aedac9a504ae63feb70d653aafabc6ca255dbae58699898dc25d0b2fa2f267f5"
+    },
+    {
+      "path": "revision/docs/core-concepts.mdx",
+      "bytes": 2614,
+      "sha256": "66bd39d49a7c2138c5a420fed960c38ff191a706a1c728da64eb62bbf492ff31"
+    },
+    {
+      "path": "revision/docs/guides/error-handling.ko.mdx",
+      "bytes": 1362,
+      "sha256": "80adf3faf3e552a3753abf032f4fe3f717d57aafc7c344311a525c2983693ba6"
+    },
+    {
+      "path": "revision/docs/guides/error-handling.mdx",
+      "bytes": 1252,
+      "sha256": "d396252ca625bdeb35b0c31aee1381ffa696d768ba80de78c200d0cc8c3ecb85"
+    },
+    {
+      "path": "revision/docs/guides/generated-openapi.ko.mdx",
+      "bytes": 1509,
+      "sha256": "368472158b9689e50657b7216da9a7967d2b4b79441cc9f7852824913417b718"
+    },
+    {
+      "path": "revision/docs/guides/generated-openapi.mdx",
+      "bytes": 1403,
+      "sha256": "0796bfa498b3fab7561ed08db1c67929b9110e410abaeb6f78db161eb6460bcf"
+    },
+    {
+      "path": "revision/docs/guides/ky-hooks.ko.mdx",
+      "bytes": 1350,
+      "sha256": "4f9d2b400e628d0e7aad81e776dc10922ddae69794575ff8957c7625f255deb7"
+    },
+    {
+      "path": "revision/docs/guides/ky-hooks.mdx",
+      "bytes": 1258,
+      "sha256": "23304bae4978e8956ba7613a8496235d0eb2b166f6869b0fb2d90c21bc4d376b"
+    },
+    {
+      "path": "revision/docs/guides/meta.json",
+      "bytes": 129,
+      "sha256": "4a13a3500516f9951b82039364ac10fc80bcac4bbfe1ad3efaca0ab6aa85b184"
+    },
+    {
+      "path": "revision/docs/guides/uploads-and-forms.ko.mdx",
+      "bytes": 1291,
+      "sha256": "a27b008dd2e98c578dda3b998b900d6ac78770a0b9f790668099d9cfb0753c8b"
+    },
+    {
+      "path": "revision/docs/guides/uploads-and-forms.mdx",
+      "bytes": 1194,
+      "sha256": "3d7c9ce232de084d7a08658145ad375d824a0d0c64acfe1c99ebd98dfe9cb608"
+    },
+    {
+      "path": "revision/docs/index.ko.mdx",
+      "bytes": 2444,
+      "sha256": "21d5037af43c31af796a54fae6535fcadde65dec2cd7a51d4c5ff170e34266fc"
+    },
+    {
+      "path": "revision/docs/index.mdx",
+      "bytes": 2176,
+      "sha256": "83be901446d568b3d954fc64ea6f5ae26b531b47b27dcc4ea45ee159301e2b37"
+    },
+    {
+      "path": "revision/docs/integrations/meta.json",
+      "bytes": 74,
+      "sha256": "c3d35862f3668b4791b2c4dae0934028f36f9bc6707ab862a55ac1482cb9f403"
+    },
+    {
+      "path": "revision/docs/integrations/nextjs.ko.mdx",
+      "bytes": 1349,
+      "sha256": "c22945b72f6d2397bbbc6e4a2cc9f1c7c6d44378cd0ad95d787e71f053fe8470"
+    },
+    {
+      "path": "revision/docs/integrations/nextjs.mdx",
+      "bytes": 1233,
+      "sha256": "d426ae4e97f47fee73a2cb0047422cb8fd330e7d7473c80941cb39856631509e"
+    },
+    {
+      "path": "revision/docs/integrations/react.ko.mdx",
+      "bytes": 1443,
+      "sha256": "8d5834c2596630471b656a7edc93545ca028273781b1cbd1c462599beda504cb"
+    },
+    {
+      "path": "revision/docs/integrations/react.mdx",
+      "bytes": 1406,
+      "sha256": "bd8b2fc43e31b30e369d48fe8cc165de1a0058d5de5d86d5ab54237b6306805f"
+    },
+    {
+      "path": "revision/docs/meta.json",
+      "bytes": 333,
+      "sha256": "3e8a8acbc8af0565bcd2a40a549989236f6441eaaa19d3948a20d96b96c2a7de"
+    },
+    {
+      "path": "revision/docs/quick-start.ko.mdx",
+      "bytes": 3508,
+      "sha256": "f165d6868897a99318722410bb64f3a130ce226f1c8bc4ccddd9708ca8f36385"
+    },
+    {
+      "path": "revision/docs/quick-start.mdx",
+      "bytes": 3165,
+      "sha256": "44ccfec48f7142a87fa45a172460f567b756064b3658947a5afa793b2111d13f"
+    },
+    {
+      "path": "revision/docs/reference/create-fetcher.ko.mdx",
+      "bytes": 1235,
+      "sha256": "7dfe805840be39a17c6781f59f2b8a712a0c7ab9f87ceac452d6e6ab81445983"
+    },
+    {
+      "path": "revision/docs/reference/create-fetcher.mdx",
+      "bytes": 1128,
+      "sha256": "c84c191eaa798c195282bed3d439a0a8085aa526a3a22a5a32573520174c5fc9"
+    },
+    {
+      "path": "revision/docs/reference/entrypoints.ko.mdx",
+      "bytes": 1431,
+      "sha256": "642318347febdaf3b99d655b6090a5bdbbda1f1d1257425780d828c0c6192a5c"
+    },
+    {
+      "path": "revision/docs/reference/entrypoints.mdx",
+      "bytes": 1256,
+      "sha256": "a4e1e16edfe22ec21030b83b968be3258ace051ff72ff1c9aaf863cb84991029"
+    },
+    {
+      "path": "revision/docs/reference/meta.json",
+      "bytes": 248,
+      "sha256": "ffc97fcf174e77c51faba084820f9e8899ef503786ed088c8754c52fb9b0e3a5"
+    },
+    {
+      "path": "revision/docs/reference/request-bodies.ko.mdx",
+      "bytes": 1735,
+      "sha256": "ab620392a74d34d524e85762f6aa8ae74c4d911beb6d51d5f4d443e64ff198c1"
+    },
+    {
+      "path": "revision/docs/reference/request-bodies.mdx",
+      "bytes": 1537,
+      "sha256": "7701fe0c86f8e509a90883e94285b302a80882889de0f9df9df15e39e830a64c"
+    },
+    {
+      "path": "revision/docs/reference/request-grouped-request.ko.mdx",
+      "bytes": 1653,
+      "sha256": "74d9c3cdcf160216558ae0fca1579deb55381f3073d35397dec22747301ff159"
+    },
+    {
+      "path": "revision/docs/reference/request-grouped-request.mdx",
+      "bytes": 1432,
+      "sha256": "8114acf168947a22bcf696cffeee26e2be5a4ac3ddee83580f66ce6d15e27a22"
+    },
+    {
+      "path": "revision/docs/reference/request-path-and-query.ko.mdx",
+      "bytes": 1199,
+      "sha256": "13f112d15fa829d97ea817d4d9383dfc61450de8985462be820eeee7507326d7"
+    },
+    {
+      "path": "revision/docs/reference/request-path-and-query.mdx",
+      "bytes": 1092,
+      "sha256": "b1b6a2fbeaab2ca35227fa9f9674991dfc7d7d0b68de396800aa1d0eff93c0b8"
+    },
+    {
+      "path": "revision/docs/reference/request-runtime-context.ko.mdx",
+      "bytes": 1176,
+      "sha256": "1349d6eb30fa1fdde657247c9b582d99ab67c00ee9402c77cf2ed1b5fa283d75"
+    },
+    {
+      "path": "revision/docs/reference/request-runtime-context.mdx",
+      "bytes": 1114,
+      "sha256": "ef41fbd659924228fc38d464f327e9331ca9c6c04ba940a17a8ac36d31ef5172"
+    },
+    {
+      "path": "revision/docs/reference/safe.ko.mdx",
+      "bytes": 1334,
+      "sha256": "25dbe796e2258200de8aae4c7997bf2ea35163ddab39b83ed0249f528c707ba9"
+    },
+    {
+      "path": "revision/docs/reference/safe.mdx",
+      "bytes": 1276,
+      "sha256": "fbda26c8873df921547e7497d0c7df268c9b80178bd5229c1ce6eac431e5ba64"
+    },
+    {
+      "path": "revision/docs/reference/shortcut-methods.ko.mdx",
+      "bytes": 1365,
+      "sha256": "f4a78e655ed89fbfc62559db69fbf8e5250d5e03bd0846b127657bb13dc73069"
+    },
+    {
+      "path": "revision/docs/reference/shortcut-methods.mdx",
+      "bytes": 1294,
+      "sha256": "a6dcff9941cf79017fa4c886f30ff4c4569fd2ca223ce365f4a5eb881b06ec2c"
+    },
+    {
+      "path": "revision/docs/reference/types.ko.mdx",
+      "bytes": 1756,
+      "sha256": "d359b4fd58f1741de24e62fb5940ced16569a310729eeb337a0e666b0c676e45"
+    },
+    {
+      "path": "revision/docs/reference/types.mdx",
+      "bytes": 1617,
+      "sha256": "61d595fc86d99a918bcdc3ba1048fb07f2a47d12d59c7e5d249a5502199f5e98"
+    },
+    {
+      "path": "revision/docs/troubleshooting.ko.mdx",
+      "bytes": 1458,
+      "sha256": "de58ff7d188fe1f1d6988c049e18f5023ec64cd9545cf8d8ba3020dabe656faf"
+    },
+    {
+      "path": "revision/docs/troubleshooting.mdx",
+      "bytes": 1261,
+      "sha256": "63e9e13cefaabadb173e862baab3ecc70c87ddc0844fc30898dcf2643126aa3a"
+    }
+  ]
+}

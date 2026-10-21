@@ -1,0 +1,50 @@
+---
+title: "Fetcher"
+description: "ky의 사용감을 유지하면서 OpenAPI 타입 안전성을 더하는 얇은 래퍼입니다."
+---
+
+# Fetcher
+
+`@ilokesto/fetcher`는 실제 `ky` 런타임 위에 얇게 얹히는 래퍼입니다. `ky.create`, `extend`, 훅, `prefixUrl`, 커스텀 `fetch`, 지연 `ResponsePromise` 파싱, `ky` 오류 동작은 유지하면서 타입 안전한 경로 템플릿, 묶음형 단축 요청, `.json()` 결과 추론, 오류를 던지지 않는 `safe` API를 추가합니다.
+
+OpenAPI 타입을 생성하거나 캐시를 추가하지 않으며, `ky`의 전송 동작을 대체하지도 않습니다. 호환되는 `paths` 타입을 생성하거나 직접 작성한 뒤, 그 계약을 적용할 `ky` 호출에 Fetcher를 사용하세요.
+
+<PackageDemo name="fetcher" lang="ko" />
+
+## 설치
+
+Fetcher 릴리스는 `beta` 배포 태그로 게시됩니다. 선택한 beta 채널 릴리스와 피어 의존성인 `ky`를 함께 설치하세요.
+
+```package-install
+@ilokesto/fetcher@beta ky
+```
+
+패키지는 빌드된 ESM 형태로 배포됩니다. 패키지 도구 기준은 Node.js 22 이상이며, 실제 HTTP 런타임은 `ky`에 위임하므로 브라우저, 서버, 테스트 환경 제약은 사용하는 `ky` 환경과 같습니다.
+
+## 빠른 예시
+
+```ts lineNumbers
+import { createFetcher } from '@ilokesto/fetcher/openapi';
+import type { paths } from './__generated__/openapi';
+
+const api = createFetcher<paths>({ prefixUrl: '/api' });
+
+const user = await api
+  .get('/users/{id}', {
+    params: {
+      path: { id: '42' },
+      query: { include: 'profile' },
+    },
+  })
+  .json();
+```
+
+요청은 `/api/users/42?include=profile`로 전송되며, `user` 타입은 해당 작업의 우선 JSON 응답에서 추론됩니다. 생성된 타입 없이 실행할 수 있는 완전한 파일은 [빠른 시작](/ko/fetcher/quick-start)에서 확인하세요.
+
+## 다음에 볼 문서
+
+- [빠른 시작](/ko/fetcher/quick-start)에서 타입 안전한 클라이언트를 처음부터 만듭니다.
+- [핵심 개념](/ko/fetcher/core-concepts)에서 ky를 중심에 둔 모델을 설명합니다.
+- [엔트리포인트](/ko/fetcher/reference/entrypoints)에서 공개 import 경로를 확인합니다.
+- [그룹 요청](/ko/fetcher/reference/request-grouped-request)에서 단축 요청의 형태를 다룹니다.
+- [Safe](/ko/fetcher/reference/safe)에서 오류를 던지지 않는 요청을 설명합니다.

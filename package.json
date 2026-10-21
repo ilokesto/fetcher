@@ -37,10 +37,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ilokesto/ilokesto.git",
-    "directory": "packages/fetcher"
+    "url": "git+https://github.com/ilokesto/fetcher.git"
   },
-  "homepage": "https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher",
+  "homepage": "https://github.com/ilokesto/fetcher",
   "engines": {
     "node": ">=22"
   },
@@ -48,16 +47,34 @@
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "test:dist": "node ./scripts/verify-dist.mjs"
+    "test:dist": "node ./scripts/verify-dist.mjs",
+    "test:tooling": "node --test tests/tooling/*.test.mjs",
+    "docs:prepare": "pnpm build",
+    "docs:dev": "pnpm docs:prepare && pnpm --dir website dev",
+    "docs:build": "pnpm docs:prepare && pnpm --dir website build",
+    "docs:typecheck": "pnpm docs:prepare && pnpm --dir website typecheck",
+    "docs:test": "pnpm --dir website test",
+    "docs:start": "pnpm --dir website start",
+    "docs:publication:verify": "node scripts/docs-publication.mjs verify && node scripts/docs-runtime.mjs verify",
+    "docs:publication:capture": "node scripts/docs-publication.mjs capture",
+    "docs:publication:promote": "node scripts/docs-publication.mjs promote",
+    "migrate:verify": "node scripts/verify-migration.mjs",
+    "release:verify": "node scripts/release-verify.mjs",
+    "changeset": "changeset",
+    "changeset:status": "changeset status",
+    "version-packages": "changeset version && pnpm install --lockfile-only"
   },
   "peerDependencies": {
     "ky": "^1.14.0"
   },
   "devDependencies": {
-    "@types/node": "^24.10.0",
-    "ky": "^1.14.0",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
-  }
+    "@types/node": "24.13.3",
+    "ky": "1.14.3",
+    "tsup": "8.5.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.10",
+    "@changesets/cli": "2.31.1",
+    "yaml": "2.8.2"
+  },
+  "packageManager": "pnpm@10.17.1"
 }

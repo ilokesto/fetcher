@@ -1,0 +1,48 @@
+---
+title: "Runtime context"
+description: "The OpenAPI metadata injected into ky hook context."
+---
+
+# Runtime context
+
+Fetcher injects OpenAPI metadata into ky context for string URL requests.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  hooks: {
+    beforeRequest: [(_request, options) => {
+      const pathTemplate = options.context.openapi?.pathTemplate;
+      const method = options.context.openapi?.method;
+    }],
+  },
+});
+```
+
+## Shape
+
+```ts
+type OpenApiContext<Path extends string, Method extends string> = {
+  openapi?: {
+    pathTemplate?: Path;
+    method?: Method;
+  };
+};
+```
+
+`pathTemplate` is the original template passed to the client, not the interpolated URL. `method` is normalized to lowercase at runtime.
+
+## Existing context is preserved
+
+If you pass your own ky `context`, fetcher merges `openapi` into it instead of replacing the whole object.
+
+```ts lineNumbers
+api.get('/users/{id}', {
+  params: { path: { id: '42' } },
+}, {
+  context: {
+    requestId: crypto.randomUUID(),
+  },
+});
+```
+
+Use this to combine application tracing fields with fetcher-provided OpenAPI metadata.

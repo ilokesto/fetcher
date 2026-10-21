@@ -1,0 +1,20 @@
+{
+  "name": "@ilokesto/fetcher-docs-runtime",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./fetcher-demo": "./.generated/fetcher/fetcher-demo.tsx"
+  },
+  "dependencies": {
+    "@ilokesto/released-fetcher": "npm:@ilokesto/fetcher@1.0.0",
+    "ky": "1.14.3",
+    "lucide-react": "1.41.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4"
+  }
+}

@@ -1,0 +1,66 @@
+---
+title: "타입"
+description: "패키지가 export하는 OpenAPI helper type입니다."
+---
+
+# Types
+
+OpenAPI 엔트리포인트는 생성된 스키마, 경로 요청, 응답 추론, safe 결과를 위한 헬퍼 타입을 내보냅니다.
+
+## `Fetcher`
+
+`createFetcher`가 반환하는 decorated client type입니다.
+
+```ts
+type Api = Fetcher<paths>;
+```
+
+Configured client를 application boundary 너머로 전달할 때 사용합니다.
+
+## `OpenApiRequest`
+
+Path와 method에 대한 typed grouped request object입니다.
+
+```ts
+type CreatePostRequest = OpenApiRequest<paths, '/posts', 'post'>;
+```
+
+Shared action function, test, route helper에 유용합니다.
+
+## `OpenApiOptions`
+
+Path와 method에 대한 typed callable options shape입니다.
+
+```ts
+type GetUserOptions = OpenApiOptions<paths, '/users/{id}', 'get'>;
+```
+
+Callable ky-like surface를 선호할 때 사용하세요.
+
+## `InferJson`
+
+Operation에서 preferred JSON response type을 추론합니다.
+
+```ts
+type User = InferJson<paths, '/users/{id}', 'get'>;
+```
+
+Preference order는 200, 201, 204, default 순서입니다.
+
+## `MergePaths`
+
+Generated paths와 수동으로 유지하는 extra paths를 합칩니다.
+
+```ts
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+```
+
+양쪽이 같은 path를 정의하면 extra 쪽 method definition이 matching method를 override하고 나머지는 보존합니다.
+
+## Other helpers
+
+- `PathsLike`: `Fetcher`가 받는 최소 shape입니다.
+- `PathTemplateParams`: string path template에서 `{param}` 이름을 추출합니다.
+- `OpenApiContext`: ky hook에 주입되는 context입니다.
+- `OpenApiHttpMethod`: 지원하는 OpenAPI method string union입니다.
+- `SafeResult`: `safe`가 사용하는 result union입니다.

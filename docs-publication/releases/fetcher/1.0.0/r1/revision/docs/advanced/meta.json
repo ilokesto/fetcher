@@ -1,0 +1,8 @@
+{
+  "title": "Advanced",
+  "pages": [
+    "prefix-url",
+    "response-inference",
+    "migration"
+  ]
+}

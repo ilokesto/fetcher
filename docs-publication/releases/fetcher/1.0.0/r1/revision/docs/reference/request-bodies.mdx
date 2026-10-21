@@ -1,0 +1,59 @@
+---
+title: "Bodies"
+description: "JSON, multipart, URL-encoded, and explicit body override behavior."
+---
+
+# Bodies
+
+Shortcut requests support three OpenAPI body shortcuts: `json`, `formData`, and `formUrlEncoded`.
+
+## JSON
+
+```ts lineNumbers
+api.post('/posts', {
+  json: {
+    title: 'Typed facade',
+  },
+});
+```
+
+Grouped `json` maps to the ky `json` option. If the third argument also includes `json` and both values are strict plain objects, they are shallow-merged with the explicit ky value taking precedence.
+
+## Multipart form data
+
+```ts lineNumbers
+api.post('/uploads/{uploadId}', {
+  params: { path: { uploadId: 'upload-1' } },
+  formData: {
+    file,
+    visibility: 'private',
+    tags: ['a', 'b'],
+  },
+});
+```
+
+Objects are converted to `FormData`. Arrays append repeated keys. `Blob` values are appended as blobs. `undefined` values are skipped. If you already have a `FormData` instance, it is passed through.
+
+## URL encoded
+
+```ts lineNumbers
+api.post('/sessions', {
+  formUrlEncoded: {
+    username: 'demo',
+    password: 'secret',
+    scope: ['read', 'write'],
+  },
+});
+```
+
+Objects are converted to `URLSearchParams`. Arrays append repeated keys and values are stringified.
+
+## Explicit override
+
+The third argument can override grouped body normalization:
+
+- explicit `body` wins over all grouped bodies
+- explicit `json` can replace grouped form bodies
+- grouped `json` and explicit `json` merge only when both are strict plain objects
+
+Use this escape hatch when you need exact ky behavior for a special endpoint.

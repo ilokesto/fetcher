@@ -1,0 +1,66 @@
+---
+title: "Types"
+description: "OpenAPI helper types exported by the package."
+---
+
+# Types
+
+The OpenAPI entrypoint exports helper types for generated schemas, route requests, response inference, and safe results.
+
+## `Fetcher`
+
+The decorated client type returned by `createFetcher`.
+
+```ts
+type Api = Fetcher<paths>;
+```
+
+Use it when passing a configured client through application boundaries.
+
+## `OpenApiRequest`
+
+The typed grouped request object for a path and method.
+
+```ts
+type CreatePostRequest = OpenApiRequest<paths, '/posts', 'post'>;
+```
+
+This is useful for shared action functions, tests, or route helpers.
+
+## `OpenApiOptions`
+
+The typed callable options shape for a path and method.
+
+```ts
+type GetUserOptions = OpenApiOptions<paths, '/users/{id}', 'get'>;
+```
+
+Use this when you prefer the callable ky-like surface.
+
+## `InferJson`
+
+Infers the preferred JSON response type from an operation.
+
+```ts
+type User = InferJson<paths, '/users/{id}', 'get'>;
+```
+
+Preference order is 200, then 201, then 204, then default.
+
+## `MergePaths`
+
+Combines generated paths with manually maintained extra paths.
+
+```ts
+type ApiPaths = MergePaths<GeneratedPaths, ExtraPaths>;
+```
+
+If both sides define the same path, method definitions from the extra side override matching methods while preserving the rest.
+
+## Other helpers
+
+- `PathsLike`: minimal shape accepted by `Fetcher`.
+- `PathTemplateParams`: extracts `{param}` names from a string path template.
+- `OpenApiContext`: context injected into ky hooks.
+- `OpenApiHttpMethod`: supported OpenAPI method string union.
+- `SafeResult`: result union used by `safe`.

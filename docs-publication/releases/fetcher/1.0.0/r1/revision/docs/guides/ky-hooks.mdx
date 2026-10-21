@@ -1,0 +1,51 @@
+---
+title: "ky hooks"
+description: "Use ky hooks with OpenAPI context for auth, logging, and metrics."
+---
+
+# ky hooks
+
+Because fetcher delegates to `ky`, hook-based patterns stay familiar. The extra `context.openapi` metadata makes route-level instrumentation easier.
+
+```ts lineNumbers
+const api = createFetcher<paths>({
+  prefixUrl: '/api',
+  hooks: {
+    beforeRequest: [
+      (request, options) => {
+        request.headers.set('x-client', 'web');
+        console.debug('request', {
+          method: options.context.openapi?.method,
+          template: options.context.openapi?.pathTemplate,
+        });
+      },
+    ],
+    afterResponse: [
+      (_request, options, response) => {
+        reportMetric('http.response', {
+          path: options.context.openapi?.pathTemplate,
+          status: response.status,
+        });
+      },
+    ],
+  },
+});
+```
+
+## Auth clients
+
+Create a base client once, then use `extend` for authenticated branches.
+
+```ts lineNumbers
+const api = createFetcher<paths>({ prefixUrl: '/api' });
+
+export function withToken(token: string) {
+  return api.extend({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+```
+
+`extend` returns a typed fetcher, so route inference remains available after composition.

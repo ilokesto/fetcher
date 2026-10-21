@@ -9,7 +9,7 @@
 ## 문서
 
 - 전체 문서: [English](https://ilokesto.ayden94.com/en/fetcher) · [한국어](https://ilokesto.ayden94.com/ko/fetcher)
-- 소스: [packages/fetcher](https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher)
+- 소스: [ilokesto/fetcher](https://github.com/ilokesto/fetcher)
 - npm: [@ilokesto/fetcher](https://www.npmjs.com/package/@ilokesto/fetcher)
 
 ## 상태
@@ -475,14 +475,36 @@ callable client는 raw `ky`에 더 가깝게 유지되므로, 이 마이그레�
 
 ## 개발과 릴리스 검증
 
+저장소 루트에서 Node 22와 pnpm 10.17.1을 사용합니다. 다른 패키지의 체크아웃은 필요하지 않습니다.
+
 ```bash
+pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm test:dist
+pnpm test:tooling
+pnpm migrate:verify
+pnpm docs:publication:verify
+pnpm docs:typecheck
+pnpm docs:build
+pnpm docs:test
+pnpm docs:start --hostname 127.0.0.1 --port 0
 ```
 
 `pnpm test:dist`는 `pnpm build` 이후에 실행해야 합니다. 이 명령은 root, core, OpenAPI 엔트리포인트 사이의 strict `createFetcher` identity를 포함해 빌드된 패키지 surface를 검증한 뒤 tarball을 pack하고, 임시 consumer에서 typed HEAD/callable OPTIONS 계약과 HEAD 런타임 동작을 확인합니다. CI는 패키지 engine 요구사항과 맞는 Node 22에서 이 검증을 실행합니다.
+
+문서 테스트 브라우저는 `pnpm --dir website exec playwright install chromium`으로 설치합니다.
+한영 원본 문서는 `docs/`, 로컬 렌더러는 `website/`에 있습니다.
+공개 예제는 `docs-publication/active.json`의 정확한 npm 버전을 사용하며,
+`/en/fetcher/next`와 `/ko/fetcher/next`는 현재 체크아웃을 사용합니다.
+기존 schema 1/2 아카이브는 변경하지 않습니다. 새 캡처는 명시적인 schema 3
+독립 저장소 레이아웃과 검토된 릴리스 카탈로그 항목을 요구합니다.
+
+`pnpm release:verify --sha <전체-SHA>`는 배포 없이 실제 GitHub Verify 결과,
+패키지 아티팩트, main과 레지스트리 상태를 검증합니다. 원격 저장소 준비와
+정확한 SHA의 CI 검증 전에는 릴리스 자격을 부여하지 않습니다.
+체크인된 정책에서 배포를 비활성화했으며 Changesets 릴리스 PR 생성은 배포하지 않습니다.
 
 ## 현재 한계
 

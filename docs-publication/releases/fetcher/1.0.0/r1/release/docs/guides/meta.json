@@ -1,0 +1,9 @@
+{
+  "title": "Guides",
+  "pages": [
+    "generated-openapi",
+    "ky-hooks",
+    "uploads-and-forms",
+    "error-handling"
+  ]
+}

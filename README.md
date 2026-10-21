@@ -9,7 +9,7 @@ It keeps the parts people already like about `ky`, such as `create()`, `extend()
 ## Documentation
 
 - Full docs: [English](https://ilokesto.ayden94.com/en/fetcher) · [한국어](https://ilokesto.ayden94.com/ko/fetcher)
-- Source: [packages/fetcher](https://github.com/ilokesto/ilokesto/tree/main/packages/fetcher)
+- Source: [ilokesto/fetcher](https://github.com/ilokesto/fetcher)
 - npm: [@ilokesto/fetcher](https://www.npmjs.com/package/@ilokesto/fetcher)
 
 ## Status
@@ -475,14 +475,36 @@ If deeper runtime divergence is needed later, that can be evaluated separately. 
 
 ## Development and release checks
 
+Use Node 22 and pnpm 10.17.1 from this repository root. No sibling checkout is required.
+
 ```bash
+pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 pnpm build
 pnpm test:dist
+pnpm test:tooling
+pnpm migrate:verify
+pnpm docs:publication:verify
+pnpm docs:typecheck
+pnpm docs:build
+pnpm docs:test
+pnpm docs:start --hostname 127.0.0.1 --port 0
 ```
 
 `pnpm test:dist` must run after `pnpm build`. It verifies the built package surface, including strict `createFetcher` identity across the root, core, and OpenAPI entrypoints, then packs a tarball and checks typed HEAD/callable OPTIONS contracts plus HEAD runtime behavior from a temporary consumer. CI runs these checks on Node 22, which matches the package engine requirement.
+
+Install the docs test browser once with `pnpm --dir website exec playwright install chromium`.
+Canonical bilingual docs live in `docs/`; `website/` owns the local renderer.
+Released examples use the exact npm identity in `docs-publication/active.json`, while
+`/en/fetcher/next` and `/ko/fetcher/next` use this checkout.
+The old schema 1/2 archives are immutable. New captures require the explicit schema 3
+standalone source layout and a reviewed release catalog entry.
+
+`pnpm release:verify --sha <full-SHA>` checks live GitHub Verify evidence, its packed
+artifact, main and registry state without publishing. It is intentionally not eligible
+before remote bootstrap and exact-SHA CI verification. Publishing is disabled in the
+checked-in policy; Changesets release-PR generation does not publish.
 
 ## Current limitations
 

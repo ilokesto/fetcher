@@ -1,0 +1,48 @@
+---
+title: "Path and query"
+description: "How route templates and query parameters are normalized."
+---
+
+# Path and query
+
+Fetcher understands OpenAPI-style path templates such as `/users/{id}`.
+
+## Path interpolation
+
+```ts lineNumbers
+api.get('/users/{id}', {
+  params: {
+    path: { id: '42' },
+  },
+});
+```
+
+Before the request reaches `ky`, `{id}` is replaced with `encodeURIComponent(String(value))`. Missing path values throw synchronously so the application does not make an accidental request to an unresolved template.
+
+Allowed runtime values are strings, numbers, and booleans.
+
+## Query parameters
+
+```ts lineNumbers
+api.get('/search', {
+  params: {
+    query: {
+      term: 'widget',
+      page: 2,
+    },
+  },
+});
+```
+
+Shortcut query parameters become ky `searchParams`. Callable usage uses `searchParams` directly.
+
+```ts lineNumbers
+api('/search', {
+  method: 'GET',
+  searchParams: { term: 'widget' },
+});
+```
+
+## Template fallback
+
+If an operation does not define explicit `parameters.path`, the type layer can infer path parameters from `{param}` names in the route string.
