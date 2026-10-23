@@ -145,6 +145,20 @@ test('release verification: wrong tag or artifact digest -> rejected after real 
   await assert.rejects(verifyRelease(fixture.options), /RELEASE_TAG_MISMATCH/);
 });
 
+test('packRelease: real pack gzip header is cross-host stable and matches saved bytes and hash', async t => {
+  const fixture = await releaseFixture(t);
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'fetcher-pack-header-'));
+  t.after(() => rm(temporary, { recursive: true, force: true }));
+  const packed = await packRelease(fixture.root, temporary);
+  const saved = await readFile(path.join(temporary, packed.file));
+  assert.equal(packed.bytes[0], 0x1f, 'PACK_NOT_GZIP');
+  assert.equal(packed.bytes[1], 0x8b, 'PACK_NOT_GZIP');
+  assert.equal(packed.bytes.subarray(0, 10).toString('hex'), '1f8b0800000000000003', 'PACK_GZIP_OS_BYTE');
+  assert.equal(saved.length, packed.bytes.length, 'PACK_FILE_BYTES_CHANGED');
+  assert.ok(saved.equals(packed.bytes), 'PACK_FILE_BYTES_CHANGED');
+  assert.equal(hash(saved), packed.packSha256, 'PACK_HASH_CHANGED');
+});
+
 test('CI dispatch: main, PR, moving head, and foreign repository -> exact gate semantics', async t => {
   const workflow = parse(await readFile(path.join(rootDir, '.github/workflows/ci.yml'), 'utf8'));
   assert.equal(workflow.on.workflow_dispatch.inputs.expected_head_sha.required, true);
