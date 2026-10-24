@@ -56,6 +56,10 @@ export async function packRelease(root, destination) {
   const names = (await readdir(destination)).filter(name => name.endsWith('.tgz'));
   assert.equal(names.length, 1, 'Expected exactly one package tarball');
   const bytes = await readFile(path.join(destination, names[0]));
+  if (bytes[0] === 0x1f && bytes[1] === 0x8b && bytes[9] !== 3) {
+    bytes[9] = 3;
+    await writeFile(path.join(destination, names[0]), bytes);
+  }
   const files = tarFiles(bytes);
   const manifest = json(files.get('package.json'));
   assert.ok([...files.keys()].every(name => !/^(?:website|docs-publication|scripts|tests|\.migration)\//.test(name)), 'MIGRATION_DATA_IN_PACKAGE');
