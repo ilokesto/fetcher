@@ -93,6 +93,9 @@ pnpm docs:test
 
 Canonical bilingual docs live in `docs/`; `website/` renders them. Released examples use the exact npm identity in `docs-publication/active.json`; `/en/fetcher/next` and `/ko/fetcher/next` use this checkout. Schema 1/2 archives are immutable; new captures require explicit schema 3 standalone layout and a reviewed release catalog entry.
 
-`pnpm release:verify --sha <full-SHA>` checks live GitHub Verify evidence, its packed artifact, main, and registry state without publishing. It requires remote bootstrap and exact-SHA CI verification. Publishing is disabled in the checked-in policy; Changesets release-PR generation does not publish.
+`pnpm release:verify --sha <full-SHA>` checks live GitHub Verify evidence, its packed artifact, main, and registry state without publishing. It requires remote bootstrap and exact-SHA CI verification. Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging
+that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable
+`Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the
+`Production` environment before rollout. Never publish locally or deploy documentation.
 
 </details>
