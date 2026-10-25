@@ -93,6 +93,9 @@ pnpm docs:test
 
 한영 원본 문서는 `docs/`, 렌더러는 `website/`에 있습니다. 공개 예제는 `docs-publication/active.json`의 정확한 npm 버전을, `/en/fetcher/next`와 `/ko/fetcher/next`는 현재 체크아웃을 사용합니다. schema 1/2 아카이브는 변경하지 않으며, 새 캡처는 명시적인 schema 3 독립 저장소 레이아웃과 검토된 릴리스 카탈로그 항목이 필요합니다.
 
-`pnpm release:verify --sha <전체-SHA>`는 배포 없이 실제 GitHub Verify 결과, 패키지 아티팩트, main과 레지스트리 상태를 확인합니다. 원격 저장소 준비와 정확한 SHA의 CI 검증이 선행되어야 합니다. 체크인된 정책에서 배포를 비활성화했으며 Changesets 릴리스 PR 생성은 배포하지 않습니다.
+`pnpm release:verify --sha <전체-SHA>`는 배포 없이 실제 GitHub Verify 결과, 패키지 아티팩트, main과 레지스트리 상태를 확인합니다. 원격 저장소 준비와 정확한 SHA의 CI 검증이 선행되어야 합니다. PR은 Verify CI를 실행합니다. main 병합은 Changesets 릴리스 PR을 생성·갱신하며,
+릴리스 PR을 병합하면 GitHub Actions가 성공한 Verify의 정확한 아티팩트만 게시합니다.
+적용 전에 `Allow GitHub Actions to create and approve pull requests`를 켜고
+`Production` 환경에 `NPM_TOKEN`을 설정하세요. 로컬 게시나 문서 배포는 하지 않습니다.
 
 </details>
