@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createFetcher } from './openapi';
-import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher';
+import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher.assertions';
 import type { ApiPaths } from './test-fixtures/createFetcher';
 
 describe.each(['callable', 'shortcut'] as const)('createFetcher safe %s failures', (surface) => {
