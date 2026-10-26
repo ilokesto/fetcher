@@ -79,6 +79,7 @@ console.log(user.name);
 pnpm install --frozen-lockfile
 pnpm build
 pnpm typecheck
+pnpm test:types
 pnpm test
 pnpm test:dist
 pnpm test:tooling
@@ -89,7 +90,7 @@ pnpm docs:build
 pnpm docs:test
 ```
 
-`test:dist`는 `build` 이후에 실행하며 엔트리포인트의 구현 동일성과 패키지 소비자의 HEAD/OPTIONS 계약을 검증합니다. 문서 브라우저는 `pnpm --dir website exec playwright install chromium`으로 한 번 설치하고, `pnpm docs:start --hostname 127.0.0.1 --port 0`으로 미리 봅니다.
+`test:types`는 요청을 실행하지 않고 타입 계약 사례를 컴파일하며, `test`는 런타임 테스트를 실행합니다. `test:dist`는 `build` 이후에 실행하며 엔트리포인트의 구현 동일성과 패키지 소비자의 HEAD/OPTIONS 계약을 검증합니다. 문서 브라우저는 `pnpm --dir website exec playwright install chromium`으로 한 번 설치하고, `pnpm docs:start --hostname 127.0.0.1 --port 0`으로 미리 봅니다.
 
 한영 원본 문서는 `docs/`, 렌더러는 `website/`에 있습니다. 공개 예제는 `docs-publication/active.json`의 정확한 npm 버전을, `/en/fetcher/next`와 `/ko/fetcher/next`는 현재 체크아웃을 사용합니다. schema 1/2 아카이브는 변경하지 않으며, 새 캡처는 명시적인 schema 3 독립 저장소 레이아웃과 검토된 릴리스 카탈로그 항목이 필요합니다.
 

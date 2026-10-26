@@ -88,6 +88,7 @@ jobs:
         run: |
           pnpm build
           pnpm typecheck
+          pnpm test:types
           pnpm test
           pnpm test:dist
           pnpm test:tooling
