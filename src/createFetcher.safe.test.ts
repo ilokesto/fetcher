@@ -1,7 +1,87 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createFetcher } from './openapi';
-import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher';
+import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher.assertions';
 import type { ApiPaths } from './test-fixtures/createFetcher';
+
+describe.each(['callable', 'shortcut'] as const)('createFetcher safe %s failures', (surface) => {
+  it('returns a network rejection without a response', async () => {
+    const error = new TypeError('Connection failed');
+    const api = createFetcher<ApiPaths>({
+      retry: 0,
+      fetch: async () => {
+        throw error;
+      },
+    });
+
+    const result = expectSafeFailure(await (surface === 'callable'
+      ? api.safe('https://example.com/network')
+      : api.safe.get('https://example.com/network', {})));
+
+    expect(result.error).toBe(error);
+    expect(result.data).toBeNull();
+    expect(result.response).toBeNull();
+  });
+
+  it('returns an in-flight abort without a response', async () => {
+    const controller = new AbortController();
+    const error = new DOMException('Request cancelled', 'AbortError');
+    const started = Promise.withResolvers<void>();
+    const api = createFetcher<ApiPaths>({
+      retry: 0,
+      signal: controller.signal,
+      fetch: async (input) => {
+        const request = input instanceof Request ? input : new Request(input);
+        return new Promise<Response>((_resolve, reject) => {
+          request.signal.addEventListener('abort', () => reject(request.signal.reason), { once: true });
+          started.resolve();
+        });
+      },
+    });
+
+    const pending = surface === 'callable'
+      ? api.safe('https://example.com/abort')
+      : api.safe.get('https://example.com/abort', {});
+    await started.promise;
+    controller.abort(error);
+    const result = expectSafeFailure(await pending);
+
+    expect(result.error).toBe(error);
+    expect(result.data).toBeNull();
+    expect(result.response).toBeNull();
+  });
+
+  it('preserves a successful HTTP response when JSON parsing fails', async () => {
+    const api = createFetcher<ApiPaths>({
+      fetch: async () => new Response('not-json', {
+        status: 200,
+        headers: { 'content-type': 'application/json', 'x-request-id': 'malformed-response' },
+      }),
+    });
+
+    const result = expectSafeFailure(await (surface === 'callable'
+      ? api.safe('https://example.com/malformed')
+      : api.safe.get('https://example.com/malformed', {})));
+
+    expect(result.error).toBeInstanceOf(SyntaxError);
+    expect(result.data).toBeNull();
+    expect(result.response?.status).toBe(200);
+    expect(result.response?.headers.get('x-request-id')).toBe('malformed-response');
+  });
+
+  it('returns path preparation errors without invoking the transport', async () => {
+    const fetch = vi.fn(async () => Response.json({ ok: true }));
+    const api = createFetcher<ApiPaths>({ fetch });
+
+    const result = expectSafeFailure(await (surface === 'callable'
+      ? api.safe('https://example.com/unknown/{id}')
+      : api.safe.get('https://example.com/unknown/{id}', {})));
+
+    expect(result.error).toBeInstanceOf(Error);
+    expect(result.data).toBeNull();
+    expect(result.response).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+});
 
 describe('createFetcher safe surface', () => {
   it('returns safe success and failure results without throwing', async () => {
