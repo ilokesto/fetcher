@@ -79,6 +79,7 @@ Use Node 22 and pnpm 10.17.1 from this repository root. No sibling checkout is r
 pnpm install --frozen-lockfile
 pnpm build
 pnpm typecheck
+pnpm test:types
 pnpm test
 pnpm test:dist
 pnpm test:tooling
@@ -89,7 +90,7 @@ pnpm docs:build
 pnpm docs:test
 ```
 
-`test:dist` runs after `build`: it checks entrypoint identity and packed-consumer HEAD/OPTIONS contracts. Install the docs browser once with `pnpm --dir website exec playwright install chromium`; preview with `pnpm docs:start --hostname 127.0.0.1 --port 0`.
+`test:types` compiles the type-contract cases without executing requests; `test` runs runtime tests. `test:dist` runs after `build`: it checks entrypoint identity and packed-consumer HEAD/OPTIONS contracts. Install the docs browser once with `pnpm --dir website exec playwright install chromium`; preview with `pnpm docs:start --hostname 127.0.0.1 --port 0`.
 
 Canonical bilingual docs live in `docs/`; `website/` renders them. Released examples use the exact npm identity in `docs-publication/active.json`; `/en/fetcher/next` and `/ko/fetcher/next` use this checkout. Schema 1/2 archives are immutable; new captures require explicit schema 3 standalone layout and a reviewed release catalog entry.
 
