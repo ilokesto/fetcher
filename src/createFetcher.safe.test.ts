@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createFetcher } from './openapi';
-import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher';
+import { expectHttpError, expectSafeFailure, expectSafeSuccess } from './test-fixtures/createFetcher.assertions';
 import type { ApiPaths } from './test-fixtures/createFetcher';
 
 describe('createFetcher safe surface', () => {

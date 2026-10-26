@@ -1,5 +1,6 @@
 import { describe, it } from 'vitest';
 import type { Fetcher } from './openapi';
+import type { ApiPaths } from './test-fixtures/createFetcher';
 import { assertTypedHeadAndCallableOptions, type HeadPaths } from './test-fixtures/head';
 import {
   assertBarrelImportContinuity,
@@ -11,8 +12,7 @@ import {
   assertSafeSurfaceTyping,
   assertTypedShortcutUrlOptionFoundations,
   assertUnknownShortcutUrlOptionFallback,
-  type ApiPaths,
-} from './test-fixtures/createFetcher';
+} from './test-fixtures/createFetcher.type-contracts';
 
 describe('createFetcher type contracts', () => {
   it('preserves OpenAPI helper, shortcut, safe, barrel, and README compile-time contracts', () => {
