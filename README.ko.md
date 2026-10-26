@@ -13,7 +13,7 @@ ky의 사용감을 유지하면서 OpenAPI 기반 요청 타입과 JSON 응답 �
 
 ## 설치
 
-Node.js 22+와 peer dependency인 `ky ^1.14.0`이 필요합니다.
+Node.js 24.22.1+와 peer dependency인 `ky ^1.14.0`이 필요합니다.
 
 ```bash
 pnpm add @ilokesto/fetcher ky@^1.14.0
@@ -73,7 +73,7 @@ console.log(user.name);
 <details>
 <summary>개발</summary>
 
-저장소 루트에서 Node 22와 pnpm 10.17.1을 사용합니다. 다른 패키지의 체크아웃은 필요하지 않습니다.
+저장소 루트에서 Node 24.22.1과 pnpm 10.17.1을 사용합니다. 다른 패키지의 체크아웃은 필요하지 않습니다.
 
 ```bash
 pnpm install --frozen-lockfile
