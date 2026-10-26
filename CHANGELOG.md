@@ -1,5 +1,11 @@
 # @ilokesto/fetcher
 
+## 1.0.3
+
+### Patch Changes
+
+- 34de277: Separate grouped request normalization from ky request preparation while preserving request headers, body precedence, path interpolation, and OpenAPI context behavior.
+
 ## 1.0.2
 
 ### Patch Changes
