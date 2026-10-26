@@ -13,7 +13,7 @@ A thin OpenAPI-aware wrapper around ky, with typed requests and inferred JSON re
 
 ## Installation
 
-Requires Node.js 22+ and the `ky ^1.14.0` peer dependency.
+Requires Node.js 24.22.1+ and the `ky ^1.14.0` peer dependency.
 
 ```bash
 pnpm add @ilokesto/fetcher ky@^1.14.0
@@ -73,7 +73,7 @@ The default client throws on HTTP failures. `params.cookie` is type-only, not au
 <details>
 <summary>Development</summary>
 
-Use Node 22 and pnpm 10.17.1 from this repository root. No sibling checkout is required.
+Use Node 24.22.1 and pnpm 10.17.1 from this repository root. No sibling checkout is required.
 
 ```bash
 pnpm install --frozen-lockfile
