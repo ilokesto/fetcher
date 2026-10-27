@@ -69,15 +69,11 @@ Use Node 24.22.1 and pnpm 10.17.1 from this repository root. No sibling checkout
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm build
 pnpm typecheck
-pnpm test:types
 pnpm test
-pnpm test:dist
-pnpm test:tooling
 ```
 
-`test:types` compiles the type-contract cases without executing requests; `test` runs runtime tests. `test:dist` runs after `build`: it checks entrypoint identity and packed-consumer HEAD/OPTIONS contracts.
+`pnpm test` builds once and runs unit, type, tooling, and packed-consumer checks. Tests live under `tests/unit`, `tests/types`, `tests/tooling`, and `tests/fixtures`. Use `test:unit`, `test:types`, `test:tooling`, or `test:pack` to run an individual suite; build before running `test:pack` alone.
 
 `pnpm release:verify --sha <full-SHA>` checks live GitHub Verify evidence, its packed artifact, main, and registry state without publishing. It requires remote bootstrap and exact-SHA CI verification. Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging
 that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable

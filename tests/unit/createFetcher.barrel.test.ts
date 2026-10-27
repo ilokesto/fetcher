@@ -1,10 +1,10 @@
 import ky from 'ky';
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { createFetcher as createFetcherFromRoot } from '.';
-import { createFetcher as createFetcherFromCore } from './core';
-import { createFetcher } from './openapi';
-import type { Fetcher } from './openapi';
-import type { ApiPaths } from './test-fixtures/createFetcher';
+import { createFetcher as createFetcherFromRoot } from '../../src';
+import { createFetcher as createFetcherFromCore } from '../../src/core';
+import { createFetcher } from '../../src/openapi';
+import type { Fetcher } from '../../src/openapi';
+import type { ApiPaths } from '../fixtures/createFetcher';
 
 describe('createFetcher barrel and ky surface parity', () => {
   it('keeps extend typed and preserves inherited ky defaults', async () => {

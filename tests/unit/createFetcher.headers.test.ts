@@ -1,6 +1,6 @@
 import ky, { type Options } from 'ky';
 import { describe, expect, it } from 'vitest';
-import { createFetcher } from './openapi';
+import { createFetcher } from '../../src/openapi';
 
 describe('createFetcher header deletion', () => {
   const deletionHeaders: Array<NonNullable<Options['headers']>> = [

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const packageDirectory = dirname(dirname(fileURLToPath(import.meta.url)));
+const packageDirectory = dirname(dirname(dirname(fileURLToPath(import.meta.url))));
 
 export const verifyPackedDist = () => {
   const consumerDirectory = mkdtempSync(join(tmpdir(), 'ilokesto-fetcher-dist-'));

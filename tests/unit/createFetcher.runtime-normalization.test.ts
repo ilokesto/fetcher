@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { createFetcher } from './openapi';
-import type { ApiPaths } from './test-fixtures/createFetcher';
-import { interpolatePathTemplate, normalizeGroupedRequestOptions } from './internal/runtime';
-import type { UntypedShortcutPost } from './test-fixtures/createFetcher';
+import { createFetcher } from '../../src/openapi';
+import type { ApiPaths } from '../fixtures/createFetcher';
+import { interpolatePathTemplate, normalizeGroupedRequestOptions } from '../../src/internal/runtime';
+import type { UntypedShortcutPost } from '../fixtures/createFetcher';
 
 describe('createFetcher runtime normalization', () => {
   it('interpolates path params, preserves ky behavior, and injects openapi context', async () => {

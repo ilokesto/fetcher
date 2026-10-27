@@ -1,6 +1,6 @@
 import { describe, expectTypeOf, it } from 'vitest';
-import type { Fetcher, OpenApiOptions, OpenApiRequest } from './openapi';
-import type { RequestBodyRequired } from './openapi/bodies';
+import type { Fetcher, OpenApiOptions, OpenApiRequest } from '../../src/openapi';
+import type { RequestBodyRequired } from '../../src/openapi/bodies';
 
 type Payload = { name: string };
 type JsonBody = { content: { 'application/json': Payload } };

@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { verifyPackedDist } from './verify-packed-dist.mjs';
 
-const root = await import('../dist/index.js');
-const core = await import('../dist/core.js');
-const openapi = await import('../dist/openapi.js');
+const root = await import('../../dist/index.js');
+const core = await import('../../dist/core.js');
+const openapi = await import('../../dist/openapi.js');
 
 assert.equal(
   root.createFetcher,
