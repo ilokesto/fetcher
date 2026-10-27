@@ -83,7 +83,6 @@ pnpm test:types
 pnpm test
 pnpm test:dist
 pnpm test:tooling
-pnpm migrate:verify
 pnpm docs:publication:verify
 pnpm docs:typecheck
 pnpm docs:build
