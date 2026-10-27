@@ -1,9 +1,9 @@
 import { expectTypeOf } from 'vitest';
-import { createFetcher as createFetcherFromRoot } from '..';
-import { createFetcher as createFetcherFromCore } from '../core';
-import { createFetcher } from '../openapi';
-import type { Fetcher, MergePaths } from '../openapi';
-import type { SafeResult } from '../openapi/types';
+import { createFetcher as createFetcherFromRoot } from '../../src';
+import { createFetcher as createFetcherFromCore } from '../../src/core';
+import { createFetcher } from '../../src/openapi';
+import type { Fetcher, MergePaths } from '../../src/openapi';
+import type { SafeResult } from '../../src/openapi/types';
 
 import type { ApiPaths } from './createFetcher';
 

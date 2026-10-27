@@ -1,4 +1,4 @@
-import type { MergePaths } from '../openapi';
+import type { MergePaths } from '../../src/openapi';
 
 type GeneratedPaths = {
   '/users/{id}': {

@@ -1,7 +1,7 @@
 import ky from 'ky';
 import { describe, expect, it, vi } from 'vitest';
-import { createFetcher } from './openapi';
-import type { HeadPaths } from './test-fixtures/head';
+import { createFetcher } from '../../src/openapi';
+import type { HeadPaths } from '../fixtures/head';
 
 describe('createFetcher HEAD shortcut', () => {
   it('delegates typed HEAD requests to ky.head with head metadata and no body parsing', async () => {

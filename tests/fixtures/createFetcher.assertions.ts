@@ -1,6 +1,6 @@
 import { HTTPError } from 'ky';
 import { expect } from 'vitest';
-import type { SafeResult } from '../openapi/types';
+import type { SafeResult } from '../../src/openapi/types';
 
 export const expectSafeSuccess = <Data>(
   result: SafeResult<Data>,

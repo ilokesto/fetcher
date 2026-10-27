@@ -1,7 +1,7 @@
 import ky, { type Input, type KyInstance, type Options } from 'ky';
 import { describe, expect, it } from 'vitest';
-import { createFetcher } from './openapi';
-import type { ApiPaths } from './test-fixtures/createFetcher';
+import { createFetcher } from '../../src/openapi';
+import type { ApiPaths } from '../fixtures/createFetcher';
 
 describe('createFetcher prefixUrl behavior', () => {
   it('supports wrapping an existing ky instance with prefixUrl defaults', async () => {

@@ -69,15 +69,11 @@ console.log(user.name);
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm build
 pnpm typecheck
-pnpm test:types
 pnpm test
-pnpm test:dist
-pnpm test:tooling
 ```
 
-`test:types`는 요청을 실행하지 않고 타입 계약 사례를 컴파일하며, `test`는 런타임 테스트를 실행합니다. `test:dist`는 `build` 이후에 실행하며 엔트리포인트의 구현 동일성과 패키지 소비자의 HEAD/OPTIONS 계약을 검증합니다.
+`pnpm test`는 한 번 빌드한 뒤 단위·타입·도구·패키지 소비자 검증을 모두 실행합니다. 테스트는 `tests/unit`, `tests/types`, `tests/tooling`, `tests/fixtures`에 모여 있습니다. 개별 실행은 `test:unit`, `test:types`, `test:tooling`, `test:pack`을 사용하며, `test:pack`만 실행할 때는 먼저 빌드합니다.
 
 `pnpm release:verify --sha <전체-SHA>`는 배포 없이 실제 GitHub Verify 결과, 패키지 아티팩트, main과 레지스트리 상태를 확인합니다. 원격 저장소 준비와 정확한 SHA의 CI 검증이 선행되어야 합니다. PR은 Verify CI를 실행합니다. main 병합은 Changesets 릴리스 PR을 생성·갱신하며,
 릴리스 PR을 병합하면 GitHub Actions가 성공한 Verify의 정확한 아티팩트만 게시합니다.

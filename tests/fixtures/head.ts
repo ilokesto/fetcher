@@ -1,6 +1,6 @@
 import { expectTypeOf } from 'vitest';
 import type { Options } from 'ky';
-import type { Fetcher, OpenApiOptions, OpenApiRequest } from '../openapi';
+import type { Fetcher, OpenApiOptions, OpenApiRequest } from '../../src/openapi';
 
 type HeadResponse = {
   readonly available: true;
