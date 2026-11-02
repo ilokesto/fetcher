@@ -1,5 +1,11 @@
 # @ilokesto/fetcher
 
+## 1.0.4
+
+### Patch Changes
+
+- 7567c2e: Require Node.js 24.22.1 or newer and use the security-patched 24.22.1 release for development and CI.
+
 ## 1.0.3
 
 ### Patch Changes
