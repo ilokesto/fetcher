@@ -33,28 +33,42 @@ type NonStringInput = Exclude<Input, string>;
 
 type SafeResponse<Json = unknown> = Awaited<ResponsePromise<Json>>;
 
+/** Parsed JSON success or a captured preparation, transport, HTTP or parsing failure. */
 export type SafeResult<Data, Error = unknown> =
   | {
+      /** Discriminant proving JSON parsing completed successfully. */
       ok: true;
+      /** Parsed response JSON; its shape is inferred from the operation. */
       data: Data;
+      /** Always null after a successful request and parse. */
       error: null;
+      /** Successful ky response, retained alongside the parsed data. */
       response: SafeResponse<Data>;
     }
   | {
+      /** Discriminant identifying a captured failure. */
       ok: false;
+      /** Always null on failure, even when an HTTP response exists. */
       data: null;
+      /** Original thrown value, including malformed-JSON and network errors. */
       error: Error;
+      /** Available response, including parse failures; null before any response exists. */
       response: SafeResponse<Data> | null;
     };
 
+/** Typed OpenAPI metadata carried in ky's request context. */
 export type OpenApiContext<Path extends string, Method extends string> = {
+  /** OpenAPI metadata merged with caller context during request preparation. */
   openapi?: {
+    /** Original route template before parameter interpolation. */
     pathTemplate?: Path;
+    /** Lowercase HTTP method selected for the request. */
     method?: Method;
   };
 };
 
 type OpenApiContextOptions<Path extends string, Method extends string> = {
+  /** ky context augmented with route and method metadata. */
   context?: Simplify<NonNullable<Options['context']> & OpenApiContext<Path, Method>>;
 };
 
@@ -67,6 +81,7 @@ type ShortcutRequestOptions<Path extends string, Method extends string> = Simpli
     OpenApiContextOptions<Path, Method>
 >;
 
+/** Extra ky options for grouped shortcuts; payload and parameters belong in the request argument. */
 export type OpenApiRequestOptions<Path extends string, Method extends string> =
   ShortcutRequestOptions<Path, Method>;
 
@@ -111,6 +126,7 @@ type ShortcutRequest<
     ShortcutRequestPayload<OperationFor<Paths, Path, Method>>
 >;
 
+/** Grouped parameters, headers and mutually exclusive body formats inferred from an operation. */
 export type OpenApiRequest<
   Paths extends PathsLike,
   Path extends PathKey<Paths>,
@@ -119,11 +135,16 @@ export type OpenApiRequest<
 
 type WideShortcutRequest = DistributiveSimplify<
   {
+    /** Groups URL substitutions, query values and type-only cookies for an unknown route. */
     params?: {
+      /** Values encoded into brace-delimited path tokens. */
       path?: Record<string, PathParameterValue>;
+      /** Values forwarded to ky's searchParams. */
       query?: NonNullable<Options['searchParams']>;
+      /** Compile-time cookie shape only; not automatically serialized. */
       cookie?: Record<string, unknown>;
     };
+    /** Headers merged beneath explicit shortcut option headers. */
     headers?: NonNullable<Options['headers']>;
   } &
     ShortcutRequestPayload<{
@@ -137,6 +158,7 @@ type WideShortcutRequest = DistributiveSimplify<
     }>
 >;
 
+/** Direct-call ky options augmented with operation-specific parameters and JSON. */
 export type OpenApiOptions<
   Paths extends PathsLike,
   Path extends PathKey<Paths>,
@@ -237,6 +259,7 @@ type DirectCallOptions<
   Method extends MethodKeysForPath<Paths, Path>,
 > = Simplify<
   OpenApiOptions<Paths, Path, Method> & {
+    /** Explicit operation method; lowercase and uppercase spellings are accepted. */
     method: Method | Uppercase<Method>;
   }
 >;
@@ -298,22 +321,41 @@ type SafeTypedCallable<Paths extends PathsLike> = {
 };
 
 type FetcherSafe<Paths extends PathsLike> = SafeTypedCallable<Paths> & {
+  /** Performs GET and eagerly parses JSON into SafeResult. */
   get: SafeTypedShortcutMethod<Paths, 'get'>;
+  /** Performs POST and captures request or JSON parsing failures. */
   post: SafeTypedShortcutMethod<Paths, 'post'>;
+  /** Performs PUT and captures request or JSON parsing failures. */
   put: SafeTypedShortcutMethod<Paths, 'put'>;
+  /** Performs PATCH and captures request or JSON parsing failures. */
   patch: SafeTypedShortcutMethod<Paths, 'patch'>;
+  /** Performs DELETE and captures request or JSON parsing failures. */
   delete: SafeTypedShortcutMethod<Paths, 'delete'>;
 };
 
+/**
+ * OpenAPI-aware callable client preserving ky response promises and external retry/stop controls.
+ * Direct calls use ky-style options; string shortcuts use a grouped request argument.
+ * Unknown routes remain available and URL/Request inputs keep ky-compatible signatures.
+ */
 export type Fetcher<Paths extends PathsLike> = TypedCallable<Paths> &
   Pick<KyInstance, 'retry' | 'stop'> & {
+    /** Non-throwing callable and shortcuts that eagerly parse JSON; no safe.head exists. */
     safe: FetcherSafe<Paths>;
+    /** Lazy GET request using grouped params, headers and an optional schema-supported body. */
     get: TypedShortcutMethod<Paths, 'get'>;
+    /** Lazy POST request accepting one schema-supported JSON, multipart or URL-encoded body. */
     post: TypedShortcutMethod<Paths, 'post'>;
+    /** Lazy PUT request accepting grouped parameters and one schema-supported body. */
     put: TypedShortcutMethod<Paths, 'put'>;
+    /** Lazy PATCH request accepting grouped parameters and one schema-supported body. */
     patch: TypedShortcutMethod<Paths, 'patch'>;
+    /** Lazy DELETE request accepting grouped parameters and one schema-supported body. */
     delete: TypedShortcutMethod<Paths, 'delete'>;
+    /** Lazy typed HEAD shortcut; unknown routes and URL/Request inputs use ky options. */
     head: TypedHeadMethod<Paths>;
+    /** Creates a fully decorated client with replacement defaults, using ky.create semantics. */
     create(defaultOptions?: Options): Fetcher<Paths>;
+    /** Creates a fully decorated client with defaults merged by ky.extend, including callback defaults. */
     extend(defaultOptions: Parameters<KyInstance['extend']>[0]): Fetcher<Paths>;
   };

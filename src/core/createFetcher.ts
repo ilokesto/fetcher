@@ -280,6 +280,35 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetc
   return fetcher;
 };
 
+/**
+ * @description Creates an OpenAPI-aware ky facade from defaults or an existing ky instance.
+ * Requests preserve ky's lazy response parsing; safe requests eagerly parse JSON and
+ * capture preparation, transport and parsing errors. Derived clients keep the facade.
+ * @param {Options} defaultOptions - Defaults passed to ky.create when using the options overload.
+ * @param {KyInstance} instance - Existing ky instance to wrap without replacing its defaults.
+ * @returns {Fetcher<Paths>} A callable client with typed routes and these owned controls.
+ * - safe `FetcherSafe<Paths>` - Eager JSON requests returning a discriminated SafeResult without throwing.
+ * : safe.get `SafeTypedShortcutMethod<Paths, 'get'>` - Performs a safe grouped GET request.
+ * : safe.post `SafeTypedShortcutMethod<Paths, 'post'>` - Performs a safe grouped POST request.
+ * : safe.put `SafeTypedShortcutMethod<Paths, 'put'>` - Performs a safe grouped PUT request.
+ * : safe.patch `SafeTypedShortcutMethod<Paths, 'patch'>` - Performs a safe grouped PATCH request.
+ * : safe.delete `SafeTypedShortcutMethod<Paths, 'delete'>` - Performs a safe grouped DELETE request.
+ * - get `TypedShortcutMethod<Paths, 'get'>` - Starts a lazy GET request with grouped parameters.
+ * - post `TypedShortcutMethod<Paths, 'post'>` - Starts a lazy POST request with a grouped payload.
+ * - put `TypedShortcutMethod<Paths, 'put'>` - Starts a lazy PUT request with a grouped payload.
+ * - patch `TypedShortcutMethod<Paths, 'patch'>` - Starts a lazy PATCH request with a grouped payload.
+ * - delete `TypedShortcutMethod<Paths, 'delete'>` - Starts a lazy DELETE request with grouped parameters.
+ * - head `TypedHeadMethod<Paths>` - Starts a lazy HEAD request; no safe HEAD shortcut is provided.
+ * - create `(defaultOptions?: Options) => Fetcher<Paths>` - Creates a facade with replacement defaults.
+ * - extend `(defaultOptions: Parameters<KyInstance['extend']>[0]) => Fetcher<Paths>` - Creates a facade with merged defaults.
+ * @example
+ * ```ts
+ * const api = createFetcher({ prefixUrl: 'https://api.example.com' });
+ * const user = await api.get('/users/{id}', { params: { path: { id: '42' } } }).json();
+ * const result = await api.safe.get('/users', {});
+ * if (result.ok) console.log(result.data);
+ * ```
+ */
 export function createFetcher<Paths extends PathsLike>(): Fetcher<Paths>;
 export function createFetcher<Paths extends PathsLike>(defaultOptions: Options): Fetcher<Paths>;
 export function createFetcher<Paths extends PathsLike>(instance: KyInstance): Fetcher<Paths>;

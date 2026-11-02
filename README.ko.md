@@ -75,6 +75,10 @@ pnpm test
 
 `pnpm test`는 한 번 빌드한 뒤 단위·타입·도구·패키지 소비자 검증을 모두 실행합니다. 테스트는 `tests/unit`, `tests/types`, `tests/tooling`, `tests/fixtures`에 모여 있습니다. 개별 실행은 `test:unit`, `test:types`, `test:tooling`, `test:pack`을 사용하며, `test:pack`만 실행할 때는 먼저 빌드합니다.
 
+공개 API 변경 시 [JSDOC.md](./JSDOC.md)를 따릅니다. `pnpm lint:jsdoc`은 ky/Fetch
+내부를 재귀 확장하지 않고 runtime export, 프로젝트 소유 중첩 필드와 callable control을
+검증하며 `test:tooling`에도 포함됩니다. 공개 선언 문서 변경에는 patch Changeset이 필요합니다.
+
 `pnpm release:verify --sha <전체-SHA>`는 배포 없이 실제 GitHub Verify 결과, 패키지 아티팩트, main과 레지스트리 상태를 확인합니다. 원격 저장소 준비와 정확한 SHA의 CI 검증이 선행되어야 합니다. PR은 Verify CI를 실행합니다. main 병합은 Changesets 릴리스 PR을 생성·갱신하며,
 릴리스 PR을 병합하면 GitHub Actions가 성공한 Verify의 정확한 아티팩트만 게시합니다.
 적용 전에 `Allow GitHub Actions to create and approve pull requests`를 켜고

@@ -5,16 +5,24 @@ type RuntimeSearchParams = NonNullable<Options['searchParams']>;
 type RuntimeHeaders = NonNullable<Options['headers']>;
 
 export type GroupedRequestParams = {
+  /** URL template substitutions, encoded individually before transport. */
   path?: Record<string, PathParameterValue>;
+  /** Query values forwarded to ky's searchParams option. */
   query?: RuntimeSearchParams;
+  /** Type-only cookie parameters; this facade does not serialize cookies. */
   cookie?: Record<string, unknown>;
 };
 
 export type GroupedRequest = {
+  /** Path, query and type-only cookie groups. */
   params?: GroupedRequestParams;
+  /** Request headers merged beneath explicitly supplied ky headers. */
   headers?: RuntimeHeaders;
+  /** JSON body, shallowly merged with explicit JSON when both are plain objects. */
   json?: unknown;
+  /** FormData or a plain object converted to multipart fields. */
   formData?: unknown;
+  /** URLSearchParams or a plain object converted to URL-encoded fields. */
   formUrlEncoded?: unknown;
 };
 
@@ -170,6 +178,32 @@ const resolveJson = (requestJson: unknown, explicitJson: unknown): unknown => {
   return explicitJson;
 };
 
+/**
+ * @description Merges grouped request data with ky options, giving explicit transport options precedence.
+ * Explicit body wins; otherwise explicit JSON overrides form conversion. Plain JSON
+ * objects merge shallowly. Cookie parameters are type-only and are not serialized.
+ * @param {{ request?: GroupedRequest; options?: Options }} settings - Grouped data and explicit options.
+ * @param {GroupedRequest} [settings.request] - Grouped request values.
+ * @param {GroupedRequestParams} [settings.request.params] - Parameter groups.
+ * @param {Record<string, PathParameterValue>} [settings.request.params.path] - URL template substitutions.
+ * @param {RuntimeSearchParams} [settings.request.params.query] - Query parameters replacing ky searchParams.
+ * @param {Record<string, unknown>} [settings.request.params.cookie] - Type-only cookie parameters.
+ * @param {RuntimeHeaders} [settings.request.headers] - Headers merged beneath explicit headers.
+ * @param {unknown} [settings.request.json] - JSON body to merge or replace.
+ * @param {unknown} [settings.request.formData] - Multipart body or plain object to serialize.
+ * @param {unknown} [settings.request.formUrlEncoded] - URL-encoded body or plain object to serialize.
+ * @param {Options} [settings.options] - Explicit ky transport options.
+ * @returns {RuntimeOptions | undefined} Normalized options, or undefined when both inputs are absent.
+ * - path `Record<string, PathParameterValue> | undefined` - Deferred path substitutions.
+ * - cookie `Record<string, unknown> | undefined` - Internal cookie field copied from explicit runtime options, if present.
+ * - context `RuntimeContext | undefined` - Caller context preserved from explicit options.
+ * : context.openapi `Record<string, unknown> | undefined` - Existing OpenAPI metadata.
+ * @example
+ * normalizeGroupedRequestOptions({
+ *   request: { params: { path: { id: '42' }, query: { page: 1 } }, json: { name: 'Ada' } },
+ *   options: { headers: { authorization: 'Bearer token' } },
+ * });
+ */
 export const normalizeGroupedRequestOptions = ({
   request,
   options,
