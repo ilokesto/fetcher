@@ -179,9 +179,10 @@ const resolveJson = (requestJson: unknown, explicitJson: unknown): unknown => {
 };
 
 /**
- * @description Merges grouped request data with ky options, giving explicit transport options precedence.
- * Explicit body wins; otherwise explicit JSON overrides form conversion. Plain JSON
- * objects merge shallowly. Cookie parameters are type-only and are not serialized.
+ * @description Merges grouped request data with ky options; grouped query parameters replace explicit searchParams.
+ * Explicit headers override grouped headers. Explicit body wins; otherwise explicit JSON
+ * overrides form conversion. Plain JSON objects merge shallowly with explicit fields winning.
+ * Cookie parameters are type-only and are not serialized.
  * @param {{ request?: GroupedRequest; options?: Options }} settings - Grouped data and explicit options.
  * @param {GroupedRequest} [settings.request] - Grouped request values.
  * @param {GroupedRequestParams} [settings.request.params] - Parameter groups.

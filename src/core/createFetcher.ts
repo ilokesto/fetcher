@@ -293,12 +293,12 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetc
  * : safe.put `SafeTypedShortcutMethod<Paths, 'put'>` - Performs a safe grouped PUT request.
  * : safe.patch `SafeTypedShortcutMethod<Paths, 'patch'>` - Performs a safe grouped PATCH request.
  * : safe.delete `SafeTypedShortcutMethod<Paths, 'delete'>` - Performs a safe grouped DELETE request.
- * - get `TypedShortcutMethod<Paths, 'get'>` - Starts a lazy GET request with grouped parameters.
- * - post `TypedShortcutMethod<Paths, 'post'>` - Starts a lazy POST request with a grouped payload.
- * - put `TypedShortcutMethod<Paths, 'put'>` - Starts a lazy PUT request with a grouped payload.
- * - patch `TypedShortcutMethod<Paths, 'patch'>` - Starts a lazy PATCH request with a grouped payload.
- * - delete `TypedShortcutMethod<Paths, 'delete'>` - Starts a lazy DELETE request with grouped parameters.
- * - head `TypedHeadMethod<Paths>` - Starts a lazy HEAD request; no safe HEAD shortcut is provided.
+ * - get `TypedShortcutMethod<Paths, 'get'>` - Starts a grouped GET request and returns a ResponsePromise with deferred body parsing.
+ * - post `TypedShortcutMethod<Paths, 'post'>` - Starts a grouped POST request and returns a ResponsePromise with deferred body parsing.
+ * - put `TypedShortcutMethod<Paths, 'put'>` - Starts a grouped PUT request and returns a ResponsePromise with deferred body parsing.
+ * - patch `TypedShortcutMethod<Paths, 'patch'>` - Starts a grouped PATCH request and returns a ResponsePromise with deferred body parsing.
+ * - delete `TypedShortcutMethod<Paths, 'delete'>` - Starts a grouped DELETE request and returns a ResponsePromise with deferred body parsing.
+ * - head `TypedHeadMethod<Paths>` - Starts a HEAD request and returns a ResponsePromise; no safe HEAD shortcut is provided.
  * - create `(defaultOptions?: Options) => Fetcher<Paths>` - Creates a facade with replacement defaults.
  * - extend `(defaultOptions: Parameters<KyInstance['extend']>[0]) => Fetcher<Paths>` - Creates a facade with merged defaults.
  * @example

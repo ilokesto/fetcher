@@ -342,17 +342,17 @@ export type Fetcher<Paths extends PathsLike> = TypedCallable<Paths> &
   Pick<KyInstance, 'retry' | 'stop'> & {
     /** Non-throwing callable and shortcuts that eagerly parse JSON; no safe.head exists. */
     safe: FetcherSafe<Paths>;
-    /** Lazy GET request using grouped params, headers and an optional schema-supported body. */
+    /** Starts a GET request with grouped params, headers and an optional schema-supported body; body parsing is deferred. */
     get: TypedShortcutMethod<Paths, 'get'>;
-    /** Lazy POST request accepting one schema-supported JSON, multipart or URL-encoded body. */
+    /** Starts a POST request with one schema-supported JSON, multipart or URL-encoded body; response body parsing is deferred. */
     post: TypedShortcutMethod<Paths, 'post'>;
-    /** Lazy PUT request accepting grouped parameters and one schema-supported body. */
+    /** Starts a PUT request with grouped parameters and one schema-supported body; response body parsing is deferred. */
     put: TypedShortcutMethod<Paths, 'put'>;
-    /** Lazy PATCH request accepting grouped parameters and one schema-supported body. */
+    /** Starts a PATCH request with grouped parameters and one schema-supported body; response body parsing is deferred. */
     patch: TypedShortcutMethod<Paths, 'patch'>;
-    /** Lazy DELETE request accepting grouped parameters and one schema-supported body. */
+    /** Starts a DELETE request with grouped parameters and one schema-supported body; response body parsing is deferred. */
     delete: TypedShortcutMethod<Paths, 'delete'>;
-    /** Lazy typed HEAD shortcut; unknown routes and URL/Request inputs use ky options. */
+    /** Starts a typed HEAD request; unknown routes and URL/Request inputs use ky options. */
     head: TypedHeadMethod<Paths>;
     /** Creates a fully decorated client with replacement defaults, using ky.create semantics. */
     create(defaultOptions?: Options): Fetcher<Paths>;
