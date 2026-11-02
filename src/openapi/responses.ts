@@ -25,6 +25,7 @@ type PreferredJsonResponse<Responses> = [JsonResponse<ResponseForStatus<Response
     : JsonResponse<ResponseForStatus<Responses, 201>>
   : JsonResponse<ResponseForStatus<Responses, 200>>;
 
+/** Infers JSON from status 200, 201, 204, then default; falls back to unknown when absent. */
 export type InferJson<
   Paths extends PathsLike,
   Path extends PathKey<Paths>,

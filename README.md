@@ -75,6 +75,8 @@ pnpm test
 
 `pnpm test` builds once and runs unit, type, tooling, and packed-consumer checks. Tests live under `tests/unit`, `tests/types`, `tests/tooling`, and `tests/fixtures`. Use `test:unit`, `test:types`, `test:tooling`, or `test:pack` to run an individual suite; build before running `test:pack` alone.
 
+Follow [JSDOC.md](./JSDOC.md) when changing public APIs. `pnpm lint:jsdoc` checks runtime exports, owned nested fields and callable controls without expanding ky/Fetch internals; `test:tooling` enforces it. Public declaration documentation needs a patch Changeset.
+
 `pnpm release:verify --sha <full-SHA>` checks live GitHub Verify evidence, its packed artifact, main, and registry state without publishing. It requires remote bootstrap and exact-SHA CI verification. Pull requests run Verify CI. Main merges create or update a Changesets release PR; merging
 that PR publishes only the exact successful Verify artifact through GitHub Actions. Enable
 `Allow GitHub Actions to create and approve pull requests` and configure `NPM_TOKEN` in the

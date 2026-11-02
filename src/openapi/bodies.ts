@@ -3,6 +3,7 @@ import type {
   MaybeProperty,
 } from './shared';
 
+/** Extracts an operation's required or optional request body declaration. */
 export type RequestBodyFor<Operation> = Operation extends { requestBody: infer RequestBody }
   ? RequestBody
   : Operation extends { requestBody?: infer RequestBody }
@@ -16,6 +17,7 @@ type JsonMediaTypeKeys<Content> = Extract<
   'application/json' | `${string}+json` | `${string}/json`
 >;
 
+/** Unions JSON-compatible media schemas, including structured +json media types. */
 export type JsonContent<Content> = [JsonMediaTypeKeys<Content>] extends [never]
   ? never
   : Content[JsonMediaTypeKeys<Content>];
@@ -38,18 +40,23 @@ type FormUrlEncodedContent<Content> = [FormUrlEncodedMediaTypeKeys<Content>] ext
   ? never
   : Content[FormUrlEncodedMediaTypeKeys<Content>];
 
+/** JSON payload schema, or never when the operation declares no JSON content. */
 export type JsonRequestBody<Operation> = JsonContent<ContentFor<RequestBodyFor<Operation>>>;
+/** Multipart payload schema, or never when that format is not declared. */
 export type FormDataRequestBody<Operation> = FormDataContent<ContentFor<RequestBodyFor<Operation>>>;
+/** URL-encoded payload schema, or never when that format is not declared. */
 export type FormUrlEncodedRequestBody<Operation> = FormUrlEncodedContent<
   ContentFor<RequestBodyFor<Operation>>
 >;
 
+/** Whether the operation requires a requestBody with declared content. */
 export type RequestBodyRequired<Operation> = Operation extends {
   requestBody: { content: infer _Content };
 }
   ? true
   : false;
 
+/** Whether JSON content exists and its request body is required. */
 export type JsonRequestBodyRequired<Operation> = [JsonRequestBody<Operation>] extends [never]
   ? false
   : RequestBodyRequired<Operation>;
@@ -85,6 +92,7 @@ type ShortcutRequestPayloadUnion<Operation> =
           RequestBodyRequired<Operation>
         >);
 
+/** Mutually exclusive supported body formats, or an empty object for bodyless operations. */
 export type ShortcutRequestPayload<Operation> =
   [ShortcutRequestPayloadUnion<Operation>] extends [never]
     ? {}
