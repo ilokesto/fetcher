@@ -1,5 +1,11 @@
 # @ilokesto/fetcher
 
+## 1.0.5
+
+### Patch Changes
+
+- 4ebebbd: Document the OpenAPI-aware client, safe results and owned facade controls in emitted TypeScript declarations.
+
 ## 1.0.4
 
 ### Patch Changes
