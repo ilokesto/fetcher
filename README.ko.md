@@ -62,6 +62,23 @@ console.log(user.name);
 
 응답 추론은 숫자·문자열 키의 200-299 상태와 OpenAPI `2XX` 범위에 선언된 JSON 스키마를 합집합으로 반환합니다. 구체 상태 선언이 범위보다 우선합니다. 성공 응답에 JSON이 없으면 `default` JSON, 그마저 없으면 `unknown`을 사용합니다. 성공 응답 모양이 여러 개이면 합집합을 좁힌 뒤 각 모양의 고유 필드에 접근하세요.
 
+등록된 타입 경로를 callable 또는 `safe` callable로 호출할 때는 HTTP `method`를 반드시 명시합니다. 기본 메서드가 GET이거나 기존 ky 인스턴스를 감싼 경우, `extend()`·`create()`로 만든 클라이언트도 같습니다. 명시한 메서드에 따라 요청 계약·필수 JSON 본문·응답 타입이 결정됩니다. 기본값에 이미 값이 있더라도 필수 요청 필드는 호출 시 전달해야 합니다.
+
+기존 `api('/x')`는 `api('/x', { method: 'GET' })` 또는 `api.get('/x', envelope)`로 이전합니다. safe 호출은 `api.safe('/x', { method: 'GET' })` 또는 `api.safe.get('/x', envelope)`를 사용합니다. 직접 호출에서는 `path`·`searchParams`를 ky 스타일 옵션에 유지하고, shortcut에서는 `params.path`·`params.query`를 사용합니다.
+
+```ts
+const sameUser = await api('/users/{id}', {
+  method: 'GET',
+  path: { id: '42' },
+}).json();
+
+const safeUser = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+이 변경은 타입 호환성 변경이며 사용자 결정에 따라 베타 기간의 minor 업데이트로 배포합니다. shortcut의 기존 시그니처는 유지합니다. 미등록 경로·wide 문자열 URL 및 `URL`/`Request` 입력은 ky 기본 메서드의 런타임 동작을 유지하며, 응답 제네릭을 지정하지 않으면 응답은 타입 미지정 상태입니다.
+
 기본 클라이언트는 HTTP 실패 시 예외를 던집니다. `params.cookie`는 타입 전용이며 쿠키나 인증을 자동 관리하지 않습니다. 타입이 적용된 `head`는 지연 응답을 유지하고 `safe.head`는 제공하지 않습니다. OPTIONS는 `api.options()` 대신 클라이언트를 직접 호출합니다.
 
 <details>
