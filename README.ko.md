@@ -60,6 +60,8 @@ console.log(user.name);
 
 응답 제네릭 없이 `.json()`이 `User`를 추론합니다. 큰 API에는 생성된 OpenAPI 타입을 사용하세요.
 
+응답 추론은 숫자·문자열 키의 200-299 상태와 OpenAPI `2XX` 범위에 선언된 JSON 스키마를 합집합으로 반환합니다. 구체 상태 선언이 범위보다 우선합니다. 성공 응답에 JSON이 없으면 `default` JSON, 그마저 없으면 `unknown`을 사용합니다. 성공 응답 모양이 여러 개이면 합집합을 좁힌 뒤 각 모양의 고유 필드에 접근하세요.
+
 기본 클라이언트는 HTTP 실패 시 예외를 던집니다. `params.cookie`는 타입 전용이며 쿠키나 인증을 자동 관리하지 않습니다. 타입이 적용된 `head`는 지연 응답을 유지하고 `safe.head`는 제공하지 않습니다. OPTIONS는 `api.options()` 대신 클라이언트를 직접 호출합니다.
 
 <details>

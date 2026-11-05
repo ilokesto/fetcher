@@ -60,6 +60,8 @@ console.log(user.name);
 
 `.json()` infers `User` without a response generic. Use generated OpenAPI types for larger APIs.
 
+Response inference unions JSON schemas from all declared 200-299 statuses, using numeric or string keys and the OpenAPI `2XX` range. Exact status declarations override the range. When no success response supplies JSON, inference falls back to `default` JSON, then `unknown`. For multiple success shapes, narrow the resulting union before reading fields specific to one shape.
+
 The default client throws on HTTP failures. `params.cookie` is type-only, not automatic cookie or auth management. Typed `head` stays lazy and has no `safe.head`; OPTIONS uses the callable client, not `api.options()`.
 
 <details>
