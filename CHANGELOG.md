@@ -1,5 +1,18 @@
 # @ilokesto/fetcher
 
+## 1.1.0
+
+### Minor Changes
+
+- 0dc14ef: Require an explicit HTTP method on callable and safe callable requests for registered typed paths, even when the client's default is GET. Migrate `api('/x')` to `api('/x', { method: 'GET' })` or `api.get('/x', envelope)`, and use the matching safe form.
+
+  Infer the response from the selected method and enforce its required request body, including options held in variables. Shortcuts and ky runtime defaults for unregistered or wide URLs and URL/Request inputs remain unchanged. This intentional type compatibility change ships as a minor release during beta by explicit user decision.
+
+### Patch Changes
+
+- 73a420b: Infer JSON from all numeric and string 200-299 response keys and OpenAPI 2XX ranges before considering default responses. Return the union of declared success JSON schemas instead of preferring one status, while preserving default/unknown fallback and runtime request behavior.
+- b3f9815: Reject path parameters that create standalone dot path segments before sending a request, preventing URL normalization from changing the target endpoint. Preserve dotted identifiers, query and fragment values, and normal percent encoding.
+
 ## 1.0.5
 
 ### Patch Changes
