@@ -44,6 +44,21 @@ export const verifyPackedDist = () => {
 import type { Options } from 'ky';
 
 export type Paths = {
+  readonly '/jobs': {
+    readonly post: {
+      readonly responses: {
+        readonly 202: {
+          readonly content: { readonly 'application/json': { readonly jobId: string } };
+        };
+        readonly '206': {
+          readonly content: { readonly 'application/json': { readonly partial: true } };
+        };
+        readonly default: {
+          readonly content: { readonly 'application/json': { readonly error: string } };
+        };
+      };
+    };
+  };
   readonly '/resources/{resourceId}': {
     readonly head: {
       readonly parameters: {
@@ -109,6 +124,8 @@ const optionsResponse = api('/capabilities/{resourceId}', {
 
 const headBody: Promise<{ readonly revision: string }> = headResponse.json();
 const optionsBody: Promise<{ readonly methods: readonly string[] }> = optionsResponse.json();
+const jobBody: Promise<{ readonly jobId: string } | { readonly partial: true }> =
+  api.post('/jobs', {}).json();
 const missingPathRejected: ExpectFalse<MissingPath extends HeadRequest ? true : false> = false;
 const noOptionsShortcut: ExpectFalse<'options' extends keyof Fetcher<Paths> ? true : false> = false;
 const noSafeHead: ExpectFalse<'head' extends keyof Fetcher<Paths>['safe'] ? true : false> = false;
@@ -118,7 +135,7 @@ api.head('/health', {
   searchParams: { probe: 'ready' },
 } satisfies Options);
 
-void [headBody, optionsBody, missingPathRejected, noOptionsShortcut, noSafeHead];
+void [headBody, optionsBody, jobBody, missingPathRejected, noOptionsShortcut, noSafeHead];
 `,
     );
 
