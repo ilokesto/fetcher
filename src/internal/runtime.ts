@@ -45,7 +45,8 @@ export const toOpenApiMethod = (method?: string): string => (method ?? 'GET').to
 
 /**
  * @description Substitutes URL-encoded path values into brace-delimited tokens.
- * Throws when a template token has no supplied value; URLs without tokens pass through.
+ * Throws when a token has no value or substitution creates a dot path segment.
+ * URLs without tokens pass through; dots within ordinary identifiers remain valid.
  * @param {string} template - URL template containing tokens such as "{id}".
  * @param {Record<string, PathParameterValue>} [path] - Values indexed by trimmed token names.
  * @returns {string} Template with every token replaced by its encoded value.
@@ -66,7 +67,7 @@ export const interpolatePathTemplate = (
     throw new Error(`Missing path parameters for template: ${template}`);
   }
 
-  return template.replace(PATH_TOKEN_PATTERN, (_match, rawKey: string) => {
+  const interpolated = template.replace(PATH_TOKEN_PATTERN, (_match, rawKey: string) => {
     const key = rawKey.trim();
     const value = path[key];
 
@@ -76,6 +77,17 @@ export const interpolatePathTemplate = (
 
     return encodeURIComponent(String(value));
   });
+
+  const templateSegments = template.split(/[?#]/, 1)[0].split(/[\\/]/);
+  const pathSegments = interpolated.split(/[?#]/, 1)[0].split(/[\\/]/);
+
+  if (pathSegments.some((segment, index) =>
+    templateSegments[index]?.includes('{') && /^(?:\.|%2e){1,2}$/i.test(segment),
+  )) {
+    throw new Error(`Path parameters must not create a dot path segment: ${template}`);
+  }
+
+  return interpolated;
 };
 
 /**
