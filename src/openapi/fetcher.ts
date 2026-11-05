@@ -247,30 +247,15 @@ type TypedHeadMethod<Paths extends PathsLike> = {
   (url: NonStringInput, options?: Options): ResponsePromise;
 };
 
-type TypedGetArguments<Paths extends PathsLike, Path extends PathKey<Paths>> = HasRequiredKeys<
-  OpenApiOptions<Paths, Path, 'get'>
-> extends true
-  ? [url: Path, options: OpenApiOptions<Paths, Path, 'get'>]
-  : [url: Path, options?: OpenApiOptions<Paths, Path, 'get'>];
-
 type DirectCallOptions<
   Paths extends PathsLike,
   Path extends PathKey<Paths>,
-  Method extends MethodKeysForPath<Paths, Path>,
-> = Simplify<
-  OpenApiOptions<Paths, Path, Method> & {
+> = {
+  [Method in MethodKeysForPath<Paths, Path>]: OpenApiOptions<Paths, Path, Method> & {
     /** Explicit operation method; lowercase and uppercase spellings are accepted. */
     method: Method | Uppercase<Method>;
-  }
->;
-
-type DirectCallArguments<
-  Paths extends PathsLike,
-  Path extends PathKey<Paths>,
-  Method extends MethodKeysForPath<Paths, Path>,
-> = HasRequiredKeys<DirectCallOptions<Paths, Path, Method>> extends true
-  ? [url: Path, options: DirectCallOptions<Paths, Path, Method>]
-  : [url: Path, options?: DirectCallOptions<Paths, Path, Method>];
+  };
+}[MethodKeysForPath<Paths, Path>];
 
 type TypedShortcutMethod<Paths extends PathsLike, Method extends ShortcutMethod> = {
   <Path extends PathKeysWithMethod<Paths, Method>>(
@@ -293,12 +278,13 @@ type SafeTypedShortcutMethod<Paths extends PathsLike, Method extends ShortcutMet
 };
 
 type TypedCallable<Paths extends PathsLike> = {
-  <Path extends PathKeysWithMethod<Paths, 'get'>>(
-    ...args: TypedGetArguments<Paths, Path>
-  ): ResponsePromise<InferJson<Paths, Path, 'get'>>;
-  <Path extends PathKey<Paths>, Method extends MethodKeysForPath<Paths, Path>>(
-    ...args: DirectCallArguments<Paths, Path, Method>
-  ): ResponsePromise<InferJson<Paths, Path, Method>>;
+  <
+    Path extends PathKey<Paths>,
+    Method extends MethodKeysForPath<Paths, Path> | Uppercase<MethodKeysForPath<Paths, Path>>,
+  >(
+    url: Path,
+    options: DirectCallOptions<Paths, NoInfer<Path>> & { method: Method },
+  ): ResponsePromise<InferJson<Paths, Path, Lowercase<Method>>>;
   <Url extends string, Json = unknown>(
     url: UntypedCallablePath<Paths, Url>,
     options?: Options,
@@ -307,12 +293,13 @@ type TypedCallable<Paths extends PathsLike> = {
 };
 
 type SafeTypedCallable<Paths extends PathsLike> = {
-  <Path extends PathKeysWithMethod<Paths, 'get'>>(
-    ...args: TypedGetArguments<Paths, Path>
-  ): Promise<SafeResult<InferJson<Paths, Path, 'get'>>>;
-  <Path extends PathKey<Paths>, Method extends MethodKeysForPath<Paths, Path>>(
-    ...args: DirectCallArguments<Paths, Path, Method>
-  ): Promise<SafeResult<InferJson<Paths, Path, Method>>>;
+  <
+    Path extends PathKey<Paths>,
+    Method extends MethodKeysForPath<Paths, Path> | Uppercase<MethodKeysForPath<Paths, Path>>,
+  >(
+    url: Path,
+    options: DirectCallOptions<Paths, NoInfer<Path>> & { method: Method },
+  ): Promise<SafeResult<InferJson<Paths, Path, Lowercase<Method>>>>;
   <Url extends string, Json = unknown>(
     url: UntypedCallablePath<Paths, Url>,
     options?: Options,
@@ -335,7 +322,8 @@ type FetcherSafe<Paths extends PathsLike> = SafeTypedCallable<Paths> & {
 
 /**
  * OpenAPI-aware callable client preserving ky response promises and external retry/stop controls.
- * Direct calls use ky-style options; string shortcuts use a grouped request argument.
+ * Registered direct-call paths require an explicit method in ky-style options.
+ * String shortcuts use a grouped request argument.
  * Unknown routes remain available and URL/Request inputs keep ky-compatible signatures.
  */
 export type Fetcher<Paths extends PathsLike> = TypedCallable<Paths> &

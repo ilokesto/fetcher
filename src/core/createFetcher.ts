@@ -284,6 +284,8 @@ const decorateKyInstance = <Paths extends PathsLike>(instance: KyInstance): Fetc
  * @description Creates an OpenAPI-aware ky facade from defaults or an existing ky instance.
  * Requests preserve ky's lazy response parsing; safe requests eagerly parse JSON and
  * capture preparation, transport and parsing errors. Derived clients keep the facade.
+ * Registered typed paths require an explicit method on callable and safe callable requests,
+ * even with GET defaults; shortcuts select their own method.
  * @param {Options} defaultOptions - Defaults passed to ky.create when using the options overload.
  * @param {KyInstance} instance - Existing ky instance to wrap without replacing its defaults.
  * @returns {Fetcher<Paths>} A callable client with typed routes and these owned controls.

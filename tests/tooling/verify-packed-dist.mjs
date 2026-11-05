@@ -40,10 +40,25 @@ export const verifyPackedDist = () => {
 
     writeFileSync(
       join(consumerDirectory, 'contract.ts'),
-      `import { createFetcher, type Fetcher, type OpenApiRequest } from '@ilokesto/fetcher';
+      `import { createFetcher, type Fetcher, type OpenApiRequest, type SafeResult } from '@ilokesto/fetcher';
 import type { Options } from 'ky';
 
 export type Paths = {
+  readonly '/method-contract': {
+    readonly get: {
+      readonly responses: {
+        readonly 200: { readonly content: { readonly 'application/json': { readonly read: true } } };
+      };
+    };
+    readonly post: {
+      readonly requestBody: {
+        readonly content: { readonly 'application/json': { readonly value: string } };
+      };
+      readonly responses: {
+        readonly 201: { readonly content: { readonly 'application/json': { readonly written: true } } };
+      };
+    };
+  };
   readonly '/jobs': {
     readonly post: {
       readonly responses: {
@@ -126,6 +141,12 @@ const headBody: Promise<{ readonly revision: string }> = headResponse.json();
 const optionsBody: Promise<{ readonly methods: readonly string[] }> = optionsResponse.json();
 const jobBody: Promise<{ readonly jobId: string } | { readonly partial: true }> =
   api.post('/jobs', {}).json();
+const readBody: Promise<{ readonly read: true }> =
+  api('/method-contract', { method: 'GET' }).json();
+const writeBody: Promise<{ readonly written: true }> =
+  api('/method-contract', { method: 'post', json: { value: 'request' } }).json();
+const safeWrite: Promise<SafeResult<{ readonly written: true }>> =
+  api.safe('/method-contract', { method: 'POST', json: { value: 'request' } });
 const missingPathRejected: ExpectFalse<MissingPath extends HeadRequest ? true : false> = false;
 const noOptionsShortcut: ExpectFalse<'options' extends keyof Fetcher<Paths> ? true : false> = false;
 const noSafeHead: ExpectFalse<'head' extends keyof Fetcher<Paths>['safe'] ? true : false> = false;
@@ -135,7 +156,7 @@ api.head('/health', {
   searchParams: { probe: 'ready' },
 } satisfies Options);
 
-void [headBody, optionsBody, jobBody, missingPathRejected, noOptionsShortcut, noSafeHead];
+void [headBody, optionsBody, jobBody, readBody, writeBody, safeWrite, missingPathRejected, noOptionsShortcut, noSafeHead];
 `,
     );
 
@@ -204,6 +225,23 @@ api('/capabilities/{resourceId}', {
 
     assertTypecheckFails('missing-options-path.ts');
     assertTypecheckFails('missing-options-query.ts');
+
+    for (const [fileName, call] of [
+      ['missing-callable-method.ts', "api('/method-contract');"],
+      ['missing-safe-method.ts', "api.safe('/method-contract');"],
+      ['missing-post-body.ts', "const options = { method: 'POST' as const }; api('/method-contract', options);"],
+      ['missing-safe-post-body.ts', "const options = { method: 'POST' as const }; api.safe('/method-contract', options);"],
+    ]) {
+      writeFileSync(
+        join(consumerDirectory, fileName),
+        `import { createFetcher } from '@ilokesto/fetcher';
+import type { Paths } from './contract.js';
+const api = createFetcher<Paths>({ method: 'GET' });
+${call}
+`,
+      );
+      assertTypecheckFails(fileName);
+    }
 
     writeFileSync(
       join(consumerDirectory, 'runtime.mjs'),

@@ -62,6 +62,23 @@ console.log(user.name);
 
 Response inference unions JSON schemas from all declared 200-299 statuses, using numeric or string keys and the OpenAPI `2XX` range. Exact status declarations override the range. When no success response supplies JSON, inference falls back to `default` JSON, then `unknown`. For multiple success shapes, narrow the resulting union before reading fields specific to one shape.
 
+Registered typed paths require an explicit HTTP `method` on callable and `safe` callable requests, even when the client's default is GET. This also applies to wrapped ky instances and clients returned by `extend()` or `create()`. The method selects the request contract, required JSON body and inferred response. Supply required request fields at the call site, even when defaults already contain values.
+
+To migrate `api('/x')`, use `api('/x', { method: 'GET' })` or `api.get('/x', envelope)`. Use `api.safe('/x', { method: 'GET' })` or `api.safe.get('/x', envelope)` for safe requests. Keep direct-call `path` and `searchParams` in ky-style options; shortcuts use `params.path` and `params.query`:
+
+```ts
+const sameUser = await api('/users/{id}', {
+  method: 'GET',
+  path: { id: '42' },
+}).json();
+
+const safeUser = await api.safe.get('/users/{id}', {
+  params: { path: { id: '42' } },
+});
+```
+
+This is an intentional type compatibility change released as a minor update during beta. Shortcuts retain their existing signatures. Unregistered or wide string URLs and `URL`/`Request` inputs keep ky's runtime default-method behavior; their response type remains untyped unless a response generic is supplied.
+
 The default client throws on HTTP failures. `params.cookie` is type-only, not automatic cookie or auth management. Typed `head` stays lazy and has no `safe.head`; OPTIONS uses the callable client, not `api.options()`.
 
 <details>
